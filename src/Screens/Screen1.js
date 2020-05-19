@@ -14,7 +14,37 @@ class Screen1 extends React.Component {
         this.state = {
             text: '',
             title: '',
-            tickerArray: ['Incident 1','Incident 2','Incident 3','Incident 4','Incident 5','Incident 6',],
+            tickerArray: [
+                {
+                    title: 'Incident 1',
+                    desc: 'Incident 1 description',
+                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                },{
+                    title: 'Incident 2',
+                    desc: 'Incident 3 description',
+                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                },{
+                    title: 'Incident 3',
+                    desc: 'Incident 3 description',
+                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                },{
+                    title: 'Incident 4',
+                    desc: 'Incident 4 description',
+                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                },{
+                    title: 'Incident 5',
+                    desc: 'Incident 5 description',
+                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                },{
+                    title: 'Incident 6',
+                    desc: 'Incident 6 description',
+                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                },{
+                    title: 'Incident 7',
+                    desc: 'Incident 7 description',
+                    comments: [{user: 'User 7', text: 'Incidents 1 Comments by User 1'}]
+                }
+            ]
         }
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -31,9 +61,12 @@ class Screen1 extends React.Component {
             return;
         }
         var arr = this.state.tickerArray;
-        arr.push(this.state.title);
+        arr.push({title: this.state.title, desc: this.state.text, comments: []});
         this.setState({tickerArray: arr, title: '', text: ''});
         alert("Your incident is submitted.");
+    }
+    callbackFn(value){
+        alert(value);
     }
     render() {
         
@@ -41,7 +74,7 @@ class Screen1 extends React.Component {
         
     <View style={styles.container}>
         <ImageBackground source={Images.RegisterBackground} style={{ width, height, zIndex: 1 }}>
-            <Block style={{backgroundColor: '#fff'}}>
+            <Block style={{backgroundColor: '#A44FEF'}}>
                 <Text style={styles.profileText}>Incident Tracker</Text>
                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                     <Text h5 style={styles.horizontalText}>Ticker</Text>
@@ -51,10 +84,10 @@ class Screen1 extends React.Component {
             <View style={{height:50}}>
                 <View style={{flexDirection:'row',justifyContent:'space-around'}}>
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                        <TextTicker style={{ height:50,padding:15,fontSize: 17, backgroundColor: 'orange'}} duration={10000} bounce={false}>
-                        {this.state.tickerArray.map((textValue, i) => (
-                            <Text key={i} onPress={() => this.props.navigation.navigate('Screen2', {title: 'Sanjay Barman'})}>
-                                {textValue  + '     '}
+                        <TextTicker style={{ height:50,padding:15,fontSize: 17, backgroundColor: 'black'}} duration={10000} bounce={false}>
+                        {this.state.tickerArray.map((incident, i) => (
+                            <Text style={{color: 'orange'}} key={i} onPress={() => this.props.navigation.navigate('Screen2', {data: incident, callback: this.callbackFn})}>
+                                {incident.title  + '  |  '}
                             </Text>
                         ))}
                             {/* <Text onPress={() => this.props.navigation.navigate('Screen2')}>

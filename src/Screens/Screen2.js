@@ -14,37 +14,59 @@ class Screen2 extends React.Component {
         this.state = {
             text: '',
             title: '',
-            tickerArray: ['Incident 1','Incident 2','Incident 3','Incident 4','Incident 5','Incident 6',],
+            tickerArray: [
+                {
+                    title: 'Incident 1',
+                    desc: 'Incident 1 description',
+                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                },{
+                    title: 'Incident 2',
+                    desc: 'Incident 3 description',
+                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                },{
+                    title: 'Incident 3',
+                    desc: 'Incident 3 description',
+                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                },{
+                    title: 'Incident 4',
+                    desc: 'Incident 4 description',
+                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                },{
+                    title: 'Incident 5',
+                    desc: 'Incident 5 description',
+                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                },{
+                    title: 'Incident 6',
+                    desc: 'Incident 6 description',
+                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                },{
+                    title: 'Incident 7',
+                    desc: 'Incident 7 description',
+                    comments: [{user: 'User 7', text: 'Incidents 1 Comments by User 1'}]
+                },],
         }
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
-    handleChange1(e){
-        this.setState({title: e});
     }
     handleChange(e){
         this.setState({text: e});
     }
     handleSubmit(){
-        if(this.state.title == '') 
+        if(this.props.navigation.state.params.callback != undefined)
         {
-            alert('Please type in Incident details');
-            return;
+            this.props.navigation.state.params.callback(this.state.text);
         }
-        var arr = this.state.tickerArray;
-        arr.push(this.state.title);
-        this.setState({tickerArray: arr, title: '', text: ''});
-        alert("Your incident is submitted.");
     }
     render() {
-      //alert(this.props.title);
+      //alert(this.props.navigation.state.params.title);
+      var incident = this.props.navigation.state.params.data;
       return (
         
     <View style={styles.container}>
         <ImageBackground source={Images.RegisterBackground} style={{ width, height, zIndex: 1 }}>
-            <Block style={{backgroundColor: '#fff'}}>
+            <Block style={{backgroundColor: '#A44FEF'}}>
                 <Text style={styles.profileText}>Incident Details</Text>
                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                    <Text h5 style={styles.horizontalText}>Incident 3</Text>
+                    <Text h5 style={styles.horizontalText}>{incident.title}</Text>
                 </View>
             </Block>
 
@@ -53,7 +75,7 @@ class Screen2 extends React.Component {
             <Block flex middle>
                 <Block style={styles.registerContainer}>
                     <View style={styles.desc}>
-                        <Text style={styles.MessageText}>Incident Description is here... </Text>
+                        <Text style={styles.MessageText}>{incident.desc}</Text>
                     </View>
 
                     <ScrollView>

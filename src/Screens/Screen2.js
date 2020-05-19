@@ -1,11 +1,14 @@
 import React from 'react';
-import {StyleSheet, View,  ScrollView,Image , TouchableOpacity, ImageBackground, Dimensions} from 'react-native';
+import {StyleSheet, View,  ScrollView,Image , TouchableOpacity, ImageBackground, Dimensions, FlatList} from 'react-native';
 import { Icon,Card,Button, Text, Block} from 'galio-framework';
 //import { LinearGradient } from 'expo';
 import TextTicker from 'react-native-text-ticker';
 import Textarea2 from 'react-native-textarea';
 import { Input } from "../components";
 import { Images, argonTheme } from "../constants";
+import { Ionicons } from '@expo/vector-icons';
+import _ from 'lodash';
+
 const { width, height } = Dimensions.get("screen");
 
 class Screen2 extends React.Component {
@@ -14,36 +17,36 @@ class Screen2 extends React.Component {
         this.state = {
             text: '',
             title: '',
-            tickerArray: [
+            /*tickerArray: [
                 {
                     title: 'Incident 1',
                     desc: 'Incident 1 description',
-                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                    comments: [{id: 1, name: 'User 1', text: 'Incidents 1 Comments by User 1'}]
                 },{
                     title: 'Incident 2',
                     desc: 'Incident 3 description',
-                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                    comments: [{id: 1, name: 'User 1', text: 'Incidents 1 Comments by User 1'}]
                 },{
                     title: 'Incident 3',
                     desc: 'Incident 3 description',
-                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                    comments: [{id: 1, name: 'User 1', text: 'Incidents 1 Comments by User 1'}]
                 },{
                     title: 'Incident 4',
                     desc: 'Incident 4 description',
-                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                    comments: [{id: 1, name: 'User 1', text: 'Incidents 1 Comments by User 1'}]
                 },{
                     title: 'Incident 5',
                     desc: 'Incident 5 description',
-                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                    comments: [{id: 1, name: 'User 1', text: 'Incidents 1 Comments by User 1'}]
                 },{
                     title: 'Incident 6',
                     desc: 'Incident 6 description',
-                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                    comments: [{id: 1, name: 'User 1', text: 'Incidents 1 Comments by User 1'}]
                 },{
                     title: 'Incident 7',
                     desc: 'Incident 7 description',
-                    comments: [{user: 'User 7', text: 'Incidents 1 Comments by User 1'}]
-                },],
+                    comments: [{id: 1, name: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                },],*/
         }
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -51,9 +54,11 @@ class Screen2 extends React.Component {
         this.setState({text: e});
     }
     handleSubmit(){
+        alert(this.state.text);
         if(this.props.navigation.state.params.callback != undefined)
         {
-            this.props.navigation.state.params.callback(this.state.text);
+            this.props.navigation.state.params.callback(this.props.navigation.state.params.data.title,
+                this.state.text);
         }
     }
     render() {
@@ -69,14 +74,31 @@ class Screen2 extends React.Component {
                     <Text h5 style={styles.horizontalText}>{incident.title}</Text>
                 </View>
             </Block>
-
-            
-            
             <Block flex middle>
                 <Block style={styles.registerContainer}>
                     <View style={styles.desc}>
                         <Text style={styles.MessageText}>{incident.desc}</Text>
                     </View>
+
+                    <FlatList
+                        style={styles.root}
+                        data={incident.comments}
+                        keyExtractor={(item)=>{
+                            return item.id;
+                          }}
+                        renderItem={(item) => {
+                            const Notification = item.item;
+                            return(
+                            <View style={styles.listContainer}>
+                                <View style={styles.listContent}>
+                                    <View style={styles.listContentHeader}>
+                                        <Text style={styles.name}>{Notification.name}</Text>
+                                    </View>
+                                    <Text rkType='primary3 mediumLine'>{Notification.text}</Text>
+                                </View>
+                            </View>
+                            );
+                        }}/>
 
                     <ScrollView>
                         <View style={{marginTop:'2%'}}>
@@ -128,13 +150,21 @@ class Screen2 extends React.Component {
                                     underlineColorAndroid={'transparent'}
                                     onChangeText = {(text) => this.handleChange(text)}
                                 />
-                                <Block middle>
-                                    <Button color="primary" style={styles.createButton} onPress={this.handleSubmit}>
-                                        <Text bold size={14} color={'#fff'}>
-                                        Submit
-                                        </Text>
-                                    </Button>
-                                </Block>
+                                <View style={{ height: 100, alignItems: 'center', justifyContent: 'center' }}>
+                                    <View style={{ flexDirection: 'row' }}>
+                                            <TouchableOpacity onPress={() => { }}>
+                                                <Ionicons style={{ padding: 10 }} name="md-image" size={40} color="white" />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => { }}>
+                                                <Ionicons style={{ padding: 10 }} name="md-videocam" size={40} color="white" />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity style={styles.createButton2} onPress={this.handleSubmit}>
+                                                  <Text bold size={13} color={'#fff'}>
+                                                     Post comment
+                                                  </Text>
+                                            </TouchableOpacity>
+                                    </View>
+                                </View>
                             </View>
                         </View>
                     </ScrollView>
@@ -147,7 +177,46 @@ class Screen2 extends React.Component {
   }
 
 const styles = StyleSheet.create({
-
+    root: {
+        height: 200,
+        padding: 5,
+        backgroundColor: '#fff',
+        borderRadius:10,
+        margin: 20
+    },
+    createButton2: {
+        width: width * 0.25,
+        justifyContent: 'center',
+        marginTop: 15,
+        marginLeft: 10,
+        marginBottom: 10,
+        padding: 5,
+        backgroundColor: '#5E72E4'
+    },
+    listContainer: {
+        paddingLeft: 19,
+        paddingRight: 16,
+        paddingVertical: 12,
+        flexDirection: 'row',
+        alignItems: 'flex-start'
+      },
+    listContent: {
+        marginLeft: 16,
+        flex: 1,
+    },
+    listContentHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 6
+    },
+    name:{
+        fontSize:16,
+        fontWeight:"bold",
+    },
+    separator: {
+        height: 1,
+        backgroundColor: "#CCCCCC"
+    },
     container:{
         flex:1
     },

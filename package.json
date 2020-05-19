@@ -14,10 +14,12 @@
     "url": "git+https://github.com/creativetimofficial/argon-react-native.git"
   },
   "dependencies": {
+    "@expo/vector-icons": "^10.2.0",
     "expo": "^35.0.0",
     "expo-asset": "~7.0.0",
     "expo-font": "~7.0.0",
     "galio-framework": "^0.6.3",
+    "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "react": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",

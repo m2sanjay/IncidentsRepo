@@ -8,6 +8,8 @@ import { Input } from "../components";
 import { Images, argonTheme } from "../constants";
 const { width, height } = Dimensions.get("screen");
 
+import _ from 'lodash';
+
 class Screen1 extends React.Component {
     constructor(props){
         super(props);
@@ -18,35 +20,36 @@ class Screen1 extends React.Component {
                 {
                     title: 'Incident 1',
                     desc: 'Incident 1 description',
-                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                    comments: [{id: '1', name: 'User 1', text: 'Incidents 1 Comments by User 1'}]
                 },{
                     title: 'Incident 2',
-                    desc: 'Incident 3 description',
-                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                    desc: 'Incident 2 description',
+                    comments: [{id: '1', name: 'User 1', text: 'Incidents 2 Comments by User 1'}]
                 },{
                     title: 'Incident 3',
                     desc: 'Incident 3 description',
-                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                    comments: [{id: '1', name: 'User 1', text: 'Incidents 3 Comments by User 1'}]
                 },{
                     title: 'Incident 4',
                     desc: 'Incident 4 description',
-                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                    comments: [{id: '1', name: 'User 1', text: 'Incidents 4 Comments by User 1'}]
                 },{
                     title: 'Incident 5',
                     desc: 'Incident 5 description',
-                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                    comments: [{id: '1', name: 'User 1', text: 'Incidents 5 Comments by User 1'}]
                 },{
                     title: 'Incident 6',
                     desc: 'Incident 6 description',
-                    comments: [{user: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                    comments: [{id: '1', name: 'User 1', text: 'Incidents 6 Comments by User 1'}]
                 },{
                     title: 'Incident 7',
                     desc: 'Incident 7 description',
-                    comments: [{user: 'User 7', text: 'Incidents 1 Comments by User 1'}]
+                    comments: [{id: '1', name: 'User 1', text: 'Incidents 7 Comments by User 1'}]
                 }
             ]
         }
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.callbackFn = this.callbackFn.bind(this);
     }
     handleChange1(e){
         this.setState({title: e});
@@ -65,9 +68,19 @@ class Screen1 extends React.Component {
         this.setState({tickerArray: arr, title: '', text: ''});
         alert("Your incident is submitted.");
     }
-    callbackFn(value){
-        alert(value);
+    
+    callbackFn(title, commentText){
+        let node = _.filter(this.state.tickerArray, function(o) { 
+            if(o.title == title)
+                return o; 
+            });
+        let existingComments = node[0].comments;
+        let length = existingComments.length + 1;
+        existingComments.push({id: ''+length, name: 'New User', text: commentText});
+
+        this.setState({tickerArray: this.state.tickerArray});
     }
+
     render() {
         
       return (

@@ -115,7 +115,7 @@ class Screen2 extends React.Component {
                                     underlineColorAndroid={'transparent'}
                                     onChangeText = {(text) => this.handleChange(text)}
                                 />
-                                <View style={{ height: 100, alignItems: 'center', justifyContent: 'center' }}>
+                                <View style={{ height: 100, alignItems: 'flex-end', justifyContent: 'center' }}>
                                     <View style={{ flexDirection: 'row' }}>
                                         <TouchableOpacity onPress={() => { }}>
                                             <Ionicons style={{ padding: 10 }} name="md-image" size={40} color="white" />

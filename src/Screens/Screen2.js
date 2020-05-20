@@ -115,13 +115,13 @@ class Screen2 extends React.Component {
                                     underlineColorAndroid={'transparent'}
                                     onChangeText = {(text) => this.handleChange(text)}
                                 />
-                                <View style={{ height: 100, alignItems: 'flex-end', justifyContent: 'center' }}>
+                                <View style={{ height: 50, alignItems: 'flex-end', justifyContent: 'center' }}>
                                     <View style={{ flexDirection: 'row' }}>
                                         <TouchableOpacity onPress={() => { }}>
-                                            <Ionicons style={{ padding: 10 }} name="md-image" size={40} color="white" />
+                                            <Ionicons style={{ padding: 10, marginTop: 10 }} name="md-image" size={30} color="white" />
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => { }}>
-                                            <Ionicons style={{ padding: 10 }} name="md-videocam" size={40} color="white" />
+                                            <Ionicons style={{ padding: 10, marginTop: 5 }} name="md-videocam" size={40} color="white" />
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.createButton2} onPress={this.handleSubmit}>
                                                 <Text bold size={13} color={'#fff'}>
@@ -152,10 +152,12 @@ const styles = StyleSheet.create({
     createButton2: {
         width: width * 0.25,
         justifyContent: 'center',
-        marginTop: 15,
+        marginTop: 20,
+        height: 30,
         marginLeft: 10,
         marginBottom: 10,
         padding: 5,
+        borderRadius: 8,
         backgroundColor: '#26ceeb'
     },
     listContainer: {
@@ -364,7 +366,7 @@ const styles = StyleSheet.create({
         color: 'black',
     },
     textareaContainer: {
-        height: 60,
+        height: 45,
         padding: 5,
         backgroundColor: '#fff',
         borderRadius:10,

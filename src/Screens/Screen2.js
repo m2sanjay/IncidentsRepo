@@ -17,6 +17,7 @@ class Screen2 extends React.Component {
         this.state = {
             text: '',
             title: '',
+            submitted: false,
             /*tickerArray: [
                 {
                     title: 'Incident 1',
@@ -54,7 +55,8 @@ class Screen2 extends React.Component {
         this.setState({text: e});
     }
     handleSubmit(){
-        alert(this.state.text);
+        //alert(this.state.text);
+        this.setState({submitted : true});
         if(this.props.navigation.state.params.callback != undefined)
         {
             this.props.navigation.state.params.callback(this.props.navigation.state.params.data.title,
@@ -64,6 +66,8 @@ class Screen2 extends React.Component {
     render() {
       //alert(this.props.navigation.state.params.title);
       var incident = this.props.navigation.state.params.data;
+      //if(this.state.submitted)
+        //incident.comments.push({id:1,name:'User 2', text: this.state.text});
       return (
         
     <View style={styles.container}>
@@ -79,66 +83,27 @@ class Screen2 extends React.Component {
                     <View style={styles.desc}>
                         <Text style={styles.MessageText}>{incident.desc}</Text>
                     </View>
-
-                    <FlatList
-                        style={styles.root}
-                        data={incident.comments}
-                        keyExtractor={(item)=>{
-                            return item.id;
-                          }}
-                        renderItem={(item) => {
-                            const Notification = item.item;
-                            return(
-                            <View style={styles.listContainer}>
-                                <View style={styles.listContent}>
-                                    <View style={styles.listContentHeader}>
-                                        <Text style={styles.name}>{Notification.name}</Text>
+                    <ScrollView style={{backgroundColor: '#1D2123'}}>
+                        <ScrollView>
+                            <View  style={styles.comments}>
+                                {incident.comments.map((com, i) => (
+                                    <View key={i}>
+                                        <Text style={styles.MessageText2}>{com.name}</Text>
+                                        <Text style={styles.MessageText1}>
+                                            {com.text}
+                                        </Text>
                                     </View>
-                                    <Text rkType='primary3 mediumLine'>{Notification.text}</Text>
-                                </View>
+                                ))}
                             </View>
-                            );
-                        }}/>
-
-                    <ScrollView>
-                        <View style={{marginTop:'2%'}}>
-                            {/* <View 
-                                style={{
-                                    flexDirection:'row',
-                                    backgroundColor:'#2DCE89',
-                                    marginLeft:'5%',
-                                    marginRight:'5%',
-                                    borderRadius:10,
-                                    marginBottom:'3%',     
-                                }}>
-                                <Icon
-                                    style={styles.loginIcon} 
-                                    name="location-pin" 
-                                    family="Entypo"
-                                    color={'#fc408a'} 
-                                    size={35}         
-                                    />
-                                <Text style={styles.textLogin}>{'Add a location'}</Text> 
-                            </View>    */}
-                
+                        </ScrollView>
+                        <Text style={{borderWidth: 2, borderColor: '#fff', height: 1}}></Text>
+                        <View style={{marginTop:5}}>
                             <View style={{
                                     flexDirection:'column',
                                     marginLeft:'5%',
                                     marginRight:'5%',
                                     borderRadius:10,
-                                    paddingBottom:'5%'
                                 }}>
-                                {/* <Textarea2
-                                    id="textAreaId1"
-                                    containerStyle={styles.textareaContainer1}
-                                    style={styles.textarea1}
-                                    maxLength={20}
-                                    value={this.state.title}
-                                    placeholderTextColor={'black'}
-                                    placeholder={'Add Comments'}
-                                    underlineColorAndroid={'transparent'}
-                                    onChangeText = {(text) => this.handleChange1(text)}
-                                /> */}
                                 <Textarea2
                                     id="textAreaId"
                                     containerStyle={styles.textareaContainer}
@@ -146,23 +111,23 @@ class Screen2 extends React.Component {
                                     maxLength={120}
                                     value={this.state.text}
                                     placeholderTextColor={'black'}
-                                    placeholder={'Comments'}
+                                    placeholder={'Add Comments'}
                                     underlineColorAndroid={'transparent'}
                                     onChangeText = {(text) => this.handleChange(text)}
                                 />
                                 <View style={{ height: 100, alignItems: 'center', justifyContent: 'center' }}>
                                     <View style={{ flexDirection: 'row' }}>
-                                            <TouchableOpacity onPress={() => { }}>
-                                                <Ionicons style={{ padding: 10 }} name="md-image" size={40} color="white" />
-                                            </TouchableOpacity>
-                                            <TouchableOpacity onPress={() => { }}>
-                                                <Ionicons style={{ padding: 10 }} name="md-videocam" size={40} color="white" />
-                                            </TouchableOpacity>
-                                            <TouchableOpacity style={styles.createButton2} onPress={this.handleSubmit}>
-                                                  <Text bold size={13} color={'#fff'}>
-                                                     Post comment
-                                                  </Text>
-                                            </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => { }}>
+                                            <Ionicons style={{ padding: 10 }} name="md-image" size={40} color="white" />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => { }}>
+                                            <Ionicons style={{ padding: 10 }} name="md-videocam" size={40} color="white" />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.createButton2} onPress={this.handleSubmit}>
+                                                <Text bold size={13} color={'#fff'}>
+                                                    Post comment
+                                                </Text>
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
                             </View>
@@ -179,9 +144,9 @@ class Screen2 extends React.Component {
 const styles = StyleSheet.create({
     root: {
         height: 200,
-        padding: 5,
+        //padding: 5,
         backgroundColor: '#fff',
-        borderRadius:10,
+        //borderRadius:10,
         margin: 20
     },
     createButton2: {
@@ -191,7 +156,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginBottom: 10,
         padding: 5,
-        backgroundColor: '#5E72E4'
+        backgroundColor: '#26ceeb'
     },
     listContainer: {
         paddingLeft: 19,
@@ -222,9 +187,15 @@ const styles = StyleSheet.create({
     },
     desc:{
       marginTop:20,
-      height:height*0.37,
-      flexDirection:'row',
+      height:height*0.25,
+      flexDirection:'row'
     },
+    comments:{
+        marginTop:10,
+        height:200,
+        flexDirection:'column',
+        backgroundColor: '#1D2123'
+      },
     createButton: {
         width: width * 0.5,
         marginTop: 25,
@@ -282,6 +253,22 @@ const styles = StyleSheet.create({
         fontWeight:'700',
         
         color:'#fff',
+        marginLeft:'5%',
+        marginTop:'2%',
+            
+    },
+    MessageText2:{
+        alignSelf:'flex-start',
+        fontWeight:'700',
+        
+        color:'#18b6e7',
+        marginLeft:'5%',
+        marginTop:'2%',
+            
+    },
+    MessageText1:{
+        alignSelf:'flex-start',
+        color:'#18b6e7',
         marginLeft:'5%',
         marginTop:'2%',
             
@@ -377,7 +364,7 @@ const styles = StyleSheet.create({
         color: 'black',
     },
     textareaContainer: {
-        height: 120,
+        height: 60,
         padding: 5,
         backgroundColor: '#fff',
         borderRadius:10,

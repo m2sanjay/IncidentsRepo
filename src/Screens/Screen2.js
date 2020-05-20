@@ -18,36 +18,6 @@ class Screen2 extends React.Component {
             text: '',
             title: '',
             submitted: false,
-            /*tickerArray: [
-                {
-                    title: 'Incident 1',
-                    desc: 'Incident 1 description',
-                    comments: [{id: 1, name: 'User 1', text: 'Incidents 1 Comments by User 1'}]
-                },{
-                    title: 'Incident 2',
-                    desc: 'Incident 3 description',
-                    comments: [{id: 1, name: 'User 1', text: 'Incidents 1 Comments by User 1'}]
-                },{
-                    title: 'Incident 3',
-                    desc: 'Incident 3 description',
-                    comments: [{id: 1, name: 'User 1', text: 'Incidents 1 Comments by User 1'}]
-                },{
-                    title: 'Incident 4',
-                    desc: 'Incident 4 description',
-                    comments: [{id: 1, name: 'User 1', text: 'Incidents 1 Comments by User 1'}]
-                },{
-                    title: 'Incident 5',
-                    desc: 'Incident 5 description',
-                    comments: [{id: 1, name: 'User 1', text: 'Incidents 1 Comments by User 1'}]
-                },{
-                    title: 'Incident 6',
-                    desc: 'Incident 6 description',
-                    comments: [{id: 1, name: 'User 1', text: 'Incidents 1 Comments by User 1'}]
-                },{
-                    title: 'Incident 7',
-                    desc: 'Incident 7 description',
-                    comments: [{id: 1, name: 'User 1', text: 'Incidents 1 Comments by User 1'}]
-                },],*/
         }
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -71,8 +41,8 @@ class Screen2 extends React.Component {
       return (
         
     <View style={styles.container}>
-        <ImageBackground source={Images.RegisterBackground} style={{ width, height, zIndex: 1 }}>
-            <Block style={{backgroundColor: '#A44FEF'}}>
+        <Block style={{backgroundColor: '#0A121A', width, height, zIndex: 1}}>
+            <Block style={{backgroundColor: '#00c5e8'}}>
                 <Text style={styles.profileText}>Incident Details</Text>
                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                     <Text h5 style={styles.horizontalText}>{incident.title}</Text>
@@ -83,26 +53,24 @@ class Screen2 extends React.Component {
                     <View style={styles.desc}>
                         <Text style={styles.MessageText}>{incident.desc}</Text>
                     </View>
-                    <ScrollView style={{backgroundColor: '#1D2123'}}>
-                        <ScrollView>
-                            <View  style={styles.comments}>
-                                {incident.comments.map((com, i) => (
-                                    <View key={i}>
-                                        <Text style={styles.MessageText2}>{com.name}</Text>
-                                        <Text style={styles.MessageText1}>
-                                            {com.text}
-                                        </Text>
-                                    </View>
-                                ))}
-                            </View>
-                        </ScrollView>
-                        <Text style={{borderWidth: 2, borderColor: '#fff', height: 1}}></Text>
+                    <ScrollView>
+                        <View style={styles.comments}>
+                            {incident.comments.map((com, i) => (
+                                <View key={i}>
+                                    <Text style={styles.MessageText2}>{com.name}</Text>
+                                    <Text style={styles.MessageText1}>
+                                        {com.text}
+                                    </Text>
+                                </View>
+                            ))}
+                        </View>
+                        <Text style={{borderWidth: 2, borderColor: '#0A121A', height: 1}}></Text>
                         <View style={{marginTop:5}}>
                             <View style={{
                                     flexDirection:'column',
-                                    marginLeft:'5%',
-                                    marginRight:'5%',
-                                    borderRadius:10,
+                                    marginLeft:'2%',
+                                    marginRight:'2%',
+                                    borderRadius:5,
                                 }}>
                                 <Textarea2
                                     id="textAreaId"
@@ -123,11 +91,11 @@ class Screen2 extends React.Component {
                                         <TouchableOpacity onPress={() => { }}>
                                             <Ionicons style={{ padding: 10, marginTop: 5 }} name="md-videocam" size={40} color="white" />
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={styles.createButton2} onPress={this.handleSubmit}>
-                                                <Text bold size={13} color={'#fff'}>
-                                                    Post comment
-                                                </Text>
-                                        </TouchableOpacity>
+                                        <Button style={styles.submitBtn} onPress={this.handleSubmit}>
+                                            <Text bold size={14} color={'#00c5e8'}>
+                                            Post
+                                            </Text>
+                                        </Button>
                                     </View>
                                 </View>
                             </View>
@@ -135,7 +103,7 @@ class Screen2 extends React.Component {
                     </ScrollView>
                 </Block>
             </Block>
-        </ImageBackground>
+        </Block>
     </View>
     );
     }
@@ -160,6 +128,15 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: '#26ceeb'
     },
+    submitBtn: {
+        width: width * 0.25,
+        marginTop: 25,
+        //backgroundColor: '#5E72E4'
+        backgroundColor: 'transparent',
+        borderColor: '#00c5e8',
+        borderWidth: 1
+    },
+
     listContainer: {
         paddingLeft: 19,
         paddingRight: 16,
@@ -190,11 +167,17 @@ const styles = StyleSheet.create({
     desc:{
       marginTop:20,
       height:height*0.25,
-      flexDirection:'row'
+      flexDirection:'row',
+      borderBottomWidth: 10,
+      borderBottomColor: '#0A121A'
+    },
+    commentView:{
+        height:height*0.45,
+        flexDirection:'row',
     },
     comments:{
         marginTop:10,
-        height:200,
+        height:160,
         flexDirection:'column',
         backgroundColor: '#1D2123'
       },
@@ -374,7 +357,7 @@ const styles = StyleSheet.create({
     registerContainer: {
         width: width * 0.9,
         height: height * 0.70,
-        backgroundColor: "#3C57C4",
+        backgroundColor: "#1d2123",
         borderRadius: 4,
         shadowColor: 'black',
         shadowOffset: {

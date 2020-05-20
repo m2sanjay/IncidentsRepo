@@ -19,16 +19,15 @@ class LoginScreen extends React.Component {
     return (
       <Block flex middle>
         <StatusBar hidden />
-        <ImageBackground
+        {/* <ImageBackground
           source={Images.RegisterBackground}
           style={{ width, height, zIndex: 1 }}
-        >
+        > */}
+        <Block style={{backgroundColor: '#0A121A', width, height, zIndex: 1}}>
           <Block flex middle>
             <Block style={styles.registerContainer}>
               <Block flex={0.25} middle style={styles.socialConnect}>
-                <Text color={argonTheme.COLORS.BLACK} size={12}>
-                  Login with
-                </Text>
+                <Text color={'#00c5e8'} size={12}> Login with </Text>
                 <Block row style={{ marginTop: theme.SIZES.BASE, marginLeft: 25 }}>
                   <Button style={{...styles.socialButtons, marginRight: 30, backgroundColor: theme.COLORS.FACEBOOK }} onPress={() => this.props.navigation.navigate('Screen1')}>
                     <Block row>
@@ -58,7 +57,7 @@ class LoginScreen extends React.Component {
               </Block>
               <Block flex>
                 <Block flex={0.17} middle>
-                  <Text color={argonTheme.COLORS.WHITE} size={12}>
+                  <Text color={'#00c5e8'} size={12}>
                     Or sign up the classic way
                   </Text>
                 </Block>
@@ -128,13 +127,14 @@ class LoginScreen extends React.Component {
                         checkboxStyle={{
                           borderWidth: 3
                         }}
+                        labelStyle={{color:'#fff'}}
                         color={argonTheme.COLORS.WHITE}
                         label="I agree with the Privacy Policies"
                       />
                     </Block>
                     <Block middle>
                       <Button style={styles.createButton} onPress={() => this.props.navigation.navigate('Screen1')}>
-                        <Text bold size={14} color={argonTheme.COLORS.WHITE}>
+                        <Text bold size={14} color={'#00c5e8'}>
                           CREATE ACCOUNT
                         </Text>
                       </Button>
@@ -144,7 +144,8 @@ class LoginScreen extends React.Component {
               </Block>
             </Block>
           </Block>
-        </ImageBackground>
+        </Block>
+        {/* </ImageBackground> */}
       </Block>
     );
   }
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
   registerContainer: {
     width: width * 0.9,
     height: height * 0.78,
-    backgroundColor: "#3C57C4",
+    backgroundColor: "#1d2123",
     borderRadius: 4,
     shadowColor: argonTheme.COLORS.BLACK,
     shadowOffset: {
@@ -167,9 +168,10 @@ const styles = StyleSheet.create({
     overflow: "hidden"
   },
   socialConnect: {
-    backgroundColor: argonTheme.COLORS.WHITE,//"#3C57C4",//
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: "#8898AA"
+    backgroundColor: '#1d2123',
+    //borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: 10,
+    borderColor: "#0c141c",
   },
   socialButtons: {
     width: 120,
@@ -214,8 +216,11 @@ const styles = StyleSheet.create({
   createButton: {
     width: width * 0.5,
     marginTop: 25,
-    backgroundColor: '#5E72E4'
-  }
+    //backgroundColor: '#5E72E4'
+    backgroundColor: 'transparent',
+    borderColor: '#00c5e8',
+    borderWidth: 1
+  },
 });
 
 export default LoginScreen;

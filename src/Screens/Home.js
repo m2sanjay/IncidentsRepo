@@ -98,7 +98,11 @@ class Home extends React.Component {
             <View style={{height:50}}>
                 <View style={{flexDirection:'row',justifyContent:'space-around'}}>
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                        <TextTicker style={{ height:50,padding:15,fontSize: 17, backgroundColor: 'black'}} duration={10000} bounce={false}>
+                        <TextTicker style={{ height:50,padding:15,fontSize: 17, backgroundColor: 'black'}} 
+                            //duration={10000} bounce={false}
+                            loop={true}
+                            scrollSpeed={3000}
+                            >
                         {this.state.tickerArray.map((incident, i) => (
                             <Text style={{color: 'orange'}} key={i} onPress={() => this.props.navigation.navigate('Screen2', {data: incident, callback: this.callbackFn})}>
                                 {incident.title  + '  |  '}
@@ -160,7 +164,7 @@ const styles = StyleSheet.create({
         fontSize:40,
         fontWeight:'bold',
         color:'black',
-        marginTop:'13%',
+        marginTop:'2%',
         marginLeft:'5%',
         marginBottom:'2%'
     },

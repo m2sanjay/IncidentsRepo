@@ -42,7 +42,7 @@ class Screen2 extends React.Component {
         
     <View style={styles.container}>
         <Block style={{backgroundColor: '#0A121A', width, height, zIndex: 1}}>
-            <Block style={{backgroundColor: '#00c5e8'}}>
+            <Block style={{backgroundColor: '#00c5e8'}} middle>
                 <Text style={styles.profileText}>Incident Details</Text>
                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                     <Text h5 style={styles.horizontalText}>{incident.title}</Text>
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     },
     submitBtn: {
         width: width * 0.25,
-        marginTop: 25,
+        marginTop: 15,
         //backgroundColor: '#5E72E4'
         backgroundColor: 'transparent',
         borderColor: '#00c5e8',
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
         fontSize:40,
         fontWeight:'bold',
         color:'black',
-        marginTop:'13%',
+        marginTop:'2%',
         marginLeft:'5%',
         marginBottom:'2%'
     },
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
         fontWeight:'700',
         color:'black',
         marginLeft:'5%',
-        marginTop:'3%',
+        marginTop:'1%',
         paddingBottom:'3%',
 
     },  

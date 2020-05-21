@@ -80,7 +80,7 @@ class AddIncident extends React.Component {
     <View style={styles.container}>
         {/* <ImageBackground source={Images.RegisterBackground} style={{ width, height, zIndex: 1 }}> */}
         <Block style={{backgroundColor: '#0A121A', width, height, zIndex: 1}}>
-            <Block style={{backgroundColor: '#00c5e8'}}>
+            <Block style={{backgroundColor: '#00c5e8'}} middle>
                 <Text style={styles.profileText}>Add an Incident</Text>
             </Block>
             <Block flex middle>
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
         fontSize:40,
         fontWeight:'bold',
         color:'black',
-        marginTop:'13%',
+        marginTop:'2%',
         marginLeft:'5%',
         marginBottom:'2%'
     },

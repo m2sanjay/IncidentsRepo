@@ -29,7 +29,7 @@ class LoginScreen extends React.Component {
               <Block flex={0.25} middle style={styles.socialConnect}>
                 <Text color={'#00c5e8'} size={12}> Login with </Text>
                 <Block row style={{ marginTop: theme.SIZES.BASE, marginLeft: 25 }}>
-                  <Button style={{...styles.socialButtons, marginRight: 30, backgroundColor: theme.COLORS.FACEBOOK }} onPress={() => this.props.navigation.navigate('Screen1')}>
+                  <Button style={{...styles.socialButtons, marginRight: 30, backgroundColor: theme.COLORS.FACEBOOK }} onPress={() => this.props.navigation.navigate('Home')}>
                     <Block row>
                       <Icon
                         name="logo-facebook"
@@ -41,7 +41,7 @@ class LoginScreen extends React.Component {
                       <Text style={{...styles.socialTextButtons, color: theme.COLORS.WHITE}}>FACEBOOK</Text>
                     </Block>
                   </Button>
-                  <Button style={{...styles.socialButtons, marginRight: 30, backgroundColor: argonTheme.COLORS.GMAIL }} onPress={() => this.props.navigation.navigate('Screen1')}>
+                  <Button style={{...styles.socialButtons, marginRight: 30, backgroundColor: argonTheme.COLORS.GMAIL }} onPress={() => this.props.navigation.navigate('Home')}>
                     <Block row >
                       <Icon
                         name="logo-google"
@@ -133,7 +133,7 @@ class LoginScreen extends React.Component {
                       />
                     </Block>
                     <Block middle>
-                      <Button style={styles.createButton} onPress={() => this.props.navigation.navigate('Screen1')}>
+                      <Button style={styles.createButton} onPress={() => this.props.navigation.navigate('Home')}>
                         <Text bold size={14} color={'#00c5e8'}>
                           CREATE ACCOUNT
                         </Text>

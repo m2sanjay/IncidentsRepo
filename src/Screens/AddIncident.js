@@ -13,6 +13,7 @@ import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import CameraView from './CameraView';
 import _ from 'lodash';
+import { Video } from 'expo-av';
 
 class AddIncident extends React.Component {
     constructor(props){
@@ -20,7 +21,8 @@ class AddIncident extends React.Component {
         this.state = {
             text: '',
             title: '',
-            image: null
+            image: null,
+            videoUrl: null
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange1 = this.handleChange1.bind(this);
@@ -62,7 +64,10 @@ class AddIncident extends React.Component {
                 quality: 1,
             });
             if (!result.cancelled) {
-                this.setState({ image: result.uri });
+                if(result.type == 'video')
+                    this.setState({ videoUrl: result.uri, image: null });
+                else
+                this.setState({ videoUrl: null, image: result.uri });
             }
         } catch (E) {
             console.log(E);
@@ -88,7 +93,20 @@ class AddIncident extends React.Component {
                     <ScrollView>
                         <View style={styles.imageContainer}>
                             <ScrollView>
-                                <View>{this.state.image && <Image source={{ uri: this.state.image }} style={{ width: width-20, height: 300 }} />}</View>
+                                <View>
+                                    {
+                                    this.state.image != null ? (<Image source={{ uri: this.state.image }} style={{ width: width-20, height: 300 }} />)
+                                    : (this.state.videoUrl != null ? (<Video source={{uri: this.state.videoUrl}}
+                                        rate={1.0}
+                                        volume={1.0}
+                                        isMuted={false}
+                                        resizeMode="cover"
+                                        shouldPlay
+                                        isLooping={false}
+                                        useNativeControls={true}
+                                        style={{width: width-20, height: 300}} />):(<View/>))
+                                    }
+                                </View>
                             </ScrollView>
                         </View>
                 
@@ -127,9 +145,15 @@ class AddIncident extends React.Component {
                                     underlineColorAndroid={'transparent'}
                                     onChangeText = {(text) => this.handleChange(text)}
                                 />
-                                <Block middle row>
-                                    <Icon onPress={this.handleImageClick} style={styles.camera} name="image" family="Entypo" size={55} />
-                                    <Icon style={styles.camera} name="video-camera" family="Entypo" size={55} />
+                                <Block middle row style={{margin: 0,padding:0}}>
+                                    {/* <Icon onPress={this.handleImageClick} style={styles.camera} name="image" family="Entypo" size={55} />
+                                    <Icon style={styles.camera} name="video-camera" family="Entypo" size={55} /> */}
+                                    <Button style={styles.createButton1} onPress={this.handleImageClick}>
+                                        <Block row >
+                                            <Icon style={styles.btnIcon} name="image" family="Entypo" size={30} />
+                                            <Text style={styles.btnText} bold size={14} color={'#00c5e8'}>{'Upload'}</Text> 
+                                        </Block> 
+                                    </Button>
                                     <Button style={styles.createButton} onPress={this.handleSubmit}>
                                         <Text bold size={14} color={'#00c5e8'}>
                                         Submit
@@ -152,6 +176,14 @@ const styles = StyleSheet.create({
 
     container:{
         flex:1
+    },
+    btnIcon:{
+        color: '#00c5e8',
+        marginRight: 10,
+    },
+    btnText:{
+        marginLeft: 5,
+        marginTop: 5,
     },
     imageContainer:{
         width: width-20,
@@ -176,9 +208,18 @@ const styles = StyleSheet.create({
         borderRadius:5,
         marginBottom:'3%',
     },
+    createButton1: {
+        width: width * 0.35,
+        marginTop: 10,
+        marginRight: 5,
+        //backgroundColor: '#5E72E4'
+        backgroundColor: 'transparent',
+        borderColor: '#00c5e8',
+        borderWidth: 1
+      },
     createButton: {
         width: width * 0.25,
-        marginTop: 25,
+        marginTop: 10,
         //backgroundColor: '#5E72E4'
         backgroundColor: 'transparent',
         borderColor: '#00c5e8',

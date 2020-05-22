@@ -20,18 +20,31 @@ class Screen2 extends React.Component {
             submitted: false,
         }
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleImageClick = this.handleImageClick.bind(this);
+  
     }
     handleChange(e){
         this.setState({text: e});
     }
+
+    handleImageClick(){
+        //this.getPermissionAsync();
+        //this._pickImage();
+    }
     handleSubmit(){
         //alert(this.state.text);
+        if(this.state.text == '') 
+        {
+            alert('Please type in comments');
+            return;
+        }
         this.setState({submitted : true});
         if(this.props.navigation.state.params.callback != undefined)
         {
             this.props.navigation.state.params.callback(this.props.navigation.state.params.data.title,
                 this.state.text);
         }
+        this.setState({text: ''});
     }
     render() {
       //alert(this.props.navigation.state.params.title);
@@ -54,7 +67,7 @@ class Screen2 extends React.Component {
                         <Text style={styles.MessageText}>{incident.desc}</Text>
                     </View>
                     <ScrollView>
-                        <View style={styles.comments}>
+                        <ScrollView style={styles.comments}>
                             {incident.comments.map((com, i) => (
                                 <View key={i}>
                                     <Text style={styles.MessageText2}>{com.name}</Text>
@@ -63,7 +76,7 @@ class Screen2 extends React.Component {
                                     </Text>
                                 </View>
                             ))}
-                        </View>
+                        </ScrollView>
                         <Text style={{borderWidth: 2, borderColor: '#0A121A', height: 1}}></Text>
                         <View style={{marginTop:5}}>
                             <View style={{
@@ -83,21 +96,21 @@ class Screen2 extends React.Component {
                                     underlineColorAndroid={'transparent'}
                                     onChangeText = {(text) => this.handleChange(text)}
                                 />
-                                <View style={{ height: 50, alignItems: 'flex-end', justifyContent: 'center' }}>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <TouchableOpacity onPress={() => { }}>
-                                            <Ionicons style={{ padding: 10, marginTop: 10 }} name="md-image" size={30} color="white" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { }}>
-                                            <Ionicons style={{ padding: 10, marginTop: 5 }} name="md-videocam" size={40} color="white" />
-                                        </TouchableOpacity>
-                                        <Button style={styles.submitBtn} onPress={this.handleSubmit}>
-                                            <Text bold size={14} color={'#00c5e8'}>
-                                            Post
-                                            </Text>
-                                        </Button>
-                                    </View>
-                                </View>
+                                <Block middle row style={{margin: 0,padding:0}}>
+                                    {/* <Icon onPress={this.handleImageClick} style={styles.camera} name="image" family="Entypo" size={55} />
+                                    <Icon style={styles.camera} name="video-camera" family="Entypo" size={55} /> */}
+                                    <Button style={styles.createButton1} onPress={this.handleImageClick}>
+                                        <Block row >
+                                            <Icon style={styles.btnIcon} name="image" family="Entypo" size={30} />
+                                            <Text style={styles.btnText} bold size={14} color={'#00c5e8'}>{'Upload'}</Text> 
+                                        </Block> 
+                                    </Button>
+                                    <Button style={styles.createButton} onPress={this.handleSubmit}>
+                                        <Text bold size={14} color={'#00c5e8'}>
+                                        Post Comment
+                                        </Text>
+                                    </Button>
+                                </Block>
                             </View>
                         </View>
                     </ScrollView>
@@ -181,10 +194,30 @@ const styles = StyleSheet.create({
         flexDirection:'column',
         backgroundColor: '#1D2123'
       },
+      btnIcon:{
+        color: '#00c5e8',
+        marginRight: 10,
+    },
+    btnText:{
+        marginLeft: 5,
+        marginTop: 5,
+    },
+      createButton1: {
+        width: width * 0.35,
+        marginTop: 10,
+        marginRight: 5,
+        //backgroundColor: '#5E72E4'
+        backgroundColor: 'transparent',
+        borderColor: '#00c5e8',
+        borderWidth: 1
+      },
     createButton: {
-        width: width * 0.5,
-        marginTop: 25,
-        backgroundColor: '#5E72E4'
+        width: width * 0.25,
+        marginTop: 10,
+        //backgroundColor: '#5E72E4'
+        backgroundColor: 'transparent',
+        borderColor: '#00c5e8',
+        borderWidth: 1
       },
     gradient:{
         flex:1
@@ -349,7 +382,7 @@ const styles = StyleSheet.create({
         color: 'black',
     },
     textareaContainer: {
-        height: 45,
+        height: 60,
         padding: 5,
         backgroundColor: '#fff',
         borderRadius:10,

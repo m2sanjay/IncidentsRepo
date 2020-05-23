@@ -64,14 +64,17 @@ class IncidentDetailsScreen extends React.Component {
             </Block>
             <Block flex middle>
                 <ScrollView style={styles.registerContainer}>
-                    {incident.imageUrl != undefined && incident.imageUrl != null && incident.imageUrl != "" ? 
+                    {incident.imageUrls.length > 0 ? 
                         <View style={styles.imageView}>
-                            <Image source={{ uri: incident.imageUrl }} style={{ width: width-20, height: 200 }} />
+                            {incident.imageUrls.map((o, i) => (
+                            <Image key={i} source={{ uri: o }} style={{ width: width-20, height: 200 }} />
+                            ))}
                         </View> : null
                     }
-                    {incident.videoUrl != undefined && incident.videoUrl != null && incident.videoUrl != "" ? 
+                    {incident.videoUrls.length > 0 ? 
                         <View style={styles.imageView}>
-                            <Video source={{uri: incident.videoUrl}}
+                            {incident.videoUrls.map((o, i) => (
+                            <Video source={{uri: o}} key={i}
                                         rate={1.0}
                                         volume={1.0}
                                         isMuted={false}
@@ -79,7 +82,9 @@ class IncidentDetailsScreen extends React.Component {
                                         shouldPlay={false}
                                         isLooping={false}
                                         useNativeControls={true}
-                                        style={{width: width-20, height: 200}} /></View> : null
+                                        style={{width: width-20, height: 200}} />
+                            ))}
+                            </View> : null
                     }
                     <Text style={{borderWidth: 2, borderColor: '#0A121A', height: 1}}></Text>
                     <View style={styles.desc}>
@@ -97,6 +102,7 @@ class IncidentDetailsScreen extends React.Component {
                                 </View>
                             ))}
                         </ScrollView>
+                        <ScrollView >
                         <Text style={{borderWidth: 2, borderColor: '#0A121A', height: 1}}></Text>
                         <View style={{marginTop:5}}>
                             <View style={{
@@ -139,6 +145,7 @@ class IncidentDetailsScreen extends React.Component {
                                 </Block>
                             </View>
                         </View>
+                        </ScrollView>
                     </ScrollView>
                 </ScrollView>
             </Block>

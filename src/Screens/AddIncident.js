@@ -21,13 +21,14 @@ class AddIncident extends React.Component {
         this.state = {
             text: '',
             title: '',
-            image: null,
-            videoUrl: null
+            imageUrls: [],
+            videoUrls: []
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange1 = this.handleChange1.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleImageClick = this.handleImageClick.bind(this);
+        this.handleVideoClick = this.handleVideoClick.bind(this);
     }
     handleChange1(e){
         this.setState({title: e});
@@ -45,11 +46,11 @@ class AddIncident extends React.Component {
             this.props.navigation.state.params.callback(
                 {title: this.state.title, 
                     desc: this.state.text, 
-                    imageUrl:this.state.image, 
-                    videoUrl: this.state.videoUrl,
+                    imageUrls:this.state.imageUrls, 
+                    videoUrls: this.state.videoUrls,
                     comments: []}
             );
-        this.setState({title: '', text: '', image: null});
+        this.setState({title: '', text: '', imageUrls: [], videoUrls: []});
         this.props.navigation.navigate('Home');
     }
     getPermissionAsync = async () => {
@@ -62,16 +63,32 @@ class AddIncident extends React.Component {
     _pickImage = async () => {
         try {
             let result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
                 aspect: [4, 3],
                 quality: 1,
             });
             if (!result.cancelled) {
-                if(result.type == 'video')
-                    this.setState({ videoUrl: result.uri });
-                else
-                this.setState({ image: result.uri });
+                let urlsArray = this.state.imageUrls;
+                urlsArray.push(result.uri);
+                this.setState({ imageUrls: urlsArray });
+            }
+        } catch (E) {
+            console.log(E);
+        }
+    };
+    _pickVideo = async () => {
+        try {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+            if (!result.cancelled) {
+                let urlsArray = this.state.videoUrls;
+                urlsArray.push(result.uri);
+                this.setState({ videoUrls: urlsArray });
             }
         } catch (E) {
             console.log(E);
@@ -80,6 +97,10 @@ class AddIncident extends React.Component {
     handleImageClick(){
         this.getPermissionAsync();
         this._pickImage();
+    }
+    handleVideoClick(){
+        this.getPermissionAsync();
+        this._pickVideo();
     }
     
     render() {
@@ -97,36 +118,27 @@ class AddIncident extends React.Component {
                     <ScrollView>
                         <View style={styles.imageContainer}>
                             <ScrollView>
-                                {/*<View>
-                                    {
-                                    this.state.image != null ? (<Image source={{ uri: this.state.image }} style={{ width: width-20, height: 300 }} />)
-                                    : (this.state.videoUrl != null ? (<Video source={{uri: this.state.videoUrl}}
-                                        rate={1.0}
-                                        volume={1.0}
-                                        isMuted={false}
-                                        resizeMode="cover"
-                                        shouldPlay
-                                        isLooping={false}
-                                        useNativeControls={true}
-                                        style={{width: width-20, height: 300}} />):(<View/>))
-                                    }
-                                </View>*/}
-                                {this.state.image != undefined && this.state.image != null && this.state.image != "" ? 
-                                    <View style={styles.imageView}>
-                                        <Image source={{ uri: this.state.image }} style={{ width: width-20, height: 200 }} />
-                                    </View> : null
+                                {this.state.imageUrls.length > 0 ? 
+                                    (<View style={styles.imageView}>
+                                        {this.state.imageUrls.map((o, i) => (
+                                            <Image key={i} source={{ uri: o }} style={{ width: width-20, height: 200 }} />
+                                        ))}
+                                    </View>) : null
                                 }
-                                {this.state.videoUrl != undefined && this.state.videoUrl != null && this.state.videoUrl != "" ? 
-                                    <View style={styles.imageView}>
-                                        <Video source={{uri: this.state.videoUrl}}
-                                                    rate={1.0}
-                                                    volume={1.0}
-                                                    isMuted={false}
-                                                    resizeMode="cover"
-                                                    shouldPlay={false}
-                                                    isLooping={false}
-                                                    useNativeControls={true}
-                                                    style={{width: width-20, height: 200}} /></View> : null
+                                {this.state.videoUrls.length > 0? 
+                                    (<View style={styles.imageView}>
+                                        {this.state.videoUrls.map((o, i) => (
+                                            <Video source={{uri: o}} key={i}
+                                            rate={1.0}
+                                            volume={1.0}
+                                            isMuted={false}
+                                            resizeMode="cover"
+                                            shouldPlay={false}
+                                            isLooping={false}
+                                            useNativeControls={true}
+                                            style={{width: width-20, height: 200}} />
+                                            ))}
+                                    </View>) : null
                                 }
                             </ScrollView>
                         </View>
@@ -173,7 +185,7 @@ class AddIncident extends React.Component {
                                             <Text style={styles.btnText} bold size={14} color={'#00c5e8'}>{'Image'}</Text> 
                                         </Block> 
                                     </Button>
-                                    <Button style={styles.createButton1} onPress={this.handleImageClick}>
+                                    <Button style={styles.createButton1} onPress={this.handleVideoClick}>
                                         <Block row >
                                             <Icon style={styles.btnIcon} name="video" family="Entypo" size={30} />
                                             <Text style={styles.btnText} bold size={14} color={'#00c5e8'}>{'Video'}</Text> 
@@ -288,7 +300,8 @@ const styles = StyleSheet.create({
     imageView:{
         marginTop: '2%',
         flexDirection:'column',
-        backgroundColor: '#1D2123'
+        backgroundColor: '#1D2123',
+        marginBottom: '2%'
     },
     horizontalButton:{
         borderRadius:230,

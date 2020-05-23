@@ -20,31 +20,45 @@ class Home extends React.Component {
                 {
                     title: 'Inspections & Public Service',
                     desc: 'Notice of Violation. Notice of Emergency Corrective Action Hearings. Emergency Corrective Action Administrative OrdersIncident 1 description',
-                    comments: [{id: '1', name: 'User 1', text: 'Incidents 1 Comments by User 1'}]
+                    comments: [{id: '1', name: 'User 1', text: 'Incidents 1 Comments by User 1'}],
+                    imageUrls: [],
+                    videoUrls: []
                 },{
                     title: 'Robbery/Miscellaneous',
                     desc: 'Administrative Hearing Procedures – Hearings Before Hearing Officer. Audio/Video CDs – Dangerous Buildings Administrative Hearings. Application for Extension - Expired Dangerous Building Administrative Orders',
-                    comments: [{id: '1', name: 'User 1', text: 'Incidents 2 Comments by User 1'}]
+                    comments: [{id: '1', name: 'User 1', text: 'Incidents 2 Comments by User 1'}],
+                    imageUrls: [],
+                    videoUrls: []
                 },{
                     title: 'Assault/No Injury',
                     desc: 'Correspondence regarding Park Issues. Maintenance Records of Park Property and Facilities. Parks Master Plan',
-                    comments: [{id: '1', name: 'User 1', text: 'Incidents 3 Comments by User 1'}]
+                    comments: [{id: '1', name: 'User 1', text: 'Incidents 3 Comments by User 1'}],
+                    imageUrls: [],
+                    videoUrls: []
                 },{
                     title: 'Burglary/Forcible Entry',
                     desc: 'Calls for Service.Uniform Crime Reports Accident. Reports Incident and Offense Reports',
-                    comments: [{id: '1', name: 'User 1', text: 'Incidents 4 Comments by User 1'}]
+                    comments: [{id: '1', name: 'User 1', text: 'Incidents 4 Comments by User 1'}],
+                    imageUrls: [],
+                    videoUrls: []
                 },{
                     title: 'Suspicious Activity/Vehicle',
                     desc: 'Utility Maintenance (Water and Wastewater). Building Permits. Building Code Violations. Occupancy Records. Real Estate Acquisitions and Sales, Appraisals',
-                    comments: [{id: '1', name: 'User 1', text: 'Incidents 5 Comments by User 1'}]
+                    comments: [{id: '1', name: 'User 1', text: 'Incidents 5 Comments by User 1'}],
+                    imageUrls: [],
+                    videoUrls: []
                 },{
                     title: 'Narcotic Drug Laws/Possession',
                     desc: 'The following active incidents are dispatched from the Emergency Operations Center in Eagleville.The contents are updated at four minute intervals from the CAD (Computer Aided Dispatch) system',
-                    comments: [{id: '1', name: 'User 1', text: 'Incidents 6 Comments by User 1'}]
+                    comments: [{id: '1', name: 'User 1', text: 'Incidents 6 Comments by User 1'}],
+                    imageUrls: [],
+                    videoUrls: []
                 },{
                     title: 'Disorderly Conduct/Other',
                     desc: 'We analyzed a listing from rspa accident/incident data base and found that, in 1986 and 1987, there were 78 shippers that reported 3 or more hazardous',
-                    comments: [{id: '1', name: 'User 1', text: 'Incidents 7 Comments by User 1'}]
+                    comments: [{id: '1', name: 'User 1', text: 'Incidents 7 Comments by User 1'}],
+                    imageUrls: [],
+                    videoUrls: []
                 }
             ]
         }

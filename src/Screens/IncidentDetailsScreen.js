@@ -8,6 +8,7 @@ import { Input } from "../components";
 import { Images, argonTheme } from "../constants";
 import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash';
+import { Video } from 'expo-av';
 
 const { width, height } = Dimensions.get("screen");
 
@@ -62,10 +63,29 @@ class IncidentDetailsScreen extends React.Component {
                 </View>
             </Block>
             <Block flex middle>
-                <Block style={styles.registerContainer}>
+                <ScrollView style={styles.registerContainer}>
+                    {incident.imageUrl != undefined && incident.imageUrl != null && incident.imageUrl != "" ? 
+                        <View style={styles.imageView}>
+                            <Image source={{ uri: incident.imageUrl }} style={{ width: width-20, height: 200 }} />
+                        </View> : null
+                    }
+                    {incident.videoUrl != undefined && incident.videoUrl != null && incident.videoUrl != "" ? 
+                        <View style={styles.imageView}>
+                            <Video source={{uri: incident.videoUrl}}
+                                        rate={1.0}
+                                        volume={1.0}
+                                        isMuted={false}
+                                        resizeMode="cover"
+                                        shouldPlay={false}
+                                        isLooping={false}
+                                        useNativeControls={true}
+                                        style={{width: width-20, height: 200}} /></View> : null
+                    }
+                    <Text style={{borderWidth: 2, borderColor: '#0A121A', height: 1}}></Text>
                     <View style={styles.desc}>
                         <Text style={styles.MessageText}>{incident.desc}</Text>
                     </View>
+                    
                     <ScrollView>
                         <ScrollView style={styles.comments}>
                             {incident.comments.map((com, i) => (
@@ -96,13 +116,19 @@ class IncidentDetailsScreen extends React.Component {
                                     underlineColorAndroid={'transparent'}
                                     onChangeText = {(text) => this.handleChange(text)}
                                 />
-                                <Block middle row style={{margin: 0,padding:0}}>
+                                <Block middle row style={{margin: 0,padding:0, alignItems: "flex-end"}}>
                                     {/* <Icon onPress={this.handleImageClick} style={styles.camera} name="image" family="Entypo" size={55} />
                                     <Icon style={styles.camera} name="video-camera" family="Entypo" size={55} /> */}
                                     <Button style={styles.createButton1} onPress={this.handleImageClick}>
                                         <Block row >
                                             <Icon style={styles.btnIcon} name="image" family="Entypo" size={30} />
-                                            <Text style={styles.btnText} bold size={14} color={'#00c5e8'}>{'Upload'}</Text> 
+                                            <Text style={styles.btnText} bold size={14} color={'#00c5e8'}>{'Image'}</Text> 
+                                        </Block> 
+                                    </Button>
+                                    <Button style={styles.createButton1} onPress={this.handleImageClick}>
+                                        <Block row >
+                                            <Icon style={styles.btnIcon} name="video" family="Entypo" size={30} />
+                                            <Text style={styles.btnText} bold size={14} color={'#00c5e8'}>{'Video'}</Text> 
                                         </Block> 
                                     </Button>
                                     <Button style={styles.createButton} onPress={this.handleSubmit}>
@@ -114,7 +140,7 @@ class IncidentDetailsScreen extends React.Component {
                             </View>
                         </View>
                     </ScrollView>
-                </Block>
+                </ScrollView>
             </Block>
         </Block>
     </View>
@@ -193,8 +219,13 @@ const styles = StyleSheet.create({
         height:160,
         flexDirection:'column',
         backgroundColor: '#1D2123'
-      },
-      btnIcon:{
+    },
+    imageView:{
+        marginTop: '2%',
+        flexDirection:'column',
+        backgroundColor: '#1D2123'
+    },
+    btnIcon:{
         color: '#00c5e8',
         marginRight: 10,
     },
@@ -203,7 +234,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
       createButton1: {
-        width: width * 0.35,
+        width: width * 0.20,
         marginTop: 10,
         marginRight: 5,
         //backgroundColor: '#5E72E4'
@@ -212,7 +243,7 @@ const styles = StyleSheet.create({
         borderWidth: 1
       },
     createButton: {
-        width: width * 0.25,
+        width: width * 0.35,
         marginTop: 10,
         //backgroundColor: '#5E72E4'
         backgroundColor: 'transparent',
@@ -382,7 +413,7 @@ const styles = StyleSheet.create({
         color: 'black',
     },
     textareaContainer: {
-        height: 60,
+        height: height * .1,
         padding: 5,
         backgroundColor: '#fff',
         borderRadius:10,
@@ -404,7 +435,7 @@ const styles = StyleSheet.create({
       },
     textarea: {
         textAlignVertical: 'top',  // hack android
-        height: 110,
+        //height: 110,
         fontSize: 12,
         color: 'black',
     },

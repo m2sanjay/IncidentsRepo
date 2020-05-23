@@ -43,7 +43,11 @@ class AddIncident extends React.Component {
         }
         if(this.props.navigation.state.params.callback != null)
             this.props.navigation.state.params.callback(
-                {title: this.state.title, desc: this.state.text, imageUrl:this.state.image, comments: []}
+                {title: this.state.title, 
+                    desc: this.state.text, 
+                    imageUrl:this.state.image, 
+                    videoUrl: this.state.videoUrl,
+                    comments: []}
             );
         this.setState({title: '', text: '', image: null});
         this.props.navigation.navigate('Home');
@@ -65,9 +69,9 @@ class AddIncident extends React.Component {
             });
             if (!result.cancelled) {
                 if(result.type == 'video')
-                    this.setState({ videoUrl: result.uri, image: null });
+                    this.setState({ videoUrl: result.uri });
                 else
-                this.setState({ videoUrl: null, image: result.uri });
+                this.setState({ image: result.uri });
             }
         } catch (E) {
             console.log(E);
@@ -93,7 +97,7 @@ class AddIncident extends React.Component {
                     <ScrollView>
                         <View style={styles.imageContainer}>
                             <ScrollView>
-                                <View>
+                                {/*<View>
                                     {
                                     this.state.image != null ? (<Image source={{ uri: this.state.image }} style={{ width: width-20, height: 300 }} />)
                                     : (this.state.videoUrl != null ? (<Video source={{uri: this.state.videoUrl}}
@@ -106,7 +110,24 @@ class AddIncident extends React.Component {
                                         useNativeControls={true}
                                         style={{width: width-20, height: 300}} />):(<View/>))
                                     }
-                                </View>
+                                </View>*/}
+                                {this.state.image != undefined && this.state.image != null && this.state.image != "" ? 
+                                    <View style={styles.imageView}>
+                                        <Image source={{ uri: this.state.image }} style={{ width: width-20, height: 200 }} />
+                                    </View> : null
+                                }
+                                {this.state.videoUrl != undefined && this.state.videoUrl != null && this.state.videoUrl != "" ? 
+                                    <View style={styles.imageView}>
+                                        <Video source={{uri: this.state.videoUrl}}
+                                                    rate={1.0}
+                                                    volume={1.0}
+                                                    isMuted={false}
+                                                    resizeMode="cover"
+                                                    shouldPlay={false}
+                                                    isLooping={false}
+                                                    useNativeControls={true}
+                                                    style={{width: width-20, height: 200}} /></View> : null
+                                }
                             </ScrollView>
                         </View>
                 
@@ -259,6 +280,11 @@ const styles = StyleSheet.create({
         color:'black',
         backgroundColor: 'red'
 
+    },
+    imageView:{
+        marginTop: '2%',
+        flexDirection:'column',
+        backgroundColor: '#1D2123'
     },
     horizontalButton:{
         borderRadius:230,

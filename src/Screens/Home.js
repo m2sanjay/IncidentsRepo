@@ -104,7 +104,7 @@ class Home extends React.Component {
                             scrollSpeed={3000}
                             >
                         {this.state.tickerArray.map((incident, i) => (
-                            <Text style={{color: 'orange'}} key={i} onPress={() => this.props.navigation.navigate('Screen2', {data: incident, callback: this.callbackFn})}>
+                            <Text style={{color: 'orange'}} key={i} onPress={() => this.props.navigation.navigate('IncidentDetailsScreen', {data: incident, callback: this.callbackFn})}>
                                 {incident.title  + '  |  '}
                             </Text>
                         ))}

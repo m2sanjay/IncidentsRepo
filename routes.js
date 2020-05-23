@@ -3,6 +3,7 @@ import Screen1 from './src/Screens/Screen1';
 import LoginScreen from './src/Screens/LoginScreen';
 import Home from './src/Screens/Home';
 import AddIncident from './src/Screens/AddIncident';
+import IncidentDetailsScreen from './src/Screens/IncidentDetailsScreen';
 
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
@@ -21,6 +22,9 @@ const AppNavigator = createStackNavigator({
     },
     AddIncident: {
       screen: AddIncident
+    },
+    IncidentDetailsScreen: {
+      screen: IncidentDetailsScreen
     },
   }, {
       defaultNavigationOptions: {

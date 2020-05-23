@@ -167,12 +167,16 @@ class AddIncident extends React.Component {
                                     onChangeText = {(text) => this.handleChange(text)}
                                 />
                                 <Block middle row style={{margin: 0,padding:0}}>
-                                    {/* <Icon onPress={this.handleImageClick} style={styles.camera} name="image" family="Entypo" size={55} />
-                                    <Icon style={styles.camera} name="video-camera" family="Entypo" size={55} /> */}
                                     <Button style={styles.createButton1} onPress={this.handleImageClick}>
                                         <Block row >
                                             <Icon style={styles.btnIcon} name="image" family="Entypo" size={30} />
-                                            <Text style={styles.btnText} bold size={14} color={'#00c5e8'}>{'Upload'}</Text> 
+                                            <Text style={styles.btnText} bold size={14} color={'#00c5e8'}>{'Image'}</Text> 
+                                        </Block> 
+                                    </Button>
+                                    <Button style={styles.createButton1} onPress={this.handleImageClick}>
+                                        <Block row >
+                                            <Icon style={styles.btnIcon} name="video" family="Entypo" size={30} />
+                                            <Text style={styles.btnText} bold size={14} color={'#00c5e8'}>{'Video'}</Text> 
                                         </Block> 
                                     </Button>
                                     <Button style={styles.createButton} onPress={this.handleSubmit}>
@@ -230,7 +234,7 @@ const styles = StyleSheet.create({
         marginBottom:'3%',
     },
     createButton1: {
-        width: width * 0.35,
+        width: width * 0.25,
         marginTop: 10,
         marginRight: 5,
         //backgroundColor: '#5E72E4'

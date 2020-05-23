@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
       createButton1: {
-        width: width * 0.20,
+        width: width * 0.25,
         marginTop: 10,
         marginRight: 5,
         //backgroundColor: '#5E72E4'
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
         borderWidth: 1
       },
     createButton: {
-        width: width * 0.35,
+        width: width * 0.30,
         marginTop: 10,
         //backgroundColor: '#5E72E4'
         backgroundColor: 'transparent',

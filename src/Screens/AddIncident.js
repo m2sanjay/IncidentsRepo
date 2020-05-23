@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View,  ScrollView,Image , TouchableOpacity, ImageBackground, Dimensions} from 'react-native';
+import {StyleSheet, View,  ScrollView,Image , TouchableOpacity, ImageBackground, Dimensions, ToastAndroid} from 'react-native';
 import { Icon,Card,Button, Text, Block} from 'galio-framework';
 //import { LinearGradient } from 'expo';
 import TextTicker from 'react-native-text-ticker';
@@ -14,7 +14,13 @@ import * as Permissions from 'expo-permissions';
 import CameraView from './CameraView';
 import _ from 'lodash';
 import { Video } from 'expo-av';
-
+const Toast = (props) => {
+    if (props.visible) {
+        ToastAndroid.showWithGravityAndOffset(props.message, ToastAndroid.LONG, ToastAndroid.TOP, 25, 150,);
+        return null;
+    }
+    return null;
+};
 class AddIncident extends React.Component {
     constructor(props){
         super(props);
@@ -22,7 +28,9 @@ class AddIncident extends React.Component {
             text: '',
             title: '',
             imageUrls: [],
-            videoUrls: []
+            videoUrls: [],
+            toasterVisible: false,
+            toasterMsg: ''
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange1 = this.handleChange1.bind(this);
@@ -39,7 +47,7 @@ class AddIncident extends React.Component {
     handleSubmit(){
         if(this.state.title == '') 
         {
-            alert('Please type in Incident details');
+            this.setState({toasterVisible: true, toasterMsg: 'Please type in Incident details'});
             return;
         }
         if(this.props.navigation.state.params.callback != null)
@@ -50,7 +58,7 @@ class AddIncident extends React.Component {
                     videoUrls: this.state.videoUrls,
                     comments: []}
             );
-        this.setState({title: '', text: '', imageUrls: [], videoUrls: []});
+        this.setState({toasterVisible: true, toasterMsg: 'Incident Added Successfully',title: '', text: '', imageUrls: [], videoUrls: []});
         this.props.navigation.navigate('Home');
     }
     getPermissionAsync = async () => {
@@ -109,6 +117,9 @@ class AddIncident extends React.Component {
         
     <View style={styles.container}>
         {/* <ImageBackground source={Images.RegisterBackground} style={{ width, height, zIndex: 1 }}> */}
+        {this.state.toasterVisible ?
+            <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg}/>: null 
+        }
         <Block style={{backgroundColor: '#0A121A', width, height, zIndex: 1}}>
             <Block style={{backgroundColor: '#00c5e8'}} middle>
                 <Text style={styles.profileText}>Add an Incident</Text>

@@ -23,7 +23,7 @@ class Home extends React.Component {
                     comments: [{id: '1', name: 'User 1', text: 'Incidents 1 Comments by User 1'}],
                     imageUrls: [],
                     videoUrls: []
-                },{
+                },/*{
                     title: 'Robbery/Miscellaneous',
                     desc: 'Administrative Hearing Procedures – Hearings Before Hearing Officer. Audio/Video CDs – Dangerous Buildings Administrative Hearings. Application for Extension - Expired Dangerous Building Administrative Orders',
                     comments: [{id: '1', name: 'User 1', text: 'Incidents 2 Comments by User 1'}],
@@ -59,7 +59,7 @@ class Home extends React.Component {
                     comments: [{id: '1', name: 'User 1', text: 'Incidents 7 Comments by User 1'}],
                     imageUrls: [],
                     videoUrls: []
-                }
+                }*/
             ]
         }
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -88,14 +88,15 @@ class Home extends React.Component {
         arr.push(obj);
         this.setState({tickerArray: arr});
     }
-    callbackFn(title, commentText){
+    callbackFn(title, commentText, imageUrl, videoUrl){
         let node = _.filter(this.state.tickerArray, function(o) { 
             if(o.title == title)
                 return o; 
             });
         let existingComments = node[0].comments;
         let length = existingComments.length + 1;
-        existingComments.push({id: ''+length, name: 'New User', text: commentText});
+        existingComments.push({id: ''+length, name: 'New User', text: commentText, imageUrls: imageUrl,
+            videoUrls: videoUrl});
 
         this.setState({tickerArray: this.state.tickerArray});
     }

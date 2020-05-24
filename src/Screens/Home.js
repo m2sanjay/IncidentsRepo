@@ -23,7 +23,7 @@ class Home extends React.Component {
                     comments: [{id: '1', name: 'User 1', text: 'Incidents 1 Comments by User 1'}],
                     imageUrls: [],
                     videoUrls: []
-                },/*{
+                },{
                     title: 'Robbery/Miscellaneous',
                     desc: 'Administrative Hearing Procedures – Hearings Before Hearing Officer. Audio/Video CDs – Dangerous Buildings Administrative Hearings. Application for Extension - Expired Dangerous Building Administrative Orders',
                     comments: [{id: '1', name: 'User 1', text: 'Incidents 2 Comments by User 1'}],
@@ -35,7 +35,7 @@ class Home extends React.Component {
                     comments: [{id: '1', name: 'User 1', text: 'Incidents 3 Comments by User 1'}],
                     imageUrls: [],
                     videoUrls: []
-                },{
+                },/*{
                     title: 'Burglary/Forcible Entry',
                     desc: 'Calls for Service.Uniform Crime Reports Accident. Reports Incident and Offense Reports',
                     comments: [{id: '1', name: 'User 1', text: 'Incidents 4 Comments by User 1'}],

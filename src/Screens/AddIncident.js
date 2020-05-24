@@ -14,6 +14,7 @@ import * as Permissions from 'expo-permissions';
 import CameraView from './CameraView';
 import _ from 'lodash';
 import { Video } from 'expo-av';
+
 const Toast = (props) => {
     if (props.visible) {
         ToastAndroid.showWithGravityAndOffset(props.message, ToastAndroid.LONG, ToastAndroid.TOP, 25, 150,);

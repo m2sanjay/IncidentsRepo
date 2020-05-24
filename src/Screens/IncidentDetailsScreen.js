@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, ScrollView, Image, TouchableOpacity, ImageBackground, Dimensions, FlatList } from 'react-native';
+import { StyleSheet, View, ScrollView, Image, TouchableOpacity, ImageBackground, Dimensions, FlatList, ToastAndroid } from 'react-native';
 import { Icon, Card, Button, Text, Block } from 'galio-framework';
 //import { LinearGradient } from 'expo';
 import TextTicker from 'react-native-text-ticker';
@@ -17,6 +17,14 @@ import CameraView from './CameraView';
 
 const { width, height } = Dimensions.get("screen");
 
+const Toast = (props) => {
+    if (props.visible) {
+        ToastAndroid.showWithGravityAndOffset(props.message, ToastAndroid.LONG, ToastAndroid.TOP, 25, 150,);
+        return null;
+    }
+    return null;
+};
+
 class IncidentDetailsScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -25,7 +33,9 @@ class IncidentDetailsScreen extends React.Component {
             title: '',
             submitted: false,
             imageUrl: "",
-            videoUrl: ""
+            videoUrl: "",
+            toasterVisible: false,
+            toasterMsg: ''
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleImageClick = this.handleImageClick.bind(this);
@@ -88,26 +98,36 @@ class IncidentDetailsScreen extends React.Component {
     
     handleSubmit() {
         //alert(this.state.text);
-        if (this.state.text == '') {
-            alert('Please type in comments');
+        // if (this.state.text == '') {
+        //     alert('Please type in comments');
+        //     return;
+        // }
+        
+        if(this.state.text == '') 
+        {
+            this.setState({toasterVisible: true, toasterMsg: 'Please type in comments'});
             return;
         }
+        
         this.setState({ submitted: true });
         if (this.props.navigation.state.params.callback != undefined) {
             this.props.navigation.state.params.callback(this.props.navigation.state.params.data.title,
                 this.state.text, this.state.imageUrl, this.state.videoUrl);
         }
-        this.setState({ text: '', imageUrl: '', videoUrl: '' });
+        this.setState({ toasterVisible: true, toasterMsg: 'Incident Comments Added Successfully', 
+            text: '', imageUrl: '', videoUrl: '' });
     }
     render() {
         //alert(this.props.navigation.state.params.title);
         var incident = this.props.navigation.state.params.data;
-        console.log(incident);
         //if(this.state.submitted)
         //incident.comments.push({id:1,name:'User 2', text: this.state.text});
         return (
 
             <View style={styles.container}>
+                {this.state.toasterVisible ?
+                    <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg}/>: null 
+                }
                 <Block style={{ backgroundColor: '#0A121A', width, height, zIndex: 1 }}>
                     <Block style={{ backgroundColor: '#00c5e8' }} middle>
                         <Text style={styles.profileText}>Incident Details</Text>
@@ -145,7 +165,7 @@ class IncidentDetailsScreen extends React.Component {
                             </View>
 
                             <ScrollView>
-                                {true ?
+                                {incident.comments.length > 0 ?
                                     (<ScrollView style={styles.comments}>
                                         {incident.comments.map((com, i) => (
                                             <View key={i}>

@@ -157,7 +157,7 @@ class AddIncident extends React.Component {
                 
                         <View style={{marginTop:'2%'}}>
                             <View style={styles.location}>
-                                <Icon style={styles.loginIcon}  name="location-pin" family="Entypo" color={'#fc408a'} size={35} />
+                                <Icon style={styles.loginIcon} onPress={() => this.props.navigation.navigate('SearchMap')}  name="location-pin" family="Entypo" color={'#fc408a'} size={35} />
                                 <Text style={styles.textLogin}>{'Location of the Incident'}</Text> 
                             </View>   
                 

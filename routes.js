@@ -4,6 +4,7 @@ import LoginScreen from './src/Screens/LoginScreen';
 import Home from './src/Screens/Home';
 import AddIncident from './src/Screens/AddIncident';
 import IncidentDetailsScreen from './src/Screens/IncidentDetailsScreen';
+import SearchMap from './src/Screens/SearchMap';
 
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
@@ -25,6 +26,9 @@ const AppNavigator = createStackNavigator({
     },
     IncidentDetailsScreen: {
       screen: IncidentDetailsScreen
+    },
+    SearchMap: {
+      screen: SearchMap,
     },
   }, {
       defaultNavigationOptions: {

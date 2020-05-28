@@ -6,6 +6,7 @@ import TextTicker from 'react-native-text-ticker';
 import Textarea2 from 'react-native-textarea';
 import { Input } from "../components";
 import { Images, argonTheme } from "../constants";
+import SearchMap from "./SearchMap.js";
 const { width, height } = Dimensions.get("screen");
 
 import _ from 'lodash';
@@ -100,6 +101,9 @@ class Home extends React.Component {
 
         this.setState({tickerArray: this.state.tickerArray});
     }
+    navigate(screen){
+        this.props.navigation.navigate(screen);
+    }
 
     render() {
         
@@ -127,18 +131,8 @@ class Home extends React.Component {
                     </View>
                 </View>
             </View>
-            <View style={styles.mapContainer}>
-                
-                    <ScrollView>
-                        <View >
-                               
-                
-                            
-                        </View>
-                    </ScrollView>
-                
-            </View>
-            <View>
+            <SearchMap navigateTo={this.navigate.bind(this)}/>
+            {/* <View style={styles.add} >
                 <Block middle>
                     <Button style={styles.createButton} onPress={() => this.props.navigation.navigate('AddIncident', {callback: this.saveIncident})}>
                         <Text bold size={14} color={'#00c5e8'}>
@@ -146,7 +140,7 @@ class Home extends React.Component {
                         </Text>
                     </Button>
                 </Block>
-            </View>
+            </View> */}
         </Block>
     </View>
     );
@@ -157,6 +151,9 @@ const styles = StyleSheet.create({
 
     container:{
         flex:1
+    },
+    add:{
+        marginTop: height * 0.65
     },
     createButton: {
         width: width * 0.5,

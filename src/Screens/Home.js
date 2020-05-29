@@ -23,19 +23,31 @@ class Home extends React.Component {
                     desc: 'Notice of Violation. Notice of Emergency Corrective Action Hearings. Emergency Corrective Action Administrative OrdersIncident 1 description',
                     comments: [{id: '1', name: 'User 1', text: 'Incidents 1 Comments by User 1'}],
                     imageUrls: [],
-                    videoUrls: []
+                    videoUrls: [],
+                    coordinate: {
+                        latitude: 37.79825,
+                        longitude: -122.4424,
+                    },
                 },{
                     title: 'Robbery/Miscellaneous',
                     desc: 'Administrative Hearing Procedures – Hearings Before Hearing Officer. Audio/Video CDs – Dangerous Buildings Administrative Hearings. Application for Extension - Expired Dangerous Building Administrative Orders',
                     comments: [{id: '1', name: 'User 1', text: 'Incidents 2 Comments by User 1'}],
                     imageUrls: [],
-                    videoUrls: []
+                    videoUrls: [],
+                    coordinate: {
+                        latitude: 37.79825,
+                        longitude: -122.4524,
+                    },
                 },{
                     title: 'Assault/No Injury',
                     desc: 'Correspondence regarding Park Issues. Maintenance Records of Park Property and Facilities. Parks Master Plan',
                     comments: [{id: '1', name: 'User 1', text: 'Incidents 3 Comments by User 1'}],
                     imageUrls: [],
-                    videoUrls: []
+                    videoUrls: [],
+                    coordinate: {
+                        latitude: 37.78825,
+                        longitude: -122.4424,
+                    },
                 },/*{
                     title: 'Burglary/Forcible Entry',
                     desc: 'Calls for Service.Uniform Crime Reports Accident. Reports Incident and Offense Reports',
@@ -131,7 +143,7 @@ class Home extends React.Component {
                     </View>
                 </View>
             </View>
-            <SearchMap navigateTo={this.navigate.bind(this)}/>
+            <SearchMap navigateTo={this.navigate.bind(this)} tickerArray={this.state.tickerArray} />
             {/* <View style={styles.add} >
                 <Block middle>
                     <Button style={styles.createButton} onPress={() => this.props.navigation.navigate('AddIncident', {callback: this.saveIncident})}>

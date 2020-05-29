@@ -103,6 +103,7 @@ class SearchMap extends React.Component {
   }
   render() {
     const { region, markers } = this.state;
+    
     return (
       <View style={styles.container}>
         <MapView
@@ -112,15 +113,15 @@ class SearchMap extends React.Component {
           zoomTapEnabled={false}
           onPress={this.onChangeMarker}
         >
-          {markers.length > 0 ? (
-            markers.map((o, i) => (
-              <Marker
+          {this.props.tickerArray.length > 0 ? (
+            this.props.tickerArray.map((o, i) => (
+              <Marker key={i}
                 ref={ref => {
                   this.marker1 = ref;
                 }}
                 coordinate={o.coordinate}
-                title="This is a native view"
-                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation"
+                title={o.title}
+                description={o.description}
               />
             ))
           ) : null}

@@ -113,8 +113,12 @@ class Home extends React.Component {
 
         this.setState({tickerArray: this.state.tickerArray});
     }
-    navigate(screen){
-        this.props.navigation.navigate(screen);
+    navigate(screen, incDetails){
+        if(incDetails != undefined){
+            this.props.navigation.navigate(screen, {data: incDetails, callback: this.callbackFn});
+        } else {
+            this.props.navigation.navigate(screen);
+        }
     }
 
     render() {

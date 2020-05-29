@@ -66,7 +66,7 @@ class SearchMap extends React.Component {
     this.recordEvent=this.recordEvent.bind(this);
     this.onChangeMarker=this.onChangeMarker.bind(this);
     this.navigate = this.navigate.bind(this);
-    
+    this.navigateToDetails = this.navigateToDetails.bind(this);
   }
 
   show() {
@@ -101,6 +101,10 @@ class SearchMap extends React.Component {
     console.log("Going to ", this.props);
     this.props.navigateTo('AddIncident');
   }
+  navigateToDetails(details){
+    console.log("Details: ", details);
+    this.props.navigateTo('IncidentDetailsScreen', details);
+  }
   render() {
     const { region, markers } = this.state;
     
@@ -122,7 +126,13 @@ class SearchMap extends React.Component {
                 coordinate={o.coordinate}
                 title={o.title}
                 description={o.description}
-              />
+              >
+                <Callout onPress={() => this.navigateToDetails(o)} style={styles.plainView}>
+                  <View >
+                    <Text>{o.title}</Text>
+                  </View>
+              </Callout>
+            </Marker>
             ))
           ) : null}
           {this.state.markerCoordinate != null ? 

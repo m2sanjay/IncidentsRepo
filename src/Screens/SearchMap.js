@@ -98,11 +98,9 @@ class SearchMap extends React.Component {
     this.setState({markerCoordinate: {latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.longitude}});
   }
   navigate(){
-    console.log("Going to ", this.props);
-    this.props.navigateTo('AddIncident');
+    this.props.navigateTo('AddIncident', {data: this.state.markerCoordinate});
   }
   navigateToDetails(details){
-    console.log("Details: ", details);
     this.props.navigateTo('IncidentDetailsScreen', details);
   }
   render() {

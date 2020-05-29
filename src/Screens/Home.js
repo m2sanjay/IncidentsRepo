@@ -78,6 +78,7 @@ class Home extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.callbackFn = this.callbackFn.bind(this);
         this.saveIncident = this.saveIncident.bind(this);
+        this.callbackMapFn = this.callbackMapFn.bind(this);
     }
     handleChange1(e){
         this.setState({title: e});
@@ -113,12 +114,34 @@ class Home extends React.Component {
 
         this.setState({tickerArray: this.state.tickerArray});
     }
-    navigate(screen, incDetails){
-        if(incDetails != undefined){
-            this.props.navigation.navigate(screen, {data: incDetails, callback: this.callbackFn});
-        } else {
-            this.props.navigation.navigate(screen);
-        }
+
+    callbackMapFn(objTitle){
+        let tempArray = this.state.tickerArray;
+        var newNode = {
+            title: objTitle.title, 
+            desc: objTitle.desc,
+            imageUrls: objTitle.imageUrls,
+            videoUrls: objTitle.videoUrls, 
+            comments: objTitle.comments,
+            coordinate: objTitle.coordinate
+        };
+        tempArray.push(newNode);
+        this.state.tickerArray = tempArray;
+        this.setState({tickerArray: this.state.tickerArray});
+    }
+
+    navigate(screen, coords){
+        // console.log(screen);
+        // console.log(incDetails);
+        // if(incDetails != undefined){
+        //     console.log("1");
+        //     this.props.navigation.navigate(screen, {data: incDetails, callback: this.callbackFn});
+        // } else {
+        //     console.log("2");
+        //     this.props.navigation.navigate(screen);
+        // }
+
+        this.props.navigation.navigate(screen, {data: coords, callback: this.callbackMapFn});
     }
 
     render() {

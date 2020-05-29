@@ -31,7 +31,8 @@ class AddIncident extends React.Component {
             imageUrls: [],
             videoUrls: [],
             toasterVisible: false,
-            toasterMsg: ''
+            toasterMsg: '',
+            coordinate: this.props.navigation.state.params.data
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange1 = this.handleChange1.bind(this);
@@ -57,9 +58,13 @@ class AddIncident extends React.Component {
                     desc: this.state.text, 
                     imageUrls:this.state.imageUrls, 
                     videoUrls: this.state.videoUrls,
-                    comments: []}
+                    comments: [],
+                    coordinate: this.state.coordinate.data
+                }
             );
-        this.setState({toasterVisible: true, toasterMsg: 'Incident Added Successfully',title: '', text: '', imageUrls: [], videoUrls: []});
+        this.setState({toasterVisible: true, toasterMsg: 'Incident Added Successfully',
+            title: '', text: '', imageUrls: [], videoUrls: [], comments: [], coordinate: {}
+        });
         this.props.navigation.navigate('Home');
     }
     getPermissionAsync = async () => {

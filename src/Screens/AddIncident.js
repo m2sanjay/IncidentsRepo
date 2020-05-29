@@ -52,6 +52,9 @@ class AddIncident extends React.Component {
             this.setState({toasterVisible: true, toasterMsg: 'Please type in Incident details'});
             return;
         }
+
+        console.log(this.props.navigation.state.params.data);
+
         if(this.props.navigation.state.params.callback != null)
             this.props.navigation.state.params.callback(
                 {title: this.state.title, 
@@ -59,9 +62,10 @@ class AddIncident extends React.Component {
                     imageUrls:this.state.imageUrls, 
                     videoUrls: this.state.videoUrls,
                     comments: [],
-                    coordinate: this.state.coordinate.data
+                    coordinate: this.props.navigation.state.params.data
                 }
             );
+        
         this.setState({toasterVisible: true, toasterMsg: 'Incident Added Successfully',
             title: '', text: '', imageUrls: [], videoUrls: [], comments: [], coordinate: {}
         });
@@ -162,7 +166,9 @@ class AddIncident extends React.Component {
                 
                         <View style={{marginTop:'2%'}}>
                             <View style={styles.location}>
-                                <Icon style={styles.loginIcon} onPress={() => this.props.navigation.navigate('SearchMap')}  name="location-pin" family="Entypo" color={'#fc408a'} size={35} />
+                                <Icon style={styles.loginIcon} 
+                                    //onPress={() => this.props.navigation.navigate('SearchMap')}  
+                                    name="location-pin" family="Entypo" color={'#fc408a'} size={35} />
                                 <Text style={styles.textLogin}>{'Location of the Incident'}</Text> 
                             </View>   
                 

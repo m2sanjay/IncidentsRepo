@@ -18,7 +18,7 @@ class Home extends React.Component {
             text: '',
             title: '',
             tickerArray: [
-/*                {
+                {
                     title: 'Inspections & Public Service',
                     desc: 'Notice of Violation. Notice of Emergency Corrective Action Hearings. Emergency Corrective Action Administrative OrdersIncident 1 description',
                     comments: [{id: '1', name: 'User 1', text: 'Incidents 1 Comments by User 1'}],
@@ -38,7 +38,7 @@ class Home extends React.Component {
                         latitude: 37.79825,
                         longitude: -122.4524,
                     },
-                },*/{
+                },{
                     title: 'Assault/No Injury',
                     desc: 'Correspondence regarding Park Issues. Maintenance Records of Park Property and Facilities. Parks Master Plan',
                     comments: [{id: '1', name: 'User 1', text: 'Incidents 3 Comments by User 1'}],
@@ -112,13 +112,13 @@ class Home extends React.Component {
         existingComments.push({id: ''+length, name: 'New User', text: commentText, imageUrls: imageUrl,
             videoUrls: videoUrl});
         
-        console.log(this.state.tickerArray);
+        //console.log(this.state.tickerArray);
 
         this.setState({tickerArray: this.state.tickerArray});
     }
 
     callbackMapFn(objTitle){
-        console.log("Wrong");
+        //console.log("Wrong");
         let tempArray = this.state.tickerArray;
         var newNode = {
             title: objTitle.title, 
@@ -130,7 +130,7 @@ class Home extends React.Component {
         };
         tempArray.push(newNode);
         //this.state.tickerArray = tempArray;
-        console.log(objTitle.coordinate.data);
+        //console.log(objTitle.coordinate.data);
         this.setState({tickerArray: tempArray});
     }
 

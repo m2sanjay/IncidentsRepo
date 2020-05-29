@@ -53,7 +53,7 @@ class AddIncident extends React.Component {
             return;
         }
 
-        console.log(this.props.navigation.state.params.data);
+        //console.log(this.props.navigation.state.params.data);
 
         if(this.props.navigation.state.params.callback != null)
             this.props.navigation.state.params.callback(
@@ -142,7 +142,8 @@ class AddIncident extends React.Component {
                                 {this.state.imageUrls.length > 0 ? 
                                     (<View style={styles.imageView}>
                                         {this.state.imageUrls.map((o, i) => (
-                                            <Image key={i} source={{ uri: o }} style={{ width: width-20, height: 200 }} />
+                                            <Image key={i} source={{ uri: o }} resizeMode="contain" 
+                                            style={{ width: width-30, height: 150, marginBottom: 20 }} />
                                         ))}
                                     </View>) : null
                                 }
@@ -153,11 +154,11 @@ class AddIncident extends React.Component {
                                             rate={1.0}
                                             volume={1.0}
                                             isMuted={false}
-                                            resizeMode="cover"
+                                            resizeMode="contain"
                                             shouldPlay={false}
                                             isLooping={false}
                                             useNativeControls={true}
-                                            style={{width: width-20, height: 200}} />
+                                            style={{width: width-30, height: 150, marginBottom: 20}} />
                                             ))}
                                     </View>) : null
                                 }

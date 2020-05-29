@@ -174,7 +174,8 @@ class IncidentDetailsScreen extends React.Component {
                                         <Image
                                             key={i}
                                             source={{ uri: o }}
-                                            style={{ width: width - 20, height: 200 }}
+                                            resizeMode="contain"
+                                            style={{ width: width-30, height: 150, marginBottom: 20 }}
                                         />
                                     ))}
                                 </View>
@@ -188,11 +189,11 @@ class IncidentDetailsScreen extends React.Component {
                                             rate={1.0}
                                             volume={1.0}
                                             isMuted={false}
-                                            resizeMode="cover"
+                                            resizeMode="contain"
                                             shouldPlay={false}
                                             isLooping={false}
                                             useNativeControls={true}
-                                            style={{ width: width - 20, height: 200 }}
+                                            style={{ width: width-30, height: 150, marginBottom: 20 }}
                                         />
                                     ))}
                                 </View>

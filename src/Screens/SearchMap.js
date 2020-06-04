@@ -29,12 +29,9 @@ class SearchMap extends React.Component {
     this.state = {
       cnt: 0,
       events: [],
-      region: {
-        latitude: LATITUDE,
-        longitude: LONGITUDE,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
-      },
+      latitude: null,
+      longitude: null,
+      error:null,
       /*markers: [
         {
           coordinate: {
@@ -67,6 +64,20 @@ class SearchMap extends React.Component {
     this.onChangeMarker=this.onChangeMarker.bind(this);
     this.navigate = this.navigate.bind(this);
     this.navigateToDetails = this.navigateToDetails.bind(this);
+  }
+
+  componentWillMount(){
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.setState({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          error: null,
+        });
+      },
+      (error) => this.setState({ error: error.message }),
+      { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
+    );
   }
 
   show() {
@@ -105,15 +116,23 @@ class SearchMap extends React.Component {
     this.props.navigateTo('IncidentDetailsScreen', details);
   }
   render() {
-    const { region } = this.state;
+    //const { region } = this.state;
+    let region = {
+        latitude: this.state.latitude,
+        longitude: this.state.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0922 * ASPECT_RATIO
+    }
     
     return (
       <View style={styles.container}>
+        {region.longitude != null ?
         <MapView
           provider={this.props.provider}
           style={styles.map}
           initialRegion={region}
-          zoomTapEnabled={false}
+          zoomTapEnabled={true}
+          showUserLocation={true}
           onPress={this.onChangeMarker}
         >
           {this.props.tickerArray.length > 0 ? (
@@ -143,7 +162,7 @@ class SearchMap extends React.Component {
               </Callout>
             </Marker>
           : null}
-        </MapView>
+        </MapView>  : null}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             onPress={() => this.show()}

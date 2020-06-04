@@ -28,8 +28,8 @@ class Home extends React.Component {
                     imageUrls: [],
                     videoUrls: [],
                     coordinate: {
-                        latitude: 37.79825,
-                        longitude: -122.4424,
+                        latitude: 51.5588,
+                        longitude: 0.0691,
                     },
                 },{
                     title: 'Robbery/Miscellaneous',
@@ -38,8 +38,8 @@ class Home extends React.Component {
                     imageUrls: [],
                     videoUrls: [],
                     coordinate: {
-                        latitude: 37.79825,
-                        longitude: -122.4524,
+                        latitude: 12.9275,
+                        longitude: 77.6810,
                     },
                 },{
                     title: 'Assault/No Injury',

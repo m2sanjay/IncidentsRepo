@@ -20,7 +20,7 @@ const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-const SPACE = 0.01;
+//const SPACE = 0.01;
 let id = 0;
 class SearchMap extends React.Component {
   constructor(props) {
@@ -35,7 +35,7 @@ class SearchMap extends React.Component {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
-      markers: [
+      /*markers: [
         {
           coordinate: {
             latitude: LATITUDE + SPACE,
@@ -60,7 +60,7 @@ class SearchMap extends React.Component {
             longitude: LONGITUDE - SPACE / 2,
           },
         },
-      ],
+      ],*/
       markerCoordinate: null,
     };
     this.recordEvent=this.recordEvent.bind(this);
@@ -105,7 +105,7 @@ class SearchMap extends React.Component {
     this.props.navigateTo('IncidentDetailsScreen', details);
   }
   render() {
-    const { region, markers } = this.state;
+    const { region } = this.state;
     
     return (
       <View style={styles.container}>

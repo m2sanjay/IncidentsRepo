@@ -108,7 +108,6 @@ class AddIncidentPopUp extends React.Component {
     };
 
     setSelectedValue(value){
-        console.log(value);
         this.setState({ selectedValue : value});
     }
 
@@ -132,12 +131,6 @@ class AddIncidentPopUp extends React.Component {
         }
 
         this.setState({ submitted: true });
-        
-        console.log(this.props);
-        console.log(this.state.selectedValue);
-        console.log(this.state.text);
-        console.log(this.state.imageUrls);
-        console.log(this.state.videoUrls);
         
         this.props.createIncident(
                 this.state.selectedValue,

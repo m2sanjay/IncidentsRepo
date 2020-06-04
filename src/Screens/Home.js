@@ -11,6 +11,9 @@ const { width, height } = Dimensions.get("screen");
 
 import _ from 'lodash';
 
+import Modal from 'react-native-modal';
+import AddIncidentPopUp  from  './AddIncidentPopUp';
+
 class Home extends React.Component {
     constructor(props){
         super(props);
@@ -73,12 +76,19 @@ class Home extends React.Component {
                     imageUrls: [],
                     videoUrls: []
                 }*/
-            ]
+            ],
+            visibleModal: false,
+            newCoords: null
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.callbackFn = this.callbackFn.bind(this);
         this.saveIncident = this.saveIncident.bind(this);
         this.callbackMapFn = this.callbackMapFn.bind(this);
+		this.renderButton = this.renderButton.bind(this);
+        this.renderModalContent = this.renderModalContent.bind(this);
+        this.enableModalFn = this.enableModalFn.bind(this);
+        this.closePopUp = this.closePopUp.bind(this);
+        this.callbackPopUp = this.callbackPopUp.bind(this);
     }
     handleChange1(e){
         this.setState({title: e});
@@ -133,6 +143,23 @@ class Home extends React.Component {
         //console.log(objTitle.coordinate.data);
         this.setState({tickerArray: tempArray});
     }
+	
+	callbackPopUp(selectedDrpDwn, description, selImages, selVideos){
+        let existingArray = this.state.tickerArray;
+        
+        let newNodeToAdd = {
+            title: selectedDrpDwn, 
+            desc: description,
+            imageUrls: selImages,
+            videoUrls: selVideos, 
+            comments: [],
+            coordinate: this.state.newCoords.data
+        };
+        //console.log(newNodeToAdd);
+
+        existingArray.push(newNodeToAdd);
+        this.setState({tickerArray: existingArray});
+    }
 
     navigate(screen, incDetails){
         
@@ -144,6 +171,32 @@ class Home extends React.Component {
 
         //this.props.navigation.navigate(screen, {data: coords, callback: this.callbackMapFn});
     }
+	
+	    enableModalFn(screen, markerCoords){
+        this.setState({ visibleModal: true, newCoords: markerCoords });
+    };
+
+    renderButton = (text, onPress) => (
+        <TouchableOpacity onPress={onPress}>
+          <View>
+            <Text>{text}</Text>
+          </View>
+        </TouchableOpacity>
+    );
+
+    closePopUp(){
+        this.setState({ visibleModal: false });
+    }
+    
+    renderModalContent = () => (
+        <Block>
+          <AddIncidentPopUp 
+            closePopUp={this.closePopUp.bind(this)} 
+            createIncident={this.callbackPopUp.bind(this)} 
+          />
+        </Block>
+    );
+
 
     render() {
         
@@ -171,8 +224,19 @@ class Home extends React.Component {
                     </View>
                 </View>
             </View>
-            <SearchMap navigateTo={this.navigate.bind(this)} tickerArray={this.state.tickerArray} />
-            {/* <View style={styles.add} >
+            <SearchMap 
+                navigateTo={this.navigate.bind(this)} 
+                tickerArray={this.state.tickerArray}
+                enableModal={this.enableModalFn.bind(this)} />
+            {this.state.visibleModal == true ? 
+                <View style={{ 
+                        marginTop: '50%', 
+                        height:height * .5}}>
+                    <Modal isVisible={this.state.visibleModal}>
+                        {this.renderModalContent()}
+                    </Modal>
+                </View> : null}
+			{/* <View style={styles.add} >
                 <Block middle>
                     <Button style={styles.createButton} onPress={() => this.props.navigation.navigate('AddIncident', {callback: this.saveIncident})}>
                         <Text bold size={14} color={'#00c5e8'}>

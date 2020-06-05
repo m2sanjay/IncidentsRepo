@@ -166,64 +166,22 @@ class AddIncidentPopUp extends React.Component {
                     <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg}/>: null 
                 }
                 <View style={{marginTop:'2%'}}>
-                            {/* <View style={styles.location}>
-                                <Icon style={styles.loginIcon} 
-                                    //onPress={() => this.props.navigation.navigate('SearchMap')}  
-                                    name="location-pin" family="Entypo" color={'#fc408a'} size={35} />
-                                <Text style={styles.textLogin}>{'Location of the Incident'}</Text> 
-                            </View>   
-                 */}
-                            <View style={{
-                                    flexDirection:'column',
-                                    marginLeft:'5%',
-                                    marginRight:'5%',
-                                    borderRadius:10,
-                                    paddingBottom:'5%'
-                                }}>
-                                {/* <Textarea2
-                                    id="textAreaId1"
-                                    containerStyle={styles.textareaContainer1}
-                                    style={styles.textarea1}
-                                    maxLength={20}
-                                    value={this.state.title}
-                                    placeholderTextColor={'black'}
-                                    placeholder={'Title of the Incident'}
-                                    underlineColorAndroid={'transparent'}
-                                    onChangeText = {(text) => this.handleChange1(text)}
-                                /> */}
-                                {/* <Picker
-                                    selectedValue={this.state.selectedValue}
-                                    style={styles.drpdown}
-                                    onValueChange={(itemValue, itemIndex) => this.setSelectedValue(itemValue)}>
-                                    <Picker.Item label="Fire" value="fire" />
-                                    <Picker.Item label="Accident" value="accident" />
-                                    <Picker.Item label="XYZ" value="xyz" />
-                                </Picker> */}
+                    <View style={styles.addView}>
                                 <Dropdown
                                     label="Type of Incident"
                                     data={this.state.typeOfIncident}
                                     baseColor="black"
                                     containerStyle={{ 
-                                        backgroundColor: 'lightgrey',
+                                        backgroundColor: '#fff',
                                         borderRadius:10, 
-                                        width:width*0.8,
-                                        marginBottom: '3%', 
-                                        paddingLeft: width*0.02 
+                                        
+                                        margin: '3%', 
+                                        paddingLeft: 10,
+                                        paddingRight: 10 
                                     }}
                                     onChangeText={this.setSelectedValue}
                                 />
-                                {/* <Dropdown
-                                    style={styles.drpdown}
-                                    label='Incident Type'
-                                    labelTextStyle={{color: 'red'}}
-                                    containerStyle={{ 
-                                            backgroundColor: 'lightgrey',
-                                            borderRadius:10, 
-                                            width:width*0.8,
-                                            marginBottom: '3%', 
-                                            paddingLeft: width*0.02}}
-                                    data={this.state.typeOfIncident}
-                                /> */}
+                                <Block row style={{padding: 10}}>
                                 <Textarea2
                                     id="textAreaId"
                                     containerStyle={styles.textareaContainer}
@@ -235,54 +193,47 @@ class AddIncidentPopUp extends React.Component {
                                     underlineColorAndroid={'transparent'}
                                     onChangeText = {(text) => this.handleChange(text)}
                                 />
+                                </Block>
                                 {this.state.imageUrls.length !=0 || this.state.videoUrls.length != 0 ?
                                 (<Block row>
-                                           {this.state.imageUrls.length > 0 ? 
-                                                (this.state.imageUrls.map((o, i) => (
-                                                    <Image
-                                                        key={i}
-                                                        source={{ uri: o }}
-                                                        resizeMode="contain"
-                                                        style={{ marginLeft: "5%", width: 50, height: 50 }}
-                                                    /> ))
-                                                ) : null}
-                                            {this.state.videoUrls.length > 0 ? 
-                                                (this.state.videoUrls.map((o, i) => (
-                                                    <Video
-                                                        key={i}
-                                                        source={{ uri: o }}
-                                                        rate={1.0}
-                                                        volume={1.0}
-                                                        isMuted={false}
-                                                        resizeMode="contain"
-                                                        shouldPlay={false}
-                                                        isLooping={false}
-                                                        useNativeControls={true}
-                                                        style={{ marginLeft: "5%", width: 50, height: 50 }}
-                                                    /> ))
-                                                ) : null}
+                                    {this.state.imageUrls.length > 0 ? 
+                                        (this.state.imageUrls.map((o, i) => (
+                                            <Image
+                                                key={i}
+                                                source={{ uri: o }}
+                                                resizeMode="contain"
+                                                style={{ marginLeft: "5%", width: 50, height: 50 }}
+                                            /> ))
+                                        ) : null}
+                                    {this.state.videoUrls.length > 0 ? 
+                                        (this.state.videoUrls.map((o, i) => (
+                                            <Video
+                                                key={i}
+                                                source={{ uri: o }}
+                                                rate={1.0}
+                                                volume={1.0}
+                                                isMuted={false}
+                                                resizeMode="contain"
+                                                shouldPlay={false}
+                                                isLooping={false}
+                                                useNativeControls={true}
+                                                style={{ marginLeft: "5%", width: 50, height: 50 }}
+                                            /> ))
+                                        ) : null}
                                     
                                 </Block>) : null}
-                                <Block middle row style={{margin: 0,padding:0}}>
-                                    <Button style={styles.createButton1} onPress={this.handleImageClick}>
-                                        <Block row >
-                                            <Icon style={styles.btnIcon} name="image" family="Entypo" size={30} />
-                                        </Block> 
+                                <Block right row style={{marginTop: 10,padding:0,flexDirection: 'row', justifyContent: 'flex-end'}}>
+                                    <Button shadowless={true} color='#fff' style={styles.createButtonNew} onPress={this.handleImageClick}>
+                                        <Icon style={styles.btnIcon} name="image" family="Entypo" size={30} />
                                     </Button>
-                                    <Button style={styles.createButton1} onPress={this.handleVideoClick}>
-                                        <Block row >
-                                            <Icon style={styles.btnIcon} name="video" family="Entypo" size={30} />
-                                        </Block> 
+                                    <Button style={styles.createButtonNew} onPress={this.handleVideoClick}>
+                                        <Icon style={styles.btnIcon} name="video" family="Entypo" size={30} />
                                     </Button>
-                                    <Button style={styles.createButton} onPress={this.handleSubmit}>
-                                        <Text bold size={14} color={'#00c5e8'}>
-                                        Submit
-                                        </Text>
+                                    <Button style={styles.createButton3} onPress={this.handleSubmit}>
+                                        <Text bold size={14} color={'#00c5e8'}>Submit</Text>
                                     </Button>
-                                    <Button style={styles.createButton} onPress={this.props.closePopUp}>
-                                        <Text bold size={14} color={'#00c5e8'}>
-                                            Cancel
-                                        </Text>
+                                    <Button style={styles.createButton3} onPress={this.props.closePopUp}>
+                                        <Text bold size={14} color={'#00c5e8'}>Cancel</Text>
                                     </Button>
                                 </Block>
                             </View>
@@ -297,6 +248,27 @@ const styles = StyleSheet.create({
     container:{
         flex:1
     },
+    createButtonNew: {
+        width: width * 0.1,
+        marginTop: 10,
+        marginRight: 5,
+        borderWidth: 0,
+        borderColor: 'transparent',
+        shadowOpacity:0,
+        shadowColor: 'transparent',
+        color:'#fff',
+        //backgroundColor: '#5E72E4'
+        backgroundColor: 'transparent'
+    },
+    createButton3: {
+        width: width * 0.25,
+        marginTop: 10,
+        //backgroundColor: '#5E72E4'
+        backgroundColor: 'transparent',
+        borderWidth: 0,
+        alignSelf: 'flex-end'
+        
+      },
     btnIcon:{
         color: '#00c5e8'
     },
@@ -355,6 +327,15 @@ const styles = StyleSheet.create({
         marginRight:'5%',
         height:'20%',
         borderRadius:15
+    },
+    addView:{
+        flexDirection:'column',
+        marginLeft:'5%',
+        marginRight:'5%',
+        borderRadius:10,
+        paddingBottom:'5%',
+        backgroundColor: '#fff',
+        opacity: 0.6
     },
     profileText:{
         fontSize:40,
@@ -516,7 +497,7 @@ const styles = StyleSheet.create({
     },
     textareaContainer: {
         height: 80,
-        padding: 5,
+        padding: 10,
         backgroundColor: '#fff',
         borderRadius:5,
     },
@@ -540,6 +521,7 @@ const styles = StyleSheet.create({
         height: 110,
         fontSize: 12,
         color: 'black',
+        paddingLeft: 5
     },
     submitButton: {
         backgroundColor: '#fc408a',

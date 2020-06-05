@@ -202,7 +202,7 @@ class AddIncident extends React.Component {
                                     underlineColorAndroid={'transparent'}
                                     onChangeText = {(text) => this.handleChange(text)}
                                 />
-                                <Block middle row style={{margin: 0,padding:0}}>
+                                {/* <Block middle row style={{margin: 0,padding:0}}>
                                     <Button style={styles.createButton1} onPress={this.handleImageClick}>
                                         <Block row >
                                             <Icon style={styles.btnIcon} name="image" family="Entypo" size={30} />
@@ -219,6 +219,17 @@ class AddIncident extends React.Component {
                                         <Text bold size={14} color={'#00c5e8'}>
                                         Submit
                                         </Text>
+                                    </Button> 
+                                </Block>*/}
+                                <Block right row style={{marginTop: 10,padding:0,flexDirection: 'row', justifyContent: 'flex-end'}}>
+                                    <Button style={styles.createButtonNew} onPress={this.handleImageClick}>
+                                        <Icon style={styles.btnIcon} name="image" family="Entypo" size={30} />
+                                    </Button>
+                                    <Button style={styles.createButtonNew} onPress={this.handleVideoClick}>
+                                        <Icon style={styles.btnIcon} name="video" family="Entypo" size={30} />
+                                    </Button>
+                                    <Button style={styles.createButton2} onPress={this.handleSubmit}>
+                                        <Text bold size={14} color={'#00c5e8'}>Submit</Text>
                                     </Button>
                                 </Block>
                             </View>
@@ -240,7 +251,7 @@ const styles = StyleSheet.create({
     },
     btnIcon:{
         color: '#00c5e8',
-        marginRight: 10,
+        //marginRight: 10,
     },
     btnText:{
         marginLeft: 5,
@@ -278,6 +289,13 @@ const styles = StyleSheet.create({
         borderColor: '#00c5e8',
         borderWidth: 1
       },
+      createButtonNew: {
+        width: width * 0.1,
+        marginTop: 10,
+        marginRight: 5,
+        //backgroundColor: '#5E72E4'
+        backgroundColor: 'transparent'
+      },
     createButton: {
         width: width * 0.25,
         marginTop: 10,
@@ -285,6 +303,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         borderColor: '#00c5e8',
         borderWidth: 1
+      },
+      createButton2: {
+        width: width * 0.25,
+        marginTop: 10,
+        //backgroundColor: '#5E72E4'
+        backgroundColor: 'transparent',
+        alignSelf: 'flex-end'
+        
       },
     gradient:{
         flex:1

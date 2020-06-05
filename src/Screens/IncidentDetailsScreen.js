@@ -284,62 +284,32 @@ class IncidentDetailsScreen extends React.Component {
                                                     />
                                                 ) : null}
                                         </Block>
-                                        <Block
-                                            middle
-                                            row
-                                            style={{ margin: 0, padding: 0, alignItems: "flex-end" }}
-                                        >
-                                            {/* <Icon onPress={this.handleImageClick} style={styles.camera} name="image" family="Entypo" size={55} />
-                                    <Icon style={styles.camera} name="video-camera" family="Entypo" size={55} /> */}
-                                            <Button
-                                                style={styles.createButton1}
-                                                onPress={this.handleImageClick}
-                                            >
+                                        {/* <Block middle row style={{ margin: 0, padding: 0, alignItems: "flex-end" }}>
+                                            <Button style={styles.createButton1} onPress={this.handleImageClick}>
                                                 <Block row>
-                                                    <Icon
-                                                        style={styles.btnIcon}
-                                                        name="image"
-                                                        family="Entypo"
-                                                        size={30}
-                                                    />
-                                                    <Text
-                                                        style={styles.btnText}
-                                                        bold
-                                                        size={14}
-                                                        color={"#00c5e8"}
-                                                    >
-                                                        {"Image"}
-                                                    </Text>
+                                                    <Icon style={styles.btnIcon} name="image" family="Entypo" size={30}/>
+                                                    <Text style={styles.btnText} bold size={14} color={"#00c5e8"}>{"Image"}</Text>
                                                 </Block>
                                             </Button>
-                                            <Button
-                                                style={styles.createButton1}
-                                                onPress={this.handleVideoClick}
-                                            >
+                                            <Button style={styles.createButton1} onPress={this.handleVideoClick}>
                                                 <Block row>
-                                                    <Icon
-                                                        style={styles.btnIcon}
-                                                        name="video"
-                                                        family="Entypo"
-                                                        size={30}
-                                                    />
-                                                    <Text
-                                                        style={styles.btnText}
-                                                        bold
-                                                        size={14}
-                                                        color={"#00c5e8"}
-                                                    >
-                                                        {"Video"}
-                                                    </Text>
+                                                    <Icon style={styles.btnIcon} name="video" family="Entypo" size={30}/>
+                                                    <Text style={styles.btnText} bold size={14} color={"#00c5e8"}>{"Video"}</Text>
                                                 </Block>
                                             </Button>
-                                            <Button
-                                                style={styles.createButton}
-                                                onPress={this.handleSubmit}
-                                            >
-                                                <Text bold size={14} color={"#00c5e8"}>
-                                                    Post Comment
-                        </Text>
+                                            <Button style={styles.createButton} onPress={this.handleSubmit}>
+                                                <Text bold size={14} color={"#00c5e8"}>Post Comment</Text>
+                                            </Button>
+                                        </Block> */}
+                                        <Block right row style={{marginTop: 10,padding:0,flexDirection: 'row', justifyContent: 'flex-end'}}>
+                                            <Button style={styles.createButtonNew} onPress={this.handleImageClick}>
+                                                <Icon style={styles.btnIcon} name="image" family="Entypo" size={30} />
+                                            </Button>
+                                            <Button style={styles.createButtonNew} onPress={this.handleVideoClick}>
+                                                <Icon style={styles.btnIcon} name="video" family="Entypo" size={30} />
+                                            </Button>
+                                            <Button style={styles.createButton3} onPress={this.handleSubmit}>
+                                                <Text bold size={14} color={'#00c5e8'}>Submit</Text>
                                             </Button>
                                         </Block>
                                     </View>
@@ -354,6 +324,14 @@ class IncidentDetailsScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    
+    createButtonNew: {
+        width: width * 0.1,
+        marginTop: 10,
+        marginRight: 5,
+        //backgroundColor: '#5E72E4'
+        backgroundColor: 'transparent'
+    },
     root: {
         height: 200,
         //padding: 5,
@@ -361,6 +339,14 @@ const styles = StyleSheet.create({
         //borderRadius:10,
         margin: 20,
     },
+    createButton3: {
+        width: width * 0.25,
+        marginTop: 10,
+        //backgroundColor: '#5E72E4'
+        backgroundColor: 'transparent',
+        alignSelf: 'flex-end'
+        
+      },
     createButton2: {
         width: width * 0.25,
         justifyContent: "center",
@@ -432,7 +418,7 @@ const styles = StyleSheet.create({
     },
     btnIcon: {
         color: "#00c5e8",
-        marginRight: 10,
+        //marginRight: 10,
     },
     btnText: {
         marginLeft: 5,

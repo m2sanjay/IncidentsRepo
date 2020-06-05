@@ -229,9 +229,7 @@ class Home extends React.Component {
                 tickerArray={this.state.tickerArray}
                 enableModal={this.enableModalFn.bind(this)} />
             {this.state.visibleModal == true ? 
-                <View style={{ 
-                        marginTop: '50%', 
-                        height:height * .5}}>
+                <View style={{  marginTop: '50%',  height:height * .5}}>
                     <Modal isVisible={this.state.visibleModal}>
                         {this.renderModalContent()}
                     </Modal>

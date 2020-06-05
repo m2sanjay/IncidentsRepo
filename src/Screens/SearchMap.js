@@ -5,7 +5,7 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
-  Alert,
+  Alert,TextInput, ToastAndroid
 } from 'react-native';
 import MapView, {
   Marker,
@@ -21,6 +21,13 @@ const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 //const SPACE = 0.01;
+const Toast = (props) => {
+  if (props.visible) {
+      ToastAndroid.showWithGravityAndOffset(props.message, ToastAndroid.LONG, ToastAndroid.TOP, 25, 150,);
+      return null;
+  }
+  return null;
+};
 let id = 0;
 class SearchMap extends React.Component {
   constructor(props) {
@@ -59,6 +66,9 @@ class SearchMap extends React.Component {
         },
       ],*/
       markerCoordinate: null,
+      textInp: '',
+      toasterVisible: false,
+      toasterMsg: '',
     };
     this.recordEvent=this.recordEvent.bind(this);
     this.onChangeMarker=this.onChangeMarker.bind(this);
@@ -126,6 +136,9 @@ class SearchMap extends React.Component {
     
     return (
       <View style={styles.container}>
+        {this.state.toasterVisible ?
+            <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg}/>: null 
+        }
         {region.longitude != null ?
         <MapView
           provider={this.props.provider}
@@ -163,7 +176,7 @@ class SearchMap extends React.Component {
             </Marker>
           : null}
         </MapView>  : null}
-        <View style={styles.buttonContainer}>
+        {/* <View style={styles.buttonContainer}>
           <TouchableOpacity
             onPress={() => this.show()}
             style={[styles.bubble, styles.button]}
@@ -176,7 +189,7 @@ class SearchMap extends React.Component {
           >
             <Text>Hide</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     );
   }
@@ -192,14 +205,17 @@ const styles = StyleSheet.create({
     height: 140,
   },
   plainView: {
-    width: 60,
+    width: width * 0.5,
+    alignItems: 'center'
   },
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
     alignItems: 'center',
     marginTop: height * 0.17,
-    marginBottom: 40
+    marginBottom: 50,
+    marginRight: 10,
+    marginLeft: 10,
   },
   map: {
     ...StyleSheet.absoluteFillObject,

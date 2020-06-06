@@ -1,18 +1,8 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Dimensions,
-  TouchableOpacity,
-  Alert,TextInput, ToastAndroid
-} from 'react-native';
-import MapView, {
-  Marker,
-  Callout,
-  CalloutSubview,
-  ProviderPropType,
-} from 'react-native-maps';
+import {StyleSheet,View,Text,Dimensions,TouchableOpacity,Alert,TextInput, ToastAndroid, Button,ScrollView,ActivityIndicator} from 'react-native';
+import MapView, {Marker,Callout,CalloutSubview,ProviderPropType,} from 'react-native-maps';
+import LocationItem from './LocationItem';
+import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -74,6 +64,7 @@ class SearchMap extends React.Component {
     this.onChangeMarker=this.onChangeMarker.bind(this);
     this.navigate = this.navigate.bind(this);
     this.navigateToDetails = this.navigateToDetails.bind(this);
+    this.updateMarker = this.updateMarker.bind(this);
   }
 
   componentWillMount(){
@@ -125,6 +116,12 @@ class SearchMap extends React.Component {
   navigateToDetails(details){
     this.props.navigateTo('IncidentDetailsScreen', details);
   }
+  updateMarker(selectedLatitude, selectedLongitude){
+    this.setState({
+      isMapReady:true,
+      where: {lat: selectedLatitude,lng:selectedLongitude }
+  })
+  }
   render() {
     //const { region } = this.state;
     let region = {
@@ -139,6 +136,36 @@ class SearchMap extends React.Component {
         {this.state.toasterVisible ?
             <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg}/>: null 
         }
+        <GoogleAutoComplete apiKey="AIzaSyCCvo0BgvR3z85tN54BoQpQV537xuxnEgg" debounce={500} minLength={4}>
+        {({
+          handleTextChange,
+          locationResults,
+          fetchDetails,
+          isSearching,
+          inputValue,
+          clearSearch
+          }) => (
+            <React.Fragment>
+              <View style={styles.inputWrapper}>
+                <TextInput style={styles.textInput} placeholder="Search a places" onChangeText={handleTextChange} value={inputValue}/>
+                <Button title="Clear" onPress={clearSearch} />
+              </View>
+              {isSearching && <ActivityIndicator size="large" color="red" />}
+              {!isSearching && console.log(locationResults)}
+              <ScrollView>
+              {locationResults.map(el => (
+                <LocationItem
+                  {...el}
+                  key={el.id}
+                  fetchDetails={fetchDetails}
+                  clearSearch={clearSearch}
+                  updateMarker={this.updateMarker}
+                />
+              ))}
+              </ScrollView>
+            </React.Fragment>
+          )}
+        </GoogleAutoComplete>
         {region.longitude != null ?
         <MapView
           provider={this.props.provider}
@@ -251,6 +278,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 10,
     marginVertical: 10,
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    zIndex:1,
+    padding: 10,
+  },
+  textInput: {
+    height: 40,
+    width: width * 0.75,
+    borderWidth: 1,
+    paddingHorizontal: 16,
+    borderColor: 'black',
+    color: 'black',
+    backgroundColor: '#fff',
+    opacity: 0.7,
+    marginLeft: 10,
+    borderRadius: 5
   },
 });
 

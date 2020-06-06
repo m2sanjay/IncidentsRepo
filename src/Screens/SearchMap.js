@@ -1,5 +1,7 @@
 import React from 'react';
-import {StyleSheet,View,Text,Dimensions,TouchableOpacity,Alert,TextInput, ToastAndroid, Button,ScrollView,ActivityIndicator} from 'react-native';
+import {StyleSheet,View,Text,Dimensions,
+  TouchableOpacity,Alert,TextInput, ToastAndroid, Button,ScrollView,
+  ActivityIndicator} from 'react-native';
 import MapView, {Marker,Callout,CalloutSubview,ProviderPropType,} from 'react-native-maps';
 import LocationItem from './LocationItem';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
@@ -26,8 +28,6 @@ class SearchMap extends React.Component {
     this.state = {
       cnt: 0,
       events: [],
-      latitude: null,
-      longitude: null,
       error:null,
       /*markers: [
         {
@@ -55,7 +55,8 @@ class SearchMap extends React.Component {
           },
         },
       ],*/
-      markerCoordinate: null,
+      markerCoordinate: {latitude:null, longitude:null},
+      isMapReady: false,
       textInp: '',
       toasterVisible: false,
       toasterMsg: '',
@@ -68,17 +69,7 @@ class SearchMap extends React.Component {
   }
 
   componentWillMount(){
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.setState({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          error: null,
-        });
-      },
-      (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
-    );
+    
   }
 
   show() {
@@ -119,17 +110,34 @@ class SearchMap extends React.Component {
   updateMarker(selectedLatitude, selectedLongitude){
     this.setState({
       isMapReady:true,
-      where: {lat: selectedLatitude,lng:selectedLongitude }
+      markerCoordinate: {latitude: selectedLatitude,longitude:selectedLongitude }
   })
   }
+  geoSuccess = (position) => {
+    this.setState({
+        isMapReady:true,
+        markerCoordinate: {latitude: position.coords.latitude,longitude:position.coords.longitude }
+    })
+  }
+  geoFailure = (err) => {
+    this.setState({
+      isMapReady:true,
+      markerCoordinate: {latitude:22.5726,longitude:88.3639 }
+  })
+  }
+  onMapLayout = () => {
+    let geoOptions = {
+      enableHighAccuracy: true,
+      timeOut: 20000,
+      maximumAge: 60 * 60 * 24
+  };
+  this.setState({isMapReady:false});
+  navigator.geolocation.getCurrentPosition( this.geoSuccess, 
+                                          this.geoFailure,
+                                          geoOptions);
+  }
   render() {
-    //const { region } = this.state;
-    let region = {
-        latitude: this.state.latitude,
-        longitude: this.state.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0922 * ASPECT_RATIO
-    }
+    
     
     return (
       <View style={styles.container}>
@@ -166,15 +174,26 @@ class SearchMap extends React.Component {
             </React.Fragment>
           )}
         </GoogleAutoComplete>
-        {region.longitude != null ?
-        <MapView
-          provider={this.props.provider}
-          style={styles.map}
-          initialRegion={region}
-          zoomTapEnabled={true}
-          showUserLocation={true}
+        <MapView  style={styles.map}
+          provider='google'
+          zoomEnabled={true}
+          region={{latitude:this.state.markerCoordinate.latitude,
+                  longitude:this.state.markerCoordinate.longitude,
+                  longitudeDelta:0.1,
+                  latitudeDelta:0.1}}
+          zoomTapEnabled={false}
           onPress={this.onChangeMarker}
+          onLayout={() => this.onMapLayout()}
         >
+           {this.state.isMapReady ==true ? 
+            <MapView.Marker coordinate={this.state.markerCoordinate} >
+              <Callout onPress={this.navigate} style={styles.plainView}>
+                <View >
+                  <Text>Tap to Add an Incident</Text>
+                </View>
+              </Callout>
+            </MapView.Marker>
+          : null}
           {this.props.tickerArray.length > 0 ? (
             this.props.tickerArray.map((o, i) => (
               <Marker key={i}
@@ -193,16 +212,8 @@ class SearchMap extends React.Component {
             </Marker>
             ))
           ) : null}
-          {this.state.markerCoordinate != null ? 
-            <Marker coordinate={this.state.markerCoordinate} >
-              <Callout onPress={this.navigate} style={styles.plainView}>
-                <View >
-                  <Text>Tap to Add an Incident</Text>
-                </View>
-              </Callout>
-            </Marker>
-          : null}
-        </MapView>  : null}
+         
+        </MapView>  
         {/* <View style={styles.buttonContainer}>
           <TouchableOpacity
             onPress={() => this.show()}

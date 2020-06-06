@@ -136,7 +136,7 @@ class SearchMap extends React.Component {
         {this.state.toasterVisible ?
             <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg}/>: null 
         }
-        <GoogleAutoComplete apiKey="AIzaSyCCvo0BgvR3z85tN54BoQpQV537xuxnEgg" debounce={500} minLength={4}>
+        <GoogleAutoComplete apiKey="" debounce={500} minLength={4}>
         {({
           handleTextChange,
           locationResults,

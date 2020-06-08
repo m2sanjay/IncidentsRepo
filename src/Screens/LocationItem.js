@@ -15,7 +15,7 @@ export default class LocationItem extends PureComponent {
   render() {
     return (
       <TouchableOpacity style={styles.root} onPress={this._handlePress}>
-        <Text style={{  color: 'green'}}>{this.props.description}</Text>
+        <Text style={{  color: 'black'}}>{this.props.description}</Text>
       </TouchableOpacity>
     );
   }
@@ -25,8 +25,11 @@ const styles = StyleSheet.create({
   root: {
     height: 40,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    justifyContent: 'center',
-    backgroundColor: 'blue'
+    justifyContent: 'flex-start',
+    marginLeft: 10,
+    marginRight: 10,
+    //width: width * 0.80,
+    backgroundColor: 'white'
   }
 })
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet,View,Text,Dimensions,
-  TouchableOpacity,Alert,TextInput, ToastAndroid, Button,ScrollView,
+  TouchableOpacity,Alert,TextInput, ToastAndroid,ScrollView,
   ActivityIndicator} from 'react-native';
 import MapView, {Marker,Callout,CalloutSubview,ProviderPropType,} from 'react-native-maps';
 import LocationItem from './LocationItem';
@@ -12,6 +12,9 @@ const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+import { Button } from 'react-native-elements';
+
 //const SPACE = 0.01;
 const Toast = (props) => {
   if (props.visible) {
@@ -156,11 +159,15 @@ class SearchMap extends React.Component {
             <React.Fragment>
               <View style={styles.inputWrapper}>
                 <TextInput style={styles.textInput} placeholder="Search a places" onChangeText={handleTextChange} value={inputValue}/>
-                <Button title="Clear" onPress={clearSearch} />
+                {/* <Button title="Clear" onPress={clearSearch} /> */}
+                <Button  
+                      icon={{ name: "cancel", size: 30, marginTop: 0, color: "#0A121A"}} 
+                      type="clear" 
+                      onPress={clearSearch} />
               </View>
               {isSearching && <ActivityIndicator size="large" color="red" />}
               {!isSearching && console.log(locationResults)}
-              <ScrollView style={ {zIndex: 2 }}>
+              <ScrollView style={{zIndex: 2 }}>
               {locationResults.map(el => (
                 <LocationItem 
                   {...el}
@@ -294,10 +301,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     zIndex:1,
     padding: 10,
+    paddingBottom: 0
   },
   textInput: {
     height: 40,
-    width: width * 0.75,
+    width: width * 0.80,
     borderWidth: 1,
     paddingHorizontal: 16,
     borderColor: 'black',

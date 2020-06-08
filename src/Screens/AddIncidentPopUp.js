@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Picker,
     ScrollView, Image, TouchableOpacity, ImageBackground, Dimensions, ToastAndroid } from 'react-native';
-import { Icon, Card, Button, Text, Block } from 'galio-framework';
+import { Icon, Card, Text, Block } from 'galio-framework';
 //import { LinearGradient } from 'expo';
 import TextTicker from 'react-native-text-ticker';
 import Textarea2 from 'react-native-textarea';
@@ -17,6 +17,7 @@ import _ from 'lodash';
 import { Video } from 'expo-av';
 
 import { Dropdown } from 'react-native-material-dropdown';
+import { Button } from 'react-native-elements';
 
 const Toast = (props) => {
     if (props.visible) {
@@ -222,19 +223,30 @@ class AddIncidentPopUp extends React.Component {
                                         ) : null}
                                     
                                 </Block>) : null}
-                                <Block right row style={{marginTop: 10,padding:0,flexDirection: 'row', justifyContent: 'flex-end'}}>
-                                    <Button shadowless={true} color='#fff' style={styles.createButtonNew} onPress={this.handleImageClick}>
-                                        <Icon style={styles.btnIcon} name="image" family="Entypo" size={30} />
-                                    </Button>
-                                    <Button style={styles.createButtonNew} onPress={this.handleVideoClick}>
-                                        <Icon style={styles.btnIcon} name="video" family="Entypo" size={30} />
-                                    </Button>
-                                    <Button style={styles.createButton3} onPress={this.handleSubmit}>
+                                <Block center row style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+                                    <Button  
+                                        icon={{ name: "image", size: 30, marginBottom:15, color: "#00c5e8"}} 
+                                        type="clear" 
+                                        onPress={this.handleImageClick} />
+                                        {/* <Icon style={styles.btnIcon} name="image" family="Entypo" size={30} /> */}
+                                    <Button
+                                        icon={{name: "videocam", size: 40, marginBottom:15, color: "#00c5e8"}}
+                                        type="clear"
+                                        onPress={this.handleVideoClick}
+                                    />
+                                    <Button containerStyle={styles.createButton3} type='clear' 
+                                        titleStyle={{color:'#00c5e8', fontSize: 16 }} 
+                                        title='Submit' onPress={this.handleSubmit} />
+                                    <Button containerStyle={styles.createButton3} type='clear' 
+                                        titleStyle={{color:'#00c5e8', fontSize: 16 }} 
+                                        title='Close' onPress={this.props.closePopUp} />
+                                        {/* <Icon style={styles.btnIcon} name="video" family="Entypo" size={30} /> */}
+                                    {/* <Button style={styles.createButton3} onPress={this.handleSubmit}>
                                         <Text bold size={14} color={'#00c5e8'}>Submit</Text>
                                     </Button>
                                     <Button style={styles.createButton3} onPress={this.props.closePopUp}>
                                         <Text bold size={14} color={'#00c5e8'}>Cancel</Text>
-                                    </Button>
+                                    </Button> */}
                                 </Block>
                             </View>
                         </View>
@@ -261,9 +273,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent'
     },
     createButton3: {
-        width: width * 0.25,
-        marginTop: 10,
-        //backgroundColor: '#5E72E4'
+        // width: width * 0.25,
+        // marginTop: 10,
+        // //backgroundColor: '#5E72E4'
+        // backgroundColor: 'transparent',
+        // borderWidth: 0,
+        // alignSelf: 'flex-end'
+        width: width * 0.2,
+        marginBottom: 25,
         backgroundColor: 'transparent',
         borderWidth: 0,
         alignSelf: 'flex-end'
@@ -334,8 +351,10 @@ const styles = StyleSheet.create({
         marginRight:'5%',
         borderRadius:10,
         paddingBottom:'5%',
-        backgroundColor: '#fff',
-        opacity: 0.6
+        //backgroundColor: '#fff',
+        //opacity: 0.6
+        opacity: 0.9,
+        backgroundColor: '#0A121A',
     },
     profileText:{
         fontSize:40,

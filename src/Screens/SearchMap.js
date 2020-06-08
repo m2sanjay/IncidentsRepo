@@ -5,6 +5,7 @@ import {StyleSheet,View,Text,Dimensions,
 import MapView, {Marker,Callout,CalloutSubview,ProviderPropType,} from 'react-native-maps';
 import LocationItem from './LocationItem';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
+import Geocoder from 'react-native-geocoding';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -72,7 +73,7 @@ class SearchMap extends React.Component {
   }
 
   componentWillMount(){
-    
+    Geocoder.init("");
   }
 
   show() {
@@ -101,7 +102,16 @@ class SearchMap extends React.Component {
     };
   }
   onChangeMarker(e) {
+    console.log("Changing Marker");
     this.setState({markerCoordinate: {latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.longitude}});
+   
+    console.log("Getting Address Data");
+    Geocoder.from(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)
+		.then(json => {
+        		var addressComponent = json.results[0];//.address_components[0];
+			console.log(addressComponent.formatted_address);
+		})
+		.catch(error => console.warn(error));
   }
   navigate(){
     //this.props.navigateTo('AddIncident', {data: this.state.markerCoordinate});
@@ -166,7 +176,6 @@ class SearchMap extends React.Component {
                       onPress={clearSearch} />
               </View>
               {isSearching && <ActivityIndicator size="large" color="red" />}
-              {!isSearching && console.log(locationResults)}
               <ScrollView style={{zIndex: 2 }}>
               {locationResults.map(el => (
                 <LocationItem 

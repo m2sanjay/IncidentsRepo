@@ -160,9 +160,9 @@ class SearchMap extends React.Component {
               </View>
               {isSearching && <ActivityIndicator size="large" color="red" />}
               {!isSearching && console.log(locationResults)}
-              <ScrollView>
+              <ScrollView style={ {zIndex: 2 }}>
               {locationResults.map(el => (
-                <LocationItem
+                <LocationItem 
                   {...el}
                   key={el.id}
                   fetchDetails={fetchDetails}

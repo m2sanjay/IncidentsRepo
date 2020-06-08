@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet,View,Text,Dimensions,
   TouchableOpacity,Alert,TextInput, ToastAndroid,ScrollView,
   ActivityIndicator} from 'react-native';
-import MapView, {Marker,Callout,CalloutSubview,ProviderPropType,} from 'react-native-maps';
+import MapView, {Marker,Callout,CalloutSubview,ProviderPropType,Circle} from 'react-native-maps';
 import LocationItem from './LocationItem';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 import Geocoder from 'react-native-geocoding';
@@ -201,8 +201,10 @@ class SearchMap extends React.Component {
           onPress={this.onChangeMarker}
           onLayout={() => this.onMapLayout()}
         >
+          {this.state.isMapReady ==true ? 
+          <Circle center ={this.state.markerCoordinate} radius={5000}/>:null}
            {this.state.isMapReady ==true ? 
-            <MapView.Marker coordinate={this.state.markerCoordinate} >
+             <MapView.Marker coordinate={this.state.markerCoordinate} >
               <Callout onPress={this.navigate} style={styles.plainView}>
                 <View >
                   <Text>Tap to Add an Incident</Text>

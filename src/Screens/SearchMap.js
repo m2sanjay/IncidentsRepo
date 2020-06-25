@@ -18,6 +18,9 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 import { Button } from 'react-native-elements';
 import { Table, TableWrapper, Row } from 'react-native-table-component';
+import markerImage from './../Images/marker100.png';
+
+import _ from 'lodash';
 
 //const SPACE = 0.01;
 const Toast = (props) => {
@@ -179,14 +182,18 @@ class SearchMap extends React.Component {
     // });
     // console.log(tableData);
 
-    let tableData = this.state.items.map(record => ([record.offenceName, record.count]));
+    let tableData = this.state.items.map(record => ([record.latitude, record.longitude, 
+      record.offenceName, record.count]));
+    
+    const tableDataFull = this.state.items;
+    
     console.log(tableData);
     return (
       <View style={styles.container}>
         {this.state.toasterVisible ?
           <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg} /> : null
         }
-        <GoogleAutoComplete apiKey="" debounce={500} minLength={4}>
+        <GoogleAutoComplete apiKey="AIzaSyB4OJsFNMQncqptmQ3nAk-mbUNqqcCYYts" debounce={500} minLength={4}>
           {({
             handleTextChange,
             locationResults,
@@ -235,10 +242,11 @@ class SearchMap extends React.Component {
           {/* {this.state.isMapReady ==true ? 
               <Circle center ={this.state.markerCoordinate} radius={5000}/>:null} */}
           {this.state.isMapReady == true ?
-            <MapView.Marker coordinate={this.state.markerCoordinate} >
-              <Callout onPress={this.navigate} style={styles.plainView}>
+            <MapView.Marker coordinate={this.state.markerCoordinate}
+              image={markerImage}>
+              <Callout onPress={this.navigate} style={styles.plainViewNew}>
                 <View>
-                  <Text>Tap to Add an Incident</Text>
+                  <Text style={{color: 'black'}}>Add an incident</Text>
                 </View>
               </Callout>
             </MapView.Marker>
@@ -269,10 +277,13 @@ class SearchMap extends React.Component {
                         <ScrollView style={styles1.dataWrapper}>
                           <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
                             {
-                              tableData.map((rowData, index) => (
+                              _.filter(tableDataFull, incident => incident.latitude === o.latitude && incident.longitude === o.longitude)
+                              .map((rowData, index) => (
                                 <Row
                                   key={index}
-                                  data={rowData}
+                                  // data={o.latitude == rowData["latitude"] && o.longitude == rowData["longitude"] ?
+                                  //   new Array(rowData["offenceName"] , rowData["count"]) : null }
+                                  data={new Array(rowData.offenceName, rowData.count)}
                                   widthArr={this.state.widthArr}
                                   style={[styles1.row, index % 2 && { backgroundColor: '#F7F6E7' }]}
                                   textStyle={styles1.text}
@@ -329,7 +340,11 @@ const styles = StyleSheet.create({
   },
   plainView: {
     width: width * 0.5,
-    alignItems: 'center'
+    alignItems: 'center',
+  },
+  plainViewNew: {
+    width: width * 0.25,
+    alignItems: 'center',
   },
   container: {
     ...StyleSheet.absoluteFillObject,

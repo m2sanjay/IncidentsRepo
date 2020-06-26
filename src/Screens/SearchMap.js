@@ -4,7 +4,7 @@ import {
   TouchableOpacity, Alert, TextInput, ToastAndroid, ScrollView,
   ActivityIndicator
 } from 'react-native';
-import MapView, { Marker, Callout, CalloutSubview, ProviderPropType, Circle } from 'react-native-maps';
+import MapView, { Marker, Heatmap, Callout, CalloutSubview, ProviderPropType, Circle } from 'react-native-maps';
 import LocationItem from './LocationItem';
 import { GoogleAutoComplete } from 'react-native-google-autocomplete';
 import Geocoder from 'react-native-geocoding';
@@ -39,32 +39,15 @@ class SearchMap extends React.Component {
       cnt: 0,
       events: [],
       error: null,
-      /*markers: [
-        {
-          coordinate: {
-            latitude: LATITUDE + SPACE,
-            longitude: LONGITUDE + SPACE,
-          },
-        },
-        {
-          coordinate: {
-            latitude: LATITUDE + SPACE,
-            longitude: LONGITUDE - SPACE,
-          },
-        },
-        {
-          coordinate: {
-            latitude: LATITUDE,
-            longitude: LONGITUDE,
-          },
-        },
-        {
-          coordinate: {
-            latitude: LATITUDE,
-            longitude: LONGITUDE - SPACE / 2,
-          },
-        },
-      ],*/
+      heatDataAlabama: [
+        { latitude: 34.774548, longitude: -90.757260, weight:5 },
+        { latitude: 34.774353, longitude: -90.756905, weight:6 },
+        { latitude: 33.939323, longitude: -91.845140, weight:6 },
+        { latitude: 33.957665, longitude: -91.727624, weight:8 },
+        { latitude: 33.672880, longitude: -94.132710, weight:8 },
+        { latitude: 33.699497, longitude: -94.229774, weight:8 },
+        { latitude: 35.288918, longitude: -93.734955, weight:4 }
+      ],
       markerCoordinate: { latitude: null, longitude: null },
       isMapReady: false,
       textInp: '',
@@ -84,7 +67,7 @@ class SearchMap extends React.Component {
   }
 
   componentWillMount() {
-    Geocoder.init("");
+    Geocoder.init("AIzaSyB4OJsFNMQncqptmQ3nAk-mbUNqqcCYYts");
   }
 
   componentDidMount() {
@@ -193,7 +176,7 @@ class SearchMap extends React.Component {
         {this.state.toasterVisible ?
           <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg} /> : null
         }
-        <GoogleAutoComplete apiKey="" debounce={500} minLength={4}>
+        <GoogleAutoComplete apiKey="AIzaSyB4OJsFNMQncqptmQ3nAk-mbUNqqcCYYts" debounce={500} minLength={4}>
           {({
             handleTextChange,
             locationResults,
@@ -239,8 +222,18 @@ class SearchMap extends React.Component {
           onPress={this.onChangeMarker}
           onLayout={() => this.onMapLayout()}
         >
+          
           {/* {this.state.isMapReady ==true ? 
               <Circle center ={this.state.markerCoordinate} radius={5000}/>:null} */}
+          
+          <Heatmap
+            points = {this.state.heatDataAlabama}
+            // gradient = {{
+            //   colors: ["#79BC6A", "#BBCF4C", "EEC20B", "#F29305", "E50000"],
+            //   startPoints: [0, 0.25, 0.50, 0.75, 1],
+            //   colorMapSize: 500
+            // }}
+          ></Heatmap>
           {this.state.isMapReady == true ?
             <MapView.Marker coordinate={this.state.markerCoordinate}
               image={markerImage}>

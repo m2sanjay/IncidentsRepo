@@ -89,6 +89,7 @@ class Home extends React.Component {
         this.enableModalFn = this.enableModalFn.bind(this);
         this.closePopUp = this.closePopUp.bind(this);
         this.callbackPopUp = this.callbackPopUp.bind(this);
+        this.callbackPopUpAPI = this.callbackPopUpAPI.bind(this);
     }
     handleChange1(e){
         this.setState({title: e});
@@ -161,6 +162,20 @@ class Home extends React.Component {
         this.setState({tickerArray: existingArray});
     }
 
+    callbackPopUpAPI(postJson, createOrUpdate){
+        console.log(postJson);
+        console.log(createOrUpdate);
+        fetch('http://192.168.1.14:8080/addIncident/', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postJson)
+            }
+        );
+    }
+
     navigate(screen, incDetails){
         
         if(screen == 'AddIncident'){
@@ -192,7 +207,9 @@ class Home extends React.Component {
         <Block>
           <AddIncidentPopUp 
             closePopUp={this.closePopUp.bind(this)} 
-            createIncident={this.callbackPopUp.bind(this)} 
+            createIncident={this.callbackPopUpAPI.bind(this)} 
+            coordinate={this.state.newCoords.data}
+            selectedAddress={this.state.newCoords.selectedAddress}
           />
         </Block>
     );

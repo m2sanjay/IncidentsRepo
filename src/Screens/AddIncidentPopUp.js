@@ -36,11 +36,69 @@ class AddIncidentPopUp extends React.Component {
             videoUrls: [],
             toasterVisible: false,
             toasterMsg: '',
-            coordinate: null,
+            coordinate: this.props.coordinate,
+            selectedAddress: this.props.selectedAddress,
             selectedValue: null,
             typeOfIncident : [],
             selectedOffenseId: null,
-            selectedOffenseName: null
+            selectedOffenseName: null,
+            dummy: [
+                {
+                  long_name: "456-1238",
+                  short_name: "456-1238",
+                  types: [
+                    "street_number",
+                  ],
+                },
+                {
+                  long_name: "Phillips Road 374",
+                  short_name: "Phillips Rd 374",
+                  types: [
+                    "route",
+                  ],
+                },
+                {
+                  long_name: "Marvell",
+                  short_name: "Marvell",
+                  types: [
+                    "locality",
+                    "political",
+                  ],
+                },
+                {
+                  long_name: "Big Creek Township",
+                  short_name: "Big Creek Township",
+                  types: [
+                    "administrative_area_level_3",
+                    "political",
+                  ],
+                },
+                {
+                  long_name : "Phillips County",
+                  short_name : "Phillips County",
+                  types: [
+                    "administrative_area_level_2",
+                    "political",
+                  ],
+                },
+                {
+                  long_name: "Arkansas",
+                  short_name: "AR",
+                  types: [
+                    "administrative_area_level_1",
+                    "political",
+                  ],
+                },
+                {
+                  long_name: "United States",
+                  short_name: "US",
+                  types: [
+                    "country",
+                    "political",
+                  ],
+                }
+              ]
+
         }
 
         this.setSelectedValue = this.setSelectedValue.bind(this);
@@ -55,8 +113,11 @@ class AddIncidentPopUp extends React.Component {
         .then(response => response.json())
         .then(typeOfIncident => {
             this.setState({ typeOfIncident })
-    })
+        })
+        
         console.log(this.state.typeOfIncident);
+        console.log(this.state.coordinate);
+        console.log(this.state.selectedAddress);
     }
 
     handleImageClick() {
@@ -114,8 +175,8 @@ class AddIncidentPopUp extends React.Component {
     };
 
     setSelectedValue(value, id){
-        console.log(id);
-        console.log(value);
+        //console.log(id);
+        //console.log(value);
         this.setState({ selectedOffenseId : id, selectedOffenseName: value});
     }
 
@@ -128,28 +189,63 @@ class AddIncidentPopUp extends React.Component {
     }
 
     handleSubmit() {
+        
         //alert(this.state.text);
         // if (this.state.text == '') {
         //     alert('Please type in comments');
         //     return;
         // }
 
-        if (this.state.selectedValue == null) {
+        var localityName = _.filter(this.state.selectedAddress, { types: [
+            "locality",
+            "political",
+          ]});
+        var stateObj = _.filter(this.state.selectedAddress, { types: [
+            "administrative_area_level_1",
+            "political",
+        ]});
+
+        var postJson = {
+            incidentId:null,							//should be null
+            incidentYear:2018,							//should be 2018 for now
+            localityId:null,							//should be null
+            count:0,									//should be 0
+            offenseId: this.state.selectedOffenseId,    //Mandatory(Type->Int). Value from Offense Table
+            offenceName:this.state.selectedOffenseName, //Can be null/blank/Value from Offense Table
+            localityName: localityName[0].long_name,	// Shoudn't be null
+            area:"Test Locality",						// Either same as locality or from geocoder
+            division:"Test Locality",					// Either same as locality or from geocoder
+            latitude: this.state.coordinate.latitude,	// Mandatory(Type->Double)
+            longitude: this.state.coordinate.longitude,	// Mandatory(Type->Double)
+            stateId:0,									//should be 0
+            stateName: stateObj[0].long_name,			// Mandatory(Type->String)
+            regionId:0,									// should be 0
+            regionName:null,							// Can be null/blank
+            countryId:0,								//should be 0
+            countryName:""								//Can be null/blank
+        }
+
+        if (this.state.selectedOffenseId == null) {
             this.setState({
                 toasterVisible: true,
-                toasterMsg: "Please type in comments",
+                toasterMsg: "Please select any Offence Type",
             });
             return;
         }
 
         this.setState({ submitted: true });
         
+        // this.props.createIncident(
+        //         this.state.selectedValue,
+        //         this.state.text,
+        //         this.state.imageUrls,
+        //         this.state.videoUrls
+        // );       
+
         this.props.createIncident(
-                this.state.selectedValue,
-                this.state.text,
-                this.state.imageUrls,
-                this.state.videoUrls
-        );       
+            postJson,
+            "New"
+        ); 
 
         this.props.closePopUp();
         

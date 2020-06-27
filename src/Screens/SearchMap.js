@@ -69,7 +69,7 @@ class SearchMap extends React.Component {
   }
 
   componentDidMount() {
-    Geocoder.init("");
+    Geocoder.init("AIzaSyB4OJsFNMQncqptmQ3nAk-mbUNqqcCYYts");
 
     fetch('http://192.168.1.14:8080/getIncidents')
       .then(response => response.json())
@@ -119,15 +119,14 @@ class SearchMap extends React.Component {
       } 
     });
 
-    console.log("Getting Address Data");
     Geocoder.from(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)
       .then(json => {
          //console.log(json);
          var addressComponent = json.results[0].address_components;
-         console.log(addressComponent);
+         //console.log(addressComponent);
          this.setState({ selectedAddress : addressComponent});
-         console.log("getting data from state");
-         console.log(this.state.selectedAddress);     
+         //console.log("getting data from state");
+         //console.log(this.state.selectedAddress);     
       })
       .catch(error => console.warn(error));
     
@@ -143,7 +142,8 @@ class SearchMap extends React.Component {
   }
   navigate() {
     //this.props.navigateTo('AddIncident', {data: this.state.markerCoordinate});
-    this.props.enableModal('AddIncident', { data: this.state.markerCoordinate });
+    this.props.enableModal('AddIncident', { data: this.state.markerCoordinate, 
+      selectedAddress: this.state.selectedAddress});
   }
   navigateToDetails(details) {
     this.props.navigateTo('IncidentDetailsScreen', details);
@@ -203,7 +203,7 @@ class SearchMap extends React.Component {
         {this.state.toasterVisible ?
           <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg} /> : null
         }
-        <GoogleAutoComplete apiKey="" debounce={500} minLength={4}>
+        <GoogleAutoComplete apiKey="AIzaSyB4OJsFNMQncqptmQ3nAk-mbUNqqcCYYts" debounce={500} minLength={4}>
           {({
             handleTextChange,
             locationResults,
@@ -260,9 +260,9 @@ class SearchMap extends React.Component {
           <Heatmap
             points = {this.state.heatDataAlabama}
             // gradient = {{
-            //   colors: ["#79BC6A", "#BBCF4C", "EEC20B", "#F29305", "E50000"],
-            //   startPoints: [0, 0.25, 0.50, 0.75, 1],
-            //   colorMapSize: 500
+            //    colors: ["#79BC6A", "#BBCF4C", "EEC20B", "#F29305", "E50000"],
+            //    startPoints: [0, 0.25, 0.50, 0.75, 1],
+            //    colorMapSize: 500
             // }}
           ></Heatmap> : null }
           {this.state.isMapReady == true ?

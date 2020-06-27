@@ -39,15 +39,16 @@ class SearchMap extends React.Component {
       cnt: 0,
       events: [],
       error: null,
-      heatDataAlabama: [
-        { latitude: 34.774548, longitude: -90.757260, weight:5 },
-        { latitude: 34.774353, longitude: -90.756905, weight:6 },
-        { latitude: 33.939323, longitude: -91.845140, weight:6 },
-        { latitude: 33.957665, longitude: -91.727624, weight:8 },
-        { latitude: 33.672880, longitude: -94.132710, weight:8 },
-        { latitude: 33.699497, longitude: -94.229774, weight:8 },
-        { latitude: 35.288918, longitude: -93.734955, weight:4 }
-      ],
+      // heatDataAlabama: [
+      //   { latitude: 34.774548, longitude: -90.757260, weight:5 },
+      //   { latitude: 34.774353, longitude: -90.756905, weight:6 },
+      //   { latitude: 33.939323, longitude: -91.845140, weight:6 },
+      //   { latitude: 33.957665, longitude: -91.727624, weight:8 },
+      //   { latitude: 33.672880, longitude: -94.132710, weight:8 },
+      //   { latitude: 33.699497, longitude: -94.229774, weight:8 },
+      //   { latitude: 35.288918, longitude: -93.734955, weight:4 }
+      // ],
+      heatDataAlabama:[],
       markerCoordinate: { latitude: null, longitude: null },
       isMapReady: false,
       textInp: '',
@@ -57,7 +58,7 @@ class SearchMap extends React.Component {
       isLoaded: false,
       items: [],
       tableHead: ['Offence Type', 'Count'],
-      widthArr: [150, 60]
+      widthArr: [150, 60],
     };
     this.recordEvent = this.recordEvent.bind(this);
     this.onChangeMarker = this.onChangeMarker.bind(this);
@@ -66,16 +67,23 @@ class SearchMap extends React.Component {
     this.updateMarker = this.updateMarker.bind(this);
   }
 
-  componentWillMount() {
-    Geocoder.init("AIzaSyB4OJsFNMQncqptmQ3nAk-mbUNqqcCYYts");
-  }
-
   componentDidMount() {
+    Geocoder.init("AIzaSyB4OJsFNMQncqptmQ3nAk-mbUNqqcCYYts");
+
     fetch('http://192.168.1.14:8080/getIncidents')
       .then(response => response.json())
       .then(items => {
         this.setState({ items })
-      })
+    })
+
+    fetch('http://192.168.1.14:8080/getIncidentsHeatMap')
+      .then(response => response.json())
+      .then(heatDataAlabama => {
+        this.setState({ heatDataAlabama })
+    })
+    
+    
+      
   }
 
   show() {
@@ -171,12 +179,13 @@ class SearchMap extends React.Component {
     const tableDataFull = this.state.items;
     
     console.log(tableData);
+    console.log(this.state.heatDataAlabama);
     return (
       <View style={styles.container}>
         {this.state.toasterVisible ?
           <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg} /> : null
         }
-        <GoogleAutoComplete apiKey="AIzaSyB4OJsFNMQncqptmQ3nAk-mbUNqqcCYYts" debounce={500} minLength={4}>
+        <GoogleAutoComplete apiKey="" debounce={500} minLength={4}>
           {({
             handleTextChange,
             locationResults,
@@ -209,15 +218,18 @@ class SearchMap extends React.Component {
               </React.Fragment>
             )}
         </GoogleAutoComplete>
+        
         <MapView style={styles.map}
           provider='google'
           zoomEnabled={true}
-          region={{
+          region={ this.state.markerCoordinate.latitude != null ?
+            {
             latitude: this.state.markerCoordinate.latitude,
             longitude: this.state.markerCoordinate.longitude,
             longitudeDelta: 0.1,
             latitudeDelta: 0.1
-          }}
+          } : null
+        }
           zoomTapEnabled={false}
           onPress={this.onChangeMarker}
           onLayout={() => this.onMapLayout()}
@@ -226,6 +238,7 @@ class SearchMap extends React.Component {
           {/* {this.state.isMapReady ==true ? 
               <Circle center ={this.state.markerCoordinate} radius={5000}/>:null} */}
           
+          {this.state.heatDataAlabama.length >0 ?
           <Heatmap
             points = {this.state.heatDataAlabama}
             // gradient = {{
@@ -233,7 +246,7 @@ class SearchMap extends React.Component {
             //   startPoints: [0, 0.25, 0.50, 0.75, 1],
             //   colorMapSize: 500
             // }}
-          ></Heatmap>
+          ></Heatmap> : null }
           {this.state.isMapReady == true ?
             <MapView.Marker coordinate={this.state.markerCoordinate}
               image={markerImage}>

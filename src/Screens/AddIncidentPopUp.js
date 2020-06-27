@@ -38,13 +38,7 @@ class AddIncidentPopUp extends React.Component {
             toasterMsg: '',
             coordinate: null,
             selectedValue: null,
-            typeOfIncident : [
-                { value: 'Fire', }, 
-                { value: 'Accident', }, 
-                { value: 'Incident X', },
-                { value: 'Incident Y', },
-                { value: 'Incident Z', }
-            ]
+            typeOfIncident : []
         }
 
         this.setSelectedValue = this.setSelectedValue.bind(this);
@@ -52,6 +46,15 @@ class AddIncidentPopUp extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleImageClick = this.handleImageClick.bind(this);
         this.handleVideoClick = this.handleVideoClick.bind(this);
+    }
+
+    componentDidMount(){
+        fetch('http://192.168.1.14:8080/getIncidentsHeatMap')
+        .then(response => response.json())
+        .then(typeOfIncident => {
+            this.setState({ typeOfIncident })
+    })
+
     }
 
     handleImageClick() {

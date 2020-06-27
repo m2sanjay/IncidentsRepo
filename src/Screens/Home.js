@@ -172,7 +172,7 @@ class Home extends React.Component {
         //this.props.navigation.navigate(screen, {data: coords, callback: this.callbackMapFn});
     }
 	
-	    enableModalFn(screen, markerCoords){
+	enableModalFn(screen, markerCoords){
         this.setState({ visibleModal: true, newCoords: markerCoords });
     };
 

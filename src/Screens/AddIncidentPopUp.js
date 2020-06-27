@@ -38,7 +38,9 @@ class AddIncidentPopUp extends React.Component {
             toasterMsg: '',
             coordinate: null,
             selectedValue: null,
-            typeOfIncident : []
+            typeOfIncident : [],
+            selectedOffenseId: null,
+            selectedOffenseName: null
         }
 
         this.setSelectedValue = this.setSelectedValue.bind(this);
@@ -48,13 +50,13 @@ class AddIncidentPopUp extends React.Component {
         this.handleVideoClick = this.handleVideoClick.bind(this);
     }
 
-    componentDidMount(){
-        fetch('http://192.168.1.14:8080/getIncidentsHeatMap')
+    componentWillMount(){
+        fetch('http://192.168.1.14:8080/getOffenses')
         .then(response => response.json())
         .then(typeOfIncident => {
             this.setState({ typeOfIncident })
     })
-
+        console.log(this.state.typeOfIncident);
     }
 
     handleImageClick() {
@@ -111,12 +113,18 @@ class AddIncidentPopUp extends React.Component {
         }
     };
 
-    setSelectedValue(value){
-        this.setState({ selectedValue : value});
+    setSelectedValue(value, id){
+        console.log(id);
+        console.log(value);
+        this.setState({ selectedOffenseId : id, selectedOffenseName: value});
     }
 
     handleChange(e){
         this.setState({text: e});
+    }
+
+    postIncident(){
+        let postJson = null;
     }
 
     handleSubmit() {
@@ -183,7 +191,7 @@ class AddIncidentPopUp extends React.Component {
                                         paddingLeft: 10,
                                         paddingRight: 10 
                                     }}
-                                    onChangeText={this.setSelectedValue}
+                                    onChangeText={(e, v) => this.setSelectedValue(e, v)}
                                 />
                                 <Block row style={{padding: 10}}>
                                 <Textarea2

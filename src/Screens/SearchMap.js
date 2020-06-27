@@ -50,6 +50,7 @@ class SearchMap extends React.Component {
       // ],
       heatDataAlabama:[],
       markerCoordinate: { latitude: null, longitude: null },
+      selectedAddress: {},
       isMapReady: false,
       textInp: '',
       toasterVisible: false,
@@ -68,7 +69,7 @@ class SearchMap extends React.Component {
   }
 
   componentDidMount() {
-    Geocoder.init("AIzaSyB4OJsFNMQncqptmQ3nAk-mbUNqqcCYYts");
+    Geocoder.init("");
 
     fetch('http://192.168.1.14:8080/getIncidents')
       .then(response => response.json())
@@ -112,16 +113,33 @@ class SearchMap extends React.Component {
     };
   }
   onChangeMarker(e) {
-    console.log("Changing Marker");
-    this.setState({ markerCoordinate: { latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.longitude } });
+    this.setState({ markerCoordinate: { 
+        latitude: e.nativeEvent.coordinate.latitude, 
+        longitude: e.nativeEvent.coordinate.longitude 
+      } 
+    });
 
     console.log("Getting Address Data");
     Geocoder.from(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)
       .then(json => {
-        var addressComponent = json.results[0];//.address_components[0];
-        console.log(addressComponent.formatted_address);
+         //console.log(json);
+         var addressComponent = json.results[0].address_components;
+         console.log(addressComponent);
+         this.setState({ selectedAddress : addressComponent});
+         console.log("getting data from state");
+         console.log(this.state.selectedAddress);     
       })
       .catch(error => console.warn(error));
+    
+    // console.log("Getting Address Data");
+    // Geocoder.from(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)
+    //   .then(json => {
+    //     console.log(json);
+    //     var addressComponent = json.results[0];//.address_components[0];
+    //     console.log(addressComponent.formatted_address);
+    //   })
+    //   .catch(error => console.warn(error));
+    //console.log(this.state.selectedAddress);
   }
   navigate() {
     //this.props.navigateTo('AddIncident', {data: this.state.markerCoordinate});
@@ -178,8 +196,8 @@ class SearchMap extends React.Component {
     
     const tableDataFull = this.state.items;
     
-    console.log(tableData);
-    console.log(this.state.heatDataAlabama);
+    //console.log(tableData);
+    //console.log(this.state.heatDataAlabama);
     return (
       <View style={styles.container}>
         {this.state.toasterVisible ?
@@ -231,7 +249,7 @@ class SearchMap extends React.Component {
           } : null
         }
           zoomTapEnabled={false}
-          onPress={this.onChangeMarker}
+          onPress={this.onChangeMarker.bind(this)}
           onLayout={() => this.onMapLayout()}
         >
           

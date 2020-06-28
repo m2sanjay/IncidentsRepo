@@ -163,10 +163,9 @@ class Home extends React.Component {
     }
 
     callbackPopUpAPI(postJson, createOrUpdate){
-        console.log(postJson);
-        console.log(createOrUpdate);
         fetch('http://192.168.1.14:8080/addIncident/', {
             method: 'POST',
+
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
@@ -210,6 +209,8 @@ class Home extends React.Component {
             createIncident={this.callbackPopUpAPI.bind(this)} 
             coordinate={this.state.newCoords.data}
             selectedAddress={this.state.newCoords.selectedAddress}
+            updateExisting={this.state.newCoords.updateExisting}
+            existingIncidents={this.state.newCoords.existingIncidents}
           />
         </Block>
     );

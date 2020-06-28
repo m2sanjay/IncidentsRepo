@@ -21,6 +21,7 @@ import { Table, TableWrapper, Row } from 'react-native-table-component';
 import markerImage from './../Images/marker100.png';
 
 import _ from 'lodash';
+import { Block } from 'galio-framework';
 
 //const SPACE = 0.01;
 const Toast = (props) => {
@@ -69,7 +70,7 @@ class SearchMap extends React.Component {
   }
 
   componentDidMount() {
-    Geocoder.init("AIzaSyB4OJsFNMQncqptmQ3nAk-mbUNqqcCYYts");
+    Geocoder.init("");
 
     fetch('http://192.168.1.14:8080/getIncidents')
       .then(response => response.json())
@@ -142,9 +143,23 @@ class SearchMap extends React.Component {
   }
   navigate() {
     //this.props.navigateTo('AddIncident', {data: this.state.markerCoordinate});
-    this.props.enableModal('AddIncident', { data: this.state.markerCoordinate, 
-      selectedAddress: this.state.selectedAddress});
+    this.props.enableModal('AddIncident', { 
+      data: this.state.markerCoordinate, 
+      selectedAddress: this.state.selectedAddress,
+      updateExisting: false,
+      existingIncidents: null
+    });
   }
+
+  updateIncidentToExistingLocation(obj) {
+    this.props.enableModal('AddIncident', { 
+      data: null, 
+      selectedAddress: null, 
+      updateExisting: true,
+      existingIncidents: obj
+    });
+  }
+
   navigateToDetails(details) {
     this.props.navigateTo('IncidentDetailsScreen', details);
   }
@@ -203,7 +218,7 @@ class SearchMap extends React.Component {
         {this.state.toasterVisible ?
           <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg} /> : null
         }
-        <GoogleAutoComplete apiKey="AIzaSyB4OJsFNMQncqptmQ3nAk-mbUNqqcCYYts" debounce={500} minLength={4}>
+        <GoogleAutoComplete apiKey="" debounce={500} minLength={4}>
           {({
             handleTextChange,
             locationResults,
@@ -288,7 +303,9 @@ class SearchMap extends React.Component {
                 title={o.offenceName}
                 description={o.offenceName}
               >
-                <Callout onPress={() => this.navigateToDetails(o)} style={styles.plainView}>
+                <Callout //onPress={() => this.navigateToDetails(o)} 
+                    onPress={() => this.updateIncidentToExistingLocation(o)}
+                    style={styles.plainView}>
                   {/* <View >
                         <Text>{o.title}</Text>
                       </View> */}
@@ -316,6 +333,14 @@ class SearchMap extends React.Component {
                             }
                           </Table>
                         </ScrollView>
+                        <Block center row style={{margiflexDirection: 'row', justifyContent: 'flex-end'}}>
+                            <Button
+                              containerStyle={styles.createButton3}
+                              type="solid"
+                              onPress={this.updateIncidentToExistingLocation} 
+                              titleStyle={{color:'black', fontSize: 12 }} 
+                              title='Add new incident'/> 
+                          </Block>
                       </View>
                     </ScrollView>
                   </View>
@@ -369,6 +394,13 @@ const styles = StyleSheet.create({
   plainViewNew: {
     width: width * 0.25,
     alignItems: 'center',
+  },
+  createButton3: {
+    marginTop: 10,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    alignSelf: 'flex-end'
+    
   },
   container: {
     ...StyleSheet.absoluteFillObject,

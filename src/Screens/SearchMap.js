@@ -95,6 +95,7 @@ class SearchMap extends React.Component {
   hide() {
     this.marker1.hideCallout();
   }
+
   makeEvent(e, name) {
     return {
       id: id++,
@@ -114,7 +115,11 @@ class SearchMap extends React.Component {
     };
   }
   onChangeMarker(e) {
-    this.setState({ markerCoordinate: { 
+      console.log("onChangeMarker");
+      this.props.updateTicker(e.nativeEvent.coordinate.latitude, 
+        e.nativeEvent.coordinate.longitude );
+    
+      this.setState({ markerCoordinate: { 
         latitude: e.nativeEvent.coordinate.latitude, 
         longitude: e.nativeEvent.coordinate.longitude 
       } 
@@ -182,6 +187,7 @@ class SearchMap extends React.Component {
     })
   }
   onMapLayout = () => {
+    console.log("onMapLayout");
     let geoOptions = {
       enableHighAccuracy: true,
       timeOut: 20000,
@@ -191,6 +197,8 @@ class SearchMap extends React.Component {
     navigator.geolocation.getCurrentPosition(this.geoSuccess,
       this.geoFailure,
       geoOptions);
+
+      
   }
   render() {
     //console.log(this.state.items);

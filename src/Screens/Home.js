@@ -20,6 +20,7 @@ class Home extends React.Component {
         this.state = {
             text: '',
             title: '',
+            /*
             tickerArray: [
                 {
                     title: 'Inspections & Public Service',
@@ -75,8 +76,9 @@ class Home extends React.Component {
                     comments: [{id: '1', name: 'User 1', text: 'Incidents 7 Comments by User 1'}],
                     imageUrls: [],
                     videoUrls: []
-                }*/
-            ],
+                }
+            ],*/
+            tickerArray: [],
             visibleModal: false,
             newCoords: null
         }
@@ -90,10 +92,21 @@ class Home extends React.Component {
         this.closePopUp = this.closePopUp.bind(this);
         this.callbackPopUp = this.callbackPopUp.bind(this);
         this.callbackPopUpAPI = this.callbackPopUpAPI.bind(this);
+        this.updateTicker = this.updateTicker.bind(this);
     }
     handleChange1(e){
         this.setState({title: e});
     }
+    
+    updateTicker(latitude, longitude){
+
+        fetch('http://192.168.1.14:8080/getIncidentsListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
+            .then(response => response.json())
+            .then(tickerArray => {
+            this.setState({ tickerArray })
+        })
+    }
+
     handleChange(e){
         this.setState({text: e});
     }
@@ -217,8 +230,10 @@ class Home extends React.Component {
 
 
     render() {
-        
-      return (
+    
+    const tickerData = this.state.tickerArray;
+
+    return (
         
     <View style={styles.container}>
         <Block style={{backgroundColor: '#0A121A', width, height, zIndex: 1}}>
@@ -231,27 +246,32 @@ class Home extends React.Component {
                         <TextTicker style={{ height:50,padding:15,fontSize: 17, backgroundColor: 'black'}} 
                             //duration={10000} bounce={false}
                             loop={true}
-                            scrollSpeed={3000}
+                            //scrollSpeed={3000}
+                            scrollSpeed={8000}
                             >
-                        {this.state.tickerArray.map((incident, i) => (
+                                {console.log("tickerData")}
+                                {console.log(tickerData)}
+                        {tickerData.length > 0 ?
+                         tickerData.map((incident, i) => (
                             <Text style={{color: 'orange'}} key={i} onPress={() => this.props.navigation.navigate('IncidentDetailsScreen', {data: incident, callback: this.callbackFn})}>
-                                {incident.title  + '  |  '}
+                                {incident.offenseList[0].offenseName  + '  |  '}
                             </Text>
-                        ))}
+                        )) : null }
                         </TextTicker>    
                     </View>
                 </View>
             </View>
             <SearchMap 
                 navigateTo={this.navigate.bind(this)} 
-                tickerArray={this.state.tickerArray}
-                enableModal={this.enableModalFn.bind(this)} />
-            {this.state.visibleModal == true ? 
-                <View style={{  marginTop: '50%',  height:height * .5}}>
-                    <Modal isVisible={this.state.visibleModal}>
-                        {this.renderModalContent()}
-                    </Modal>
-                </View> : null}
+                //tickerArray={this.state.tickerArray}
+                enableModal={this.enableModalFn.bind(this)}
+                updateTicker={this.updateTicker.bind(this)} />
+                {this.state.visibleModal == true ? 
+                    <View style={{  marginTop: '50%',  height:height * .5}}>
+                        <Modal isVisible={this.state.visibleModal}>
+                            {this.renderModalContent()}
+                        </Modal>
+                    </View> : null}
 			{/* <View style={styles.add} >
                 <Block middle>
                     <Button style={styles.createButton} onPress={() => this.props.navigation.navigate('AddIncident', {callback: this.saveIncident})}>

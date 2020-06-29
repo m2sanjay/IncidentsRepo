@@ -108,6 +108,7 @@ class AddIncidentPopUp extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleImageClick = this.handleImageClick.bind(this);
         this.handleVideoClick = this.handleVideoClick.bind(this);
+        //this.setOffensesTypes = this.setOffensesTypes.bind(this);
     }
 
     componentWillMount(){
@@ -177,9 +178,7 @@ class AddIncidentPopUp extends React.Component {
     };
 
     setSelectedValue(value, id){
-        //console.log(id);
-        //console.log(value);
-        this.setState({ selectedOffenseId : id, selectedOffenseName: value});
+        this.setState({ selectedOffenseId : ++id, selectedOffenseName: value});
     }
 
     handleChange(e){
@@ -206,24 +205,26 @@ class AddIncidentPopUp extends React.Component {
             var existingIncidents = this.state.existingIncidents;
             
             var postJson2 = {
-                incidentId:null,							//should be null
-                incidentYear:2018,							//should be 2018 for now
-                localityId:null,							//should be null
-                count:0,									//should be 0
-                offenseId: this.state.selectedOffenseId,    //Mandatory(Type->Int). Value from Offense Table
-                offenceName: this.state.selectedOffenseName, //Can be null/blank/Value from Offense Table
-                localityName: existingIncidents.localityName,	// Shoudn't be null
-                area:existingIncidents.area,						// Either same as locality or from geocoder
-                division:existingIncidents.division,					// Either same as locality or from geocoder
-                latitude: existingIncidents.latitude,	// Mandatory(Type->Double)
-                longitude: existingIncidents.longitude,	// Mandatory(Type->Double)
-                stateId:0,									//should be 0
-                stateName: existingIncidents.stateName,			// Mandatory(Type->String)
-                regionId:0,									// should be 0
-                regionName:null,							// Can be null/blank
-                countryId:0,								//should be 0
-                countryName:""								//Can be null/blank
+                    incidentId:null,							//should be null
+                    incidentYear:2018,							//should be 2018 for now
+                    localityId:null,							//should be null
+                    count:0,									//should be 0
+                    offenseId: this.state.selectedOffenseId,    //Mandatory(Type->Int). Value from Offense Table
+                    offenceName: this.state.selectedOffenseName, //Can be null/blank/Value from Offense Table
+                    localityName: existingIncidents.localityName,	// Shoudn't be null
+                    area:existingIncidents.area,						// Either same as locality or from geocoder
+                    division:existingIncidents.division,					// Either same as locality or from geocoder
+                    latitude: existingIncidents.latitude,	// Mandatory(Type->Double)
+                    longitude: existingIncidents.longitude,	// Mandatory(Type->Double)
+                    stateId:0,									//should be 0
+                    stateName: existingIncidents.stateName,			// Mandatory(Type->String)
+                    regionId:0,									// should be 0
+                    regionName:null,							// Can be null/blank
+                    countryId:0,								//should be 0
+                    countryName:""								//Can be null/blank
             }
+
+            console.log(postJson2);
 
             if (this.state.selectedOffenseId == null) {
                 this.setState({

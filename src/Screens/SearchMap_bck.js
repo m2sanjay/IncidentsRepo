@@ -70,19 +70,19 @@ class SearchMap extends React.Component {
   }
 
   componentDidMount() {
-    Geocoder.init("");
+    Geocoder.init("AIzaSyB4OJsFNMQncqptmQ3nAk-mbUNqqcCYYts");
 
-    // fetch('http://192.168.1.14:8080/getIncidents')
-    //   .then(response => response.json())
-    //   .then(items => {
-    //     this.setState({ items })
-    // })
+    fetch('http://192.168.1.14:8080/getIncidents')
+      .then(response => response.json())
+      .then(items => {
+        this.setState({ items })
+    })
 
-    // fetch('http://192.168.1.14:8080/getIncidentsHeatMap')
-    //   .then(response => response.json())
-    //   .then(heatDataAlabama => {
-    //     this.setState({ heatDataAlabama })
-    // }) 
+    fetch('http://192.168.1.14:8080/getIncidentsHeatMap')
+      .then(response => response.json())
+      .then(heatDataAlabama => {
+        this.setState({ heatDataAlabama })
+    }) 
     
     
       
@@ -116,8 +116,8 @@ class SearchMap extends React.Component {
   }
   onChangeMarker(e) {
       console.log("onChangeMarker");
-      this.props.updateData(e.nativeEvent.coordinate.latitude, 
-        e.nativeEvent.coordinate.longitude);
+      this.props.updateTicker(e.nativeEvent.coordinate.latitude, 
+        e.nativeEvent.coordinate.longitude );
     
       this.setState({ markerCoordinate: { 
         latitude: e.nativeEvent.coordinate.latitude, 
@@ -169,30 +169,22 @@ class SearchMap extends React.Component {
     this.props.navigateTo('IncidentDetailsScreen', details);
   }
   updateMarker(selectedLatitude, selectedLongitude) {
-    console.log("updateMarker");
-    this.props.updateData(selectedLatitude, selectedLongitude);
     this.setState({
       isMapReady: true,
       markerCoordinate: { latitude: selectedLatitude, longitude: selectedLongitude }
-    });
-
+    })
   }
   geoSuccess = (position) => {
     this.setState({
       isMapReady: true,
       markerCoordinate: { latitude: position.coords.latitude, longitude: position.coords.longitude }
-    });
-
-    console.log("geoSuccess");
-    this.props.updateData(position.coords.latitude, position.coords.longitude);
+    })
   }
   geoFailure = (err) => {
     this.setState({
       isMapReady: true,
       markerCoordinate: { latitude: 22.5726, longitude: 88.3639 }
-    });
-    console.log("geoSuccess");
-    this.props.updateData(22.5726, 88.3639);
+    })
   }
   onMapLayout = () => {
     console.log("onMapLayout");
@@ -227,9 +219,6 @@ class SearchMap extends React.Component {
     
     const tableDataFull = this.state.items;
     
-    let heatMapData = this.props.heatData;
-    heatMapData = heatMapData.map(eachData => eachData.basicData);
-    //console.log(heatMapData);
     //console.log(tableData);
     //console.log(this.state.heatDataAlabama);
     return (
@@ -237,7 +226,7 @@ class SearchMap extends React.Component {
         {this.state.toasterVisible ?
           <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg} /> : null
         }
-        <GoogleAutoComplete apiKey="" debounce={500} minLength={4}>
+        <GoogleAutoComplete apiKey="AIzaSyB4OJsFNMQncqptmQ3nAk-mbUNqqcCYYts" debounce={500} minLength={4}>
           {({
             handleTextChange,
             locationResults,
@@ -287,24 +276,18 @@ class SearchMap extends React.Component {
           onLayout={() => this.onMapLayout()}
         >
           
-          {this.state.isMapReady ==true ? 
-              <Circle center ={this.state.markerCoordinate} 
-                radius={2000} 
-                fillColor='rgba(255,0,0,.55)'/> : null}
-          {/* Amber fillColor='rgba(255,191,0,.55)' */}
-          {/* Amber fillColor='rgba(255,191,0,.55)' */}
-
-          {/* Amber fillColor='rgba(255,191,0,.55)' */}
-          {heatMapData.length >0 ?
-            <Heatmap
-              points = {heatMapData}
-              // gradient = {{
-              //    colors: ["#79BC6A", "#BBCF4C", "EEC20B", "#F29305", "E50000"],
-              //    startPoints: [0, 0.25, 0.50, 0.75, 1],
-              //    colorMapSize: 500
-              // }}
-            ></Heatmap> : null 
-          }
+          {/* {this.state.isMapReady ==true ? 
+              <Circle center ={this.state.markerCoordinate} radius={5000}/>:null} */}
+          
+          {this.state.heatDataAlabama.length >0 ?
+          <Heatmap
+            points = {this.state.heatDataAlabama}
+            // gradient = {{
+            //    colors: ["#79BC6A", "#BBCF4C", "EEC20B", "#F29305", "E50000"],
+            //    startPoints: [0, 0.25, 0.50, 0.75, 1],
+            //    colorMapSize: 500
+            // }}
+          ></Heatmap> : null }
           {this.state.isMapReady == true ?
             <MapView.Marker coordinate={this.state.markerCoordinate}
               image={markerImage}>

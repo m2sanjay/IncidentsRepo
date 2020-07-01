@@ -197,8 +197,18 @@ class AddIncidentPopUp extends React.Component {
         //     return;
         // }
 
-        console.log(this.state.updateExisting);
+        if (this.state.selectedOffenseId == null) {
+            this.setState({
+                toasterVisible: true,
+                toasterMsg: "Please select any Offence Type",
+            });
+            return;
+        }
 
+
+        console.log("Handling POST");
+        console.log(this.state.updateExisting);
+        console.log(this.state.selectedAddress);
         var iFlag = this.state.updateExisting;
 
         if(iFlag){
@@ -206,11 +216,12 @@ class AddIncidentPopUp extends React.Component {
             
             var postJson2 = {
                     incidentId:null,							//should be null
+                    description: this.state.text,
                     incidentYear:2018,							//should be 2018 for now
                     localityId:null,							//should be null
                     count:0,									//should be 0
                     offenseId: this.state.selectedOffenseId,    //Mandatory(Type->Int). Value from Offense Table
-                    offenceName: this.state.selectedOffenseName, //Can be null/blank/Value from Offense Table
+                    offenseName: this.state.selectedOffenseName, //Can be null/blank/Value from Offense Table
                     localityName: existingIncidents.localityName,	// Shoudn't be null
                     area:existingIncidents.area,						// Either same as locality or from geocoder
                     division:existingIncidents.division,					// Either same as locality or from geocoder
@@ -221,19 +232,12 @@ class AddIncidentPopUp extends React.Component {
                     regionId:0,									// should be 0
                     regionName:null,							// Can be null/blank
                     countryId:0,								//should be 0
-                    countryName:""								//Can be null/blank
+                    countryName:""     							//Can be null/blank
             }
 
             console.log(postJson2);
 
-            if (this.state.selectedOffenseId == null) {
-                this.setState({
-                    toasterVisible: true,
-                    toasterMsg: "Please select any Offence Type",
-                });
-                return;
-            }
-    
+            
             this.setState({ submitted: true });
 
             this.props.createIncident(
@@ -241,16 +245,17 @@ class AddIncidentPopUp extends React.Component {
                 "Update"
             ); 
     
-            this.props.closePopUp();
-            
             this.setState({
                 toasterVisible: true,
-                toasterMsg: "Incident Comments Added Successfully",
+                toasterMsg: "Incident Added Successfully",
                 text: "",
                 imageUrl: "",
                 videoUrl: "",
             });
+
+            this.props.closePopUp();
             
+                        
     
         }
         else{
@@ -265,11 +270,12 @@ class AddIncidentPopUp extends React.Component {
     
             var postJson = {
                 incidentId:null,							//should be null
+                description: this.state.text,
                 incidentYear:2018,							//should be 2018 for now
                 localityId:null,							//should be null
                 count:0,									//should be 0
                 offenseId: this.state.selectedOffenseId,    //Mandatory(Type->Int). Value from Offense Table
-                offenceName:this.state.selectedOffenseName, //Can be null/blank/Value from Offense Table
+                offenseName:this.state.selectedOffenseName, //Can be null/blank/Value from Offense Table
                 localityName: localityName[0].long_name,	// Shoudn't be null
                 area:"Test Locality",						// Either same as locality or from geocoder
                 division:"Test Locality",					// Either same as locality or from geocoder
@@ -283,15 +289,14 @@ class AddIncidentPopUp extends React.Component {
                 countryName:""								//Can be null/blank
             }
     
-            if (this.state.selectedOffenseId == null) {
-                this.setState({
-                    toasterVisible: true,
-                    toasterMsg: "Please select any Offence Type",
-                });
-                return;
-            }
-    
-            this.setState({ submitted: true });
+            this.setState({
+                submitted: true,
+                toasterVisible: true,
+                toasterMsg: "Incident Added Successfully",
+                text: "",
+                imageUrl: "",
+                videoUrl: "",
+            });
             
             // this.props.createIncident(
             //         this.state.selectedValue,
@@ -304,16 +309,8 @@ class AddIncidentPopUp extends React.Component {
                 postJson,
                 "New"
             ); 
-    
             this.props.closePopUp();
             
-            this.setState({
-                toasterVisible: true,
-                toasterMsg: "Incident Comments Added Successfully",
-                text: "",
-                imageUrl: "",
-                videoUrl: "",
-            });
         }
         
     }

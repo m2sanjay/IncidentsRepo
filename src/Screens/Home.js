@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Dimensions, ActivityIndicator, ToastAndroid } from 'react-native';
 import { Text, Block } from 'galio-framework';
 import TextTicker from 'react-native-text-ticker';
 import SearchMap from "./SearchMap.js";
@@ -11,6 +11,13 @@ import AddIncidentPopUp from './AddIncidentPopUp';
 
 const { width, height } = Dimensions.get("screen");
 
+const Toast = (props) => {
+    if (props.visible) {
+        ToastAndroid.showWithGravityAndOffset(props.message, ToastAndroid.LONG, ToastAndroid.TOP, 25, 150);
+        return null;
+    }
+    return null;
+};
 
 class Home extends React.Component {
     constructor(props) {
@@ -19,11 +26,13 @@ class Home extends React.Component {
             text: '',
             title: '',
             tickerArray: [],
-            heatData: [],
+            heatData: 0,
             visibleModal: false,
             newCoords: null,
             isLoaded: true,
             error: null,
+            toasterVisible: false,
+            toasterMsg: '',
         }
         this.callbackFn = this.callbackFn.bind(this);
         this.callbackMapFn = this.callbackMapFn.bind(this);
@@ -34,29 +43,33 @@ class Home extends React.Component {
         this.callbackPopUp = this.callbackPopUp.bind(this);
         this.callbackPopUpAPI = this.callbackPopUpAPI.bind(this);
         this.updateTicker = this.updateTicker.bind(this);
-        this.updateData = this.updateData.bind(this);   
+        this.updateData = this.updateData.bind(this);
+        this.getUpdatedHeat = this.getUpdatedHeat.bind(this);
     }
 
     updateData(latitude, longitude){
        this.setState({ isLoaded : true });
        console.log("Getting HeatMap Data from DB");
        console.log(latitude, longitude);
-       fetch('http://192.168.1.14:8080/getIncidentsListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
+       fetch('http://192.168.1.14:8080/getCount?lat=' + latitude + '&lng=' + longitude)
             .then(res => res.json())
             .then(
               (heatData) => {
                 this.setState({
                   isLoaded: false,
-                  heatData: heatData
+                  heatData: heatData,
+                  toasterVisible: false
                 });
               },
               (error) => {
                 this.setState({
                   isLoaded: false,
+                  toasterVisible: false,
                   error
                 });
               }
-        )
+        );
+     console.log(this.state.heatData);
     }
 
     updateTicker(latitude, longitude) {
@@ -117,16 +130,22 @@ class Home extends React.Component {
     }
 
     callbackPopUpAPI(postJson, createOrUpdate) {
-        // fetch('http://192.168.1.14:8080/addIncident/', {
-        //     method: 'POST',
+        console.log(postJson);
+        fetch('http://192.168.1.14:8080/addIncident/', {
+            method: 'POST',
 
-        //     headers: {
-        //         Accept: 'application/json',
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(postJson)
-        // }
-        // );
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postJson)
+        }
+        );
+
+        this.setState({
+            toasterVisible: true,
+            toasterMsg: "Incident Added Successfully",
+        });
     }
 
     navigate(screen, incDetails) {
@@ -169,6 +188,10 @@ class Home extends React.Component {
         </Block>
     );
 
+    getUpdatedHeat(){
+        this.state.toasterVisible = false;
+        return this.state.heatData;
+    }
 
     render() {
 
@@ -178,6 +201,9 @@ class Home extends React.Component {
         return (
 
             <View style={styles.container}>
+                {this.state.toasterVisible ?
+                    <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg}/>: null 
+                }
                 <Block style={{ backgroundColor: '#0A121A', width, height, zIndex: 1 }}>
                     <Block style={{ backgroundColor: '#00c5e8' }} middle>
                         <Text style={styles.profileText}>Incident Tracker</Text>
@@ -205,7 +231,7 @@ class Home extends React.Component {
                     <Spinner visible={this.state.isLoaded} textContent={"Loading..."} textStyle={{color: '#FFF'}} />
                     <SearchMap
                         navigateTo={this.navigate.bind(this)}
-                        heatData={this.state.heatData}
+                        heatData={this.getUpdatedHeat.bind(this)}
                         enableModal={this.enableModalFn.bind(this)}
                         updateTicker={this.updateTicker.bind(this)}
                         updateData={this.updateData.bind(this)} />

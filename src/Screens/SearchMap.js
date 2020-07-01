@@ -196,6 +196,7 @@ class SearchMap extends React.Component {
   }
   onMapLayout = () => {
     console.log("onMapLayout");
+    
     let geoOptions = {
       enableHighAccuracy: true,
       timeOut: 20000,
@@ -206,7 +207,7 @@ class SearchMap extends React.Component {
       this.geoFailure,
       geoOptions);
 
-      
+    
   }
   render() {
     //console.log(this.state.items);
@@ -227,9 +228,9 @@ class SearchMap extends React.Component {
     
     const tableDataFull = this.state.items;
     
-    let heatMapData = this.props.heatData;
-    heatMapData = heatMapData.map(eachData => eachData.basicData);
-    //console.log(heatMapData);
+    let heatMapData = this.props.heatData();
+    //heatMapData = heatMapData.map(eachData => eachData.basicData);
+    console.log(heatMapData);
     //console.log(tableData);
     //console.log(this.state.heatDataAlabama);
     return (
@@ -290,12 +291,15 @@ class SearchMap extends React.Component {
           {this.state.isMapReady ==true ? 
               <Circle center ={this.state.markerCoordinate} 
                 radius={2000} 
-                fillColor='rgba(255,0,0,.55)'/> : null}
+                fillColor=
+                {heatMapData > 300000 ? 'rgba(255,0,0,.55)' :
+                    heatMapData > 200000 ? 'rgba(255,191,0,.55)' :
+                    'rgba(0,255,0,.55)'} /> : null}
           {/* Amber fillColor='rgba(255,191,0,.55)' */}
           {/* Amber fillColor='rgba(255,191,0,.55)' */}
 
           {/* Amber fillColor='rgba(255,191,0,.55)' */}
-          {heatMapData.length >0 ?
+          {/* {heatMapData.length >0 ?
             <Heatmap
               points = {heatMapData}
               // gradient = {{
@@ -304,10 +308,11 @@ class SearchMap extends React.Component {
               //    colorMapSize: 500
               // }}
             ></Heatmap> : null 
-          }
+          } */}
           {this.state.isMapReady == true ?
             <MapView.Marker coordinate={this.state.markerCoordinate}
-              image={markerImage}>
+              image={markerImage}
+              ref={ref => {this.mark = ref; }}>
               <Callout onPress={this.navigate} style={styles.plainViewNew}>
                 <View>
                   <Text style={{color: 'black'}}>Add an incident</Text>

@@ -209,6 +209,11 @@ class SearchMap extends React.Component {
 
     
   }
+
+  setMarkerRef = (ref) => {
+    this.marker2 = ref;
+  }
+
   render() {
     //console.log(this.state.items);
     // const crimeData = this.state.items.forEach((o) => {
@@ -286,6 +291,7 @@ class SearchMap extends React.Component {
           zoomTapEnabled={false}
           onPress={this.onChangeMarker.bind(this)}
           onLayout={() => this.onMapLayout()}
+          onRegionChangeComplete={() => this.marker2.showCallout()}
         >
           
           {this.state.isMapReady ==true ? 
@@ -312,8 +318,9 @@ class SearchMap extends React.Component {
           {this.state.isMapReady == true ?
             <MapView.Marker coordinate={this.state.markerCoordinate}
               image={markerImage}
-              ref={ref => {this.mark = ref; }}>
-              <Callout onPress={this.navigate} style={styles.plainViewNew}>
+              ref={this.setMarkerRef}
+              > 
+              <Callout onPress={this.navigate} style={styles.plainViewNew} >
                 <View>
                   <Text style={{color: 'black'}}>Add an incident</Text>
                 </View>

@@ -33,6 +33,7 @@ class Home extends React.Component {
             error: null,
             toasterVisible: false,
             toasterMsg: '',
+            liveIncidents: []
         }
         this.callbackFn = this.callbackFn.bind(this);
         this.callbackMapFn = this.callbackMapFn.bind(this);
@@ -45,19 +46,56 @@ class Home extends React.Component {
         this.updateTicker = this.updateTicker.bind(this);
         this.updateData = this.updateData.bind(this);
         this.getUpdatedHeat = this.getUpdatedHeat.bind(this);
+        this.getLiveIncident = this.getLiveIncident.bind(this);
     }
 
     updateData(latitude, longitude){
        this.setState({ isLoaded : true });
        console.log("Getting HeatMap Data from DB");
        console.log(latitude, longitude);
-       fetch('http://192.168.1.14:8080/getCount?lat=' + latitude + '&lng=' + longitude)
+        fetch('http://192.168.1.14:8080/getCount?lat=' + latitude + '&lng=' + longitude)
             .then(res => res.json())
             .then(
               (heatData) => {
                 this.setState({
-                  isLoaded: false,
+                  //isLoaded: false,
                   heatData: heatData,
+                  toasterVisible: false
+                });
+              },
+              (error) => {
+                this.setState({
+                  //isLoaded: false,
+                  toasterVisible: false,
+                  error
+                });
+              }
+        );
+        fetch('http://192.168.1.14:8080/getTickerListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
+        .then(res => res.json())
+        .then(
+          (tickerArray) => {
+            this.setState({
+              //isLoaded: false,
+              tickerArray: tickerArray,
+              toasterVisible: false
+            });
+          },
+          (error) => {
+            this.setState({
+              //isLoaded: false,
+              toasterVisible: false,
+              error
+            });
+          }
+        );
+        fetch('http://192.168.1.14:8080/getLiveIncidentsListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
+            .then(res => res.json())
+            .then(
+              (liveIncidents) => {
+                this.setState({
+                  isLoaded: false,
+                  liveIncidents: liveIncidents,
                   toasterVisible: false
                 });
               },
@@ -69,7 +107,6 @@ class Home extends React.Component {
                 });
               }
         );
-     console.log(this.state.heatData);
     }
 
     updateTicker(latitude, longitude) {
@@ -80,7 +117,30 @@ class Home extends React.Component {
         //     })
     }
 
-    callbackFn(title, commentText, imageUrl, videoUrl) {
+    callbackFn(incident, commentText, imageUrls, videoUrl) {
+
+        //Saving files 
+        for(let i=0; i < imageUrls.length ; i++){
+            let localUrl = imageUrls[i];
+            let fileName =  localUrl.split('/').pop();
+            let formData = new FormData();
+
+            console.log(localUrl);
+            console.log(fileName);
+            console.log(imageUrls.length);
+
+            formData.append('photo' , { uri: localUrl, name: fileName, type: 'image'} );
+            return fetch('http://192.168.1.14:8080/addImage?incId='+ incident.incidentId ,{
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'content-type' : 'multipart/form-data'
+                }
+            });
+        }
+
+        console.log("Image Req submitted");
+        /*
         let node = _.filter(this.state.tickerArray, function (o) {
             if (o.title == title)
                 return o;
@@ -93,6 +153,8 @@ class Home extends React.Component {
         });
 
         this.setState({ tickerArray: this.state.tickerArray });
+        */
+
     }
 
     callbackMapFn(objTitle) {
@@ -130,22 +192,24 @@ class Home extends React.Component {
     }
 
     callbackPopUpAPI(postJson, createOrUpdate) {
-        console.log(postJson);
         fetch('http://192.168.1.14:8080/addIncident/', {
             method: 'POST',
-
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(postJson)
-        }
+            }
         );
 
         this.setState({
             toasterVisible: true,
+            isLoaded: true,
             toasterMsg: "Incident Added Successfully",
         });
+
+        this.updateData(postJson.latitude, postJson.longitude);
+
     }
 
     navigate(screen, incDetails) {
@@ -193,10 +257,20 @@ class Home extends React.Component {
         return this.state.heatData;
     }
 
+
+    getLiveIncident(){
+        return this.state.liveIncidents;
+    }
+
+    updateImages(){
+
+    }
+
     render() {
 
-        let tickerData = this.state.tickerArray;
-        //console.log(tickerData);
+        let liveIncidents = this.state.liveIncidents;
+        console.log("Ticker Data");
+        console.log(liveIncidents);
 
         return (
 
@@ -211,6 +285,7 @@ class Home extends React.Component {
                     <View style={{ height: 50 }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
                             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                            {liveIncidents.length > 0 ?
                                 <TextTicker style={{ height: 50, padding: 15, fontSize: 17, backgroundColor: 'black' }}
                                     //duration={10000} bounce={false}
                                     loop={true}
@@ -218,13 +293,17 @@ class Home extends React.Component {
                                     scrollSpeed={3000}
                                 >
 
-                                    {tickerData.length > 0 ?
-                                        tickerData.map((incident, i) => (
+                                    {liveIncidents.map((incident, i) => (
                                             <Text style={{ color: 'orange' }} key={i} onPress={() => this.props.navigation.navigate('IncidentDetailsScreen', { data: incident, callback: this.callbackFn })}>
-                                                {incident.offenseList[0].offenseName + '  |  '}
+                                                {incident.offenceName + '  |  '}
                                             </Text>
-                                        )) : null}
-                                </TextTicker>
+                                        ))} 
+                                </TextTicker> : 
+                                <Text style={{ height: 50, padding: 15, fontSize: 17, 
+                                    backgroundColor: 'black', color: 'orange' }}> 
+                                    No live Incident in selected area 
+                                </Text>
+                                }
                             </View>
                         </View>
                     </View>
@@ -232,6 +311,7 @@ class Home extends React.Component {
                     <SearchMap
                         navigateTo={this.navigate.bind(this)}
                         heatData={this.getUpdatedHeat.bind(this)}
+                        liveIncidents={this.getLiveIncident.bind(this)}
                         enableModal={this.enableModalFn.bind(this)}
                         updateTicker={this.updateTicker.bind(this)}
                         updateData={this.updateData.bind(this)} />

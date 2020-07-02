@@ -9,7 +9,7 @@ import { Input } from "../components";
 import { Images, argonTheme } from "../constants";
 const { width, height } = Dimensions.get("screen");
 
-import * as ImagePicker from 'expo-image-picker';
+import * as  ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import CameraView from './CameraView';
@@ -139,6 +139,7 @@ class AddIncidentPopUp extends React.Component {
             if (!result.cancelled) {
                 let urlsArray = this.state.imageUrls;
                 urlsArray.push(result.uri);
+                console.log(result);
                 this.setState({ imageUrls: urlsArray });
             }
         } catch (E) {
@@ -156,6 +157,7 @@ class AddIncidentPopUp extends React.Component {
             });
             if (!result.cancelled) {
                 let urlsArray = this.state.videoUrls;
+                console.log(result);
                 urlsArray.push(result.uri);
                 this.setState({ videoUrls: urlsArray });
             }
@@ -190,13 +192,6 @@ class AddIncidentPopUp extends React.Component {
     }
 
     handleSubmit() {
-        
-        //alert(this.state.text);
-        // if (this.state.text == '') {
-        //     alert('Please type in comments');
-        //     return;
-        // }
-
         if (this.state.selectedOffenseId == null) {
             this.setState({
                 toasterVisible: true,

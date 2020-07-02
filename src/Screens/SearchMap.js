@@ -59,8 +59,8 @@ class SearchMap extends React.Component {
       error: null,
       isLoaded: false,
       items: [],
-      tableHead: ['Offence Type', 'Count'],
-      widthArr: [140, 40],
+      tableHead: ['Offence Type', 'When'],
+      widthArr: [140, 140],
     };
     this.recordEvent = this.recordEvent.bind(this);
     this.onChangeMarker = this.onChangeMarker.bind(this);
@@ -234,6 +234,7 @@ class SearchMap extends React.Component {
     const tableDataFull = this.state.items;
     
     let heatMapData = this.props.heatData();
+    let liveIncidents = this.props.liveIncidents();
     //heatMapData = heatMapData.map(eachData => eachData.basicData);
     console.log(heatMapData);
     //console.log(tableData);
@@ -296,7 +297,7 @@ class SearchMap extends React.Component {
           
           {this.state.isMapReady ==true ? 
               <Circle center ={this.state.markerCoordinate} 
-                radius={2000} 
+                radius={4000} 
                 fillColor=
                 {heatMapData > 300000 ? 'rgba(255,0,0,.55)' :
                     heatMapData > 200000 ? 'rgba(255,191,0,.55)' :
@@ -327,8 +328,8 @@ class SearchMap extends React.Component {
               </Callout>
             </MapView.Marker>
             : null}
-          {this.state.items.length > 0 ? (
-            this.state.items.map((o, i) => (
+          {liveIncidents.length > 0 ? (
+            liveIncidents.map((o, i) => (
               <Marker key={i}
                 ref={ref => {
                   this.marker1 = ref;
@@ -341,7 +342,7 @@ class SearchMap extends React.Component {
                 description={o.offenceName}
               >
                 <Callout //onPress={() => this.navigateToDetails(o)} 
-                    onPress={() => this.updateIncidentToExistingLocation(o)}
+                    //onPress={() => this.updateIncidentToExistingLocation(o)}
                     style={styles.plainView}>
                   {/* <View >
                         <Text>{o.title}</Text>
@@ -355,29 +356,27 @@ class SearchMap extends React.Component {
                         <ScrollView style={styles1.dataWrapper}>
                           <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
                             {
-                              _.filter(tableDataFull, incident => incident.latitude === o.latitude && incident.longitude === o.longitude)
-                              .map((rowData, index) => (
-                                <Row
-                                  key={index}
+                              <Row
+                                  //key={index}
                                   // data={o.latitude == rowData["latitude"] && o.longitude == rowData["longitude"] ?
                                   //   new Array(rowData["offenceName"] , rowData["count"]) : null }
-                                  data={new Array(rowData.offenceName, rowData.count)}
+                                  data={new Array(o.offenceName, o.createdDate)}
                                   widthArr={this.state.widthArr}
-                                  style={[styles1.row, index % 2 && { backgroundColor: '#F7F6E7' }]}
+                                  //style={[styles1.row, index % 2 && { backgroundColor: '#F7F6E7' }]}
+                                  style={[styles1.row]}
                                   textStyle={styles1.text}
                                 />
-                              ))
                             }
                           </Table>
                         </ScrollView>
-                        <Block center row style={{margiflexDirection: 'row', justifyContent: 'flex-end'}}>
+                        {/* <Block center row style={{margiflexDirection: 'row', justifyContent: 'flex-end'}}>
                             <Button
                               containerStyle={styles.createButton3}
                               type="solid"
                               onPress={this.updateIncidentToExistingLocation} 
                               titleStyle={{color:'black', fontSize: 12 }} 
                               title='Add new incident'/> 
-                          </Block>
+                          </Block> */}
                       </View>
                     </ScrollView>
                   </View>
@@ -425,7 +424,7 @@ const styles = StyleSheet.create({
     height: 140,
   },
   plainView: {
-    width: width * 0.5,
+    width: width * 0.7,
     alignItems: 'center',
   },
   plainViewNew: {

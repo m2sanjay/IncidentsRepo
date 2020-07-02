@@ -52,6 +52,8 @@ class IncidentDetailsScreen extends React.Component {
             videoUrl: "",
             toasterVisible: false,
             toasterMsg: "",
+            imageUrls: [],
+            videoUrls: [],
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleImageClick = this.handleImageClick.bind(this);
@@ -75,7 +77,10 @@ class IncidentDetailsScreen extends React.Component {
                 quality: 1,
             });
             if (!result.cancelled) {
-                this.setState({ imageUrl: result.uri });
+                let urlsArray = this.state.imageUrls;
+                urlsArray.push(result.uri);
+                console.log(result);
+                this.setState({ imageUrls: urlsArray });
             }
         } catch (E) {
             console.log(E);
@@ -117,31 +122,34 @@ class IncidentDetailsScreen extends React.Component {
         //     return;
         // }
 
-        if (this.state.text == "") {
-            this.setState({
-                toasterVisible: true,
-                toasterMsg: "Please type in comments",
-            });
-            return;
-        }
+        // if (this.state.text == "") {
+        //     this.setState({
+        //         toasterVisible: true,
+        //         toasterMsg: "Please type in comments",
+        //     });
+        //     return;
+        // }
 
         this.setState({ submitted: true });
+        
         if (this.props.navigation.state.params.callback != undefined) {
             this.props.navigation.state.params.callback(
-                this.props.navigation.state.params.data.title,
+                this.props.navigation.state.params.data,
                 this.state.text,
-                this.state.imageUrl,
-                this.state.videoUrl
+                this.state.imageUrls,
+                this.state.videoUrls
             );
         }
+        
         this.setState({
             toasterVisible: true,
-            toasterMsg: "Incident Comments Added Successfully",
+            toasterMsg: "Incident Updated Successfully",
             text: "",
-            imageUrl: "",
-            videoUrl: "",
+            imageUrls: [],
+            videoUrl: [],
         });
     }
+    
     render() {
         //alert(this.props.navigation.state.params.title);
         var incident = this.props.navigation.state.params.data;
@@ -162,13 +170,13 @@ class IncidentDetailsScreen extends React.Component {
                             style={{ flexDirection: "row", justifyContent: "space-between" }}
                         >
                             <Text h5 style={styles.horizontalText}>
-                                {incident.title}
+                                {incident.offenceName}
                             </Text>
                         </View>
                     </Block>
                     <Block flex middle>
                         <ScrollView style={styles.registerContainer}>
-                            {incident.imageUrls.length > 0 ? (
+                            {incident.imageUrls != undefined && incident.imageUrls.length > 0 ? (
                                 <View style={styles.imageView}>
                                     {incident.imageUrls.map((o, i) => (
                                         <Image
@@ -180,7 +188,7 @@ class IncidentDetailsScreen extends React.Component {
                                     ))}
                                 </View>
                             ) : null}
-                            {incident.videoUrls.length > 0 ? (
+                            {incident.videoUrls != undefined && incident.videoUrls.length > 0 ? (
                                 <View style={styles.imageView}>
                                     {incident.videoUrls.map((o, i) => (
                                         <Video
@@ -201,16 +209,17 @@ class IncidentDetailsScreen extends React.Component {
                             <Text
                                 style={{ borderWidth: 2, borderColor: "#0A121A", height: 1 }}
                             ></Text>
+                            {console.log(incident)}
                             <View style={styles.desc}>
-                                <Text style={styles.MessageText}>{incident.desc}</Text>
+                                <Text style={styles.MessageText}>{incident.description}</Text>
                             </View>
 
-                            {incident.comments.length > 0 ? (
+                            {incident.comments != undefined && incident.comments.length > 0 ? (
                                 <ScrollView style={styles.comments}>
                                     {incident.comments.map((com, i) => (
                                         <View key={i}>
                                             <Text style={styles.MessageText2}>{com.name}</Text>
-                                            {com.imageUrls != undefined && com.imageUrls != "" ? (
+                                            {/* {com.imageUrls != undefined && com.imageUrls != "" ? (
                                                 <Image
                                                     source={{ uri: com.imageUrls }}
                                                     resizeMode="contain"
@@ -229,7 +238,7 @@ class IncidentDetailsScreen extends React.Component {
                                                     useNativeControls={true}
                                                     style={{ marginLeft: "5%", width: 100, height: 100 }}
                                                 />
-                                            ) : null}
+                                            ) : null} */}
                                             <Text style={styles.MessageText1}>{com.text}</Text>
                                         </View>
                                     ))}
@@ -261,14 +270,14 @@ class IncidentDetailsScreen extends React.Component {
                                             onChangeText={(text) => this.handleChange(text)}
                                         />
                                         <Block row>
-                                            {this.state.imageUrl != undefined &&
-                                                this.state.imageUrl != "" ? (
+                                            {this.state.imageUrls.length > 0  ? 
+                                                this.state.imageUrls.map((eachImage, i) => (
                                                     <Image
-                                                        source={{ uri: this.state.imageUrl }}
+                                                        source={{ uri: eachImage }}
                                                         resizeMode="contain"
                                                         style={{ marginLeft: "5%", width: 50, height: 50 }}
-                                                    />
-                                                ) : null}
+                                                    />) 
+                                                    ) : null }
                                             {this.state.videoUrl != undefined &&
                                                 this.state.videoUrl != "" ? (
                                                     <Video

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Dimensions, ActivityIndicator, ToastAndroid } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Dimensions, ActivityIndicator, ToastAndroid, AsyncStorage } from 'react-native';
 import { Text, Block } from 'galio-framework';
 import TextTicker from 'react-native-text-ticker';
 import SearchMap from "./SearchMap.js";
@@ -8,6 +8,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import _ from 'lodash';
 
 import AddIncidentPopUp from './AddIncidentPopUp';
+import { Cache } from 'react-native-cache';
 
 const { width, height } = Dimensions.get("screen");
 
@@ -18,6 +19,14 @@ const Toast = (props) => {
     }
     return null;
 };
+
+const cache = new Cache({
+    namespace: 'InciTracker',
+    policy: {
+        maxEntries: 5000
+    },
+    backend: AsyncStorage 
+})
 
 class Home extends React.Component {
     constructor(props) {
@@ -200,7 +209,11 @@ class Home extends React.Component {
             },
             body: JSON.stringify(postJson)
             }
-        );
+        ).then(res => res.json())
+         .then(
+           (incidentId) => {
+            console.log(incidentId);
+        });
 
         this.setState({
             toasterVisible: true,

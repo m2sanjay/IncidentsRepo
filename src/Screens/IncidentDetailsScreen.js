@@ -73,6 +73,7 @@ class IncidentDetailsScreen extends React.Component {
             commentImageUrl:"",
             commentVideoUrl:""
         };
+        this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleImageClick = this.handleImageClick.bind(this);
         this.handleVideoClick = this.handleVideoClick.bind(this);
@@ -80,7 +81,7 @@ class IncidentDetailsScreen extends React.Component {
     }
 
     handleChange(e) {
-        this.setState({ text: e });
+        this.setState({ text: e, toasterVisible: false });
     }
 
     handleImageClick() {
@@ -100,7 +101,7 @@ class IncidentDetailsScreen extends React.Component {
                 let urlsArray = this.state.commentImageUrls;
                 urlsArray.push(result.uri);
                 //console.log(result);
-                this.setState({ commentImageUrls: urlsArray });
+                this.setState({ commentImageUrls: urlsArray, toasterVisible: false });
             }
         } catch (E) {
             console.log(E);
@@ -120,7 +121,7 @@ class IncidentDetailsScreen extends React.Component {
                 let urlsArrayVideo = this.state.commentVideoUrls;
                 urlsArrayVideo.push(result.uri);
                 //console.log(result);
-                this.setState({ commentVideoUrls: urlsArrayVideo });
+                this.setState({ commentVideoUrls: urlsArrayVideo, toasterVisible: false });
             }
         } catch (E) {
             console.log(E);
@@ -141,10 +142,10 @@ class IncidentDetailsScreen extends React.Component {
 
     handleSubmit() {
         //alert(this.state.text);
-        if (this.state.text == '') {
-            alert('Please type in comments');
-            return;
-        }
+        // if (this.state.text == '') {
+        //     alert('Please type in comments');
+        //     return;
+        // }
 
         if (this.state.text == "") {
             this.setState({
@@ -268,12 +269,11 @@ class IncidentDetailsScreen extends React.Component {
                             {valueFromCache.comments != undefined && valueFromCache.comments.length > 0 ? (
                                 <ScrollView style={styles.comments}>
                                     {valueFromCache.comments.map((com, i) => (
-                                        <View>
+                                        <ScrollView key={i}>
                                             <Text style={styles.MessageText2}>{com.name}</Text>
                                             {com.imageUrls != undefined && com.imageUrls.length > 0 ? (
                                                 com.imageUrls.map((o, i) => (
                                                     <Image
-                                                        key={i}
                                                         source={{ uri: o }}
                                                         resizeMode="contain"
                                                         style={{ marginLeft: "5%", width: 100, height: 100 }}
@@ -282,7 +282,6 @@ class IncidentDetailsScreen extends React.Component {
                                             {com.videoUrls != undefined && com.videoUrls.length > 0 ? (
                                                 com.videoUrls.map((o, i) => (
                                                 <Video
-                                                    key={i}
                                                     source={{ uri: o }}
                                                     rate={1.0}
                                                     volume={1.0}
@@ -295,7 +294,7 @@ class IncidentDetailsScreen extends React.Component {
                                                 /> ))
                                             ) : null}
                                             <Text style={styles.MessageText1}>{com.text}</Text>
-                                        </View>
+                                        </ScrollView>
                                     ))}
                                 </ScrollView>
                             ) : null}

@@ -324,7 +324,7 @@ class SearchMap extends React.Component {
           
           {this.state.isMapReady ==true ? 
               <Circle center ={this.state.markerCoordinate} 
-                radius={4000} 
+                radius={2500} 
                 fillColor=
                 {heatMapData > 300000 ? 'rgba(255,0,0,.55)' :
                     heatMapData > 200000 ? 'rgba(255,191,0,.55)' :

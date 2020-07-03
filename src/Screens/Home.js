@@ -63,8 +63,8 @@ class Home extends React.Component {
     updateData(latitude, longitude){
        this.setState({ isLoaded : true });
     //    console.log("Getting HeatMap Data from DB");
-    //    console.log(latitude, longitude);
-        fetch('http://192.168.1.14:8080/getCount?lat=' + latitude + '&lng=' + longitude)
+    //    console.log(latitude, longitude); http://incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com/
+        fetch('http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com/getCount?lat=' + latitude + '&lng=' + longitude)
             .then(res => res.json())
             .then(
               (heatData) => {
@@ -83,7 +83,7 @@ class Home extends React.Component {
               }
         );
         
-        fetch('http://192.168.1.14:8080/getTickerListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
+        fetch('http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com/getTickerListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
         .then(res => res.json())
         .then(
           (tickerArray) => {
@@ -102,7 +102,7 @@ class Home extends React.Component {
           }
         );
         
-        fetch('http://192.168.1.14:8080/getLiveIncidentsListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
+        fetch('http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com/getLiveIncidentsListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
             .then(res => res.json())
             .then(
               (liveIncidents) => {
@@ -236,7 +236,7 @@ class Home extends React.Component {
 
         console.log(postJson);
 
-        await fetch('http://192.168.1.14:8080/addIncident/', {
+        await fetch('http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com/addIncident/', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',

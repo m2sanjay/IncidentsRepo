@@ -112,7 +112,7 @@ class AddIncidentPopUp extends React.Component {
     }
 
     componentWillMount(){
-        fetch('http://192.168.1.14:8080/getOffenses')
+        fetch('http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com/getOffenses')
         .then(response => response.json())
         .then(typeOfIncident => {
             this.setState({ typeOfIncident })

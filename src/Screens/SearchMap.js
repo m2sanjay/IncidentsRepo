@@ -51,7 +51,7 @@ class SearchMap extends React.Component {
       // ],
       heatDataAlabama:[],
       markerCoordinate: { latitude: null, longitude: null },
-      selectedAddress: {},
+      selectedAddress: [],
       isMapReady: false,
       textInp: '',
       toasterVisible: false,
@@ -65,7 +65,7 @@ class SearchMap extends React.Component {
     this.recordEvent = this.recordEvent.bind(this);
     this.onChangeMarker = this.onChangeMarker.bind(this);
     this.navigate = this.navigate.bind(this);
-    this.navigateToDetails = this.navigateToDetails.bind(this);
+    //this.navigateToDetails = this.navigateToDetails.bind(this);
     this.updateMarker = this.updateMarker.bind(this);
   }
 
@@ -148,12 +148,33 @@ class SearchMap extends React.Component {
   }
   navigate() {
     //this.props.navigateTo('AddIncident', {data: this.state.markerCoordinate});
-    this.props.enableModal('AddIncident', { 
-      data: this.state.markerCoordinate, 
-      selectedAddress: this.state.selectedAddress,
-      updateExisting: false,
-      existingIncidents: null
-    });
+    let addressComponent = null;
+    if (this.state.selectedAddress.length == 0) {
+      Geocoder.from(this.state.markerCoordinate.latitude, this.state.markerCoordinate.longitude)
+      .then(json => {
+         //console.log(json);
+         addressComponent = json.results[0].address_components;
+         //console.log(addressComponent);
+         //this.setState({ selectedAddress : addressComponent});
+         //console.log("getting data from state");
+         //console.log(this.state.selectedAddress); 
+         this.props.enableModal('AddIncident', { 
+          data: this.state.markerCoordinate, 
+          selectedAddress: addressComponent,
+          updateExisting: false,
+          existingIncidents: null
+        });
+        
+      })
+      .catch(error => console.warn(error));
+    } else {
+        this.props.enableModal('AddIncident', { 
+          data: this.state.markerCoordinate, 
+          selectedAddress: this.state.selectedAddress,
+          updateExisting: false,
+          existingIncidents: null
+        });
+    }
   }
 
   updateIncidentToExistingLocation(obj) {
@@ -165,12 +186,14 @@ class SearchMap extends React.Component {
     });
   }
 
-  navigateToDetails(details) {
-    this.props.navigateTo('IncidentDetailsScreen', details);
-  }
+  // navigateToDetails(details) {
+  //   this.props.navigateTo('IncidentDetailsScreen', details);
+  // }
+
   updateMarker(selectedLatitude, selectedLongitude) {
     console.log("updateMarker");
     this.props.updateData(selectedLatitude, selectedLongitude);
+
     this.setState({
       isMapReady: true,
       markerCoordinate: { latitude: selectedLatitude, longitude: selectedLongitude }
@@ -191,7 +214,7 @@ class SearchMap extends React.Component {
       isMapReady: true,
       markerCoordinate: { latitude: 22.5726, longitude: 88.3639 }
     });
-    console.log("geoSuccess");
+    console.log("geoFailure");
     this.props.updateData(22.5726, 88.3639);
   }
   onMapLayout = () => {
@@ -236,7 +259,7 @@ class SearchMap extends React.Component {
     let heatMapData = this.props.heatData();
     let liveIncidents = this.props.liveIncidents();
     //heatMapData = heatMapData.map(eachData => eachData.basicData);
-    console.log(heatMapData);
+    //console.log(heatMapData);
     //console.log(tableData);
     //console.log(this.state.heatDataAlabama);
     return (
@@ -244,7 +267,10 @@ class SearchMap extends React.Component {
         {this.state.toasterVisible ?
           <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg} /> : null
         }
-        <GoogleAutoComplete apiKey="" debounce={500} minLength={4}>
+        <GoogleAutoComplete 
+          apiKey="" 
+          debounce={500} minLength={4}
+          >
           {({
             handleTextChange,
             locationResults,
@@ -255,12 +281,13 @@ class SearchMap extends React.Component {
           }) => (
               <React.Fragment>
                 <View style={styles.inputWrapper}>
-                  <TextInput style={styles.textInput} placeholder="Search a places" onChangeText={handleTextChange} value={inputValue} />
+                  <TextInput style={styles.textInput} ref={input => { this.textInput = input }} 
+                    placeholder="Search a places" onChangeText={handleTextChange} value={inputValue} />
                   {/* <Button title="Clear" onPress={clearSearch} /> */}
                   <Button
-                    icon={{ name: "cancel", zIndex:2, size: 30, marginTop: -5, color: "#0A121A" }}
+                    icon={{ name: "cancel", zIndex:3, size: 22, color: "#0A121A" }}
                     type="clear"
-                    onPress={clearSearch} />
+                    onPress={()=>{clearSearch(); this.textInput.clear()}} />
                 </View>
                 {isSearching && <ActivityIndicator size="large" color="red" />}
                 <ScrollView style={{ zIndex: 2 }}>

@@ -8,7 +8,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import _ from 'lodash';
 
 import AddIncidentPopUp from './AddIncidentPopUp';
-import { Cache } from 'react-native-cache';
+//import { Cache } from 'react-native-cache';
 
 const { width, height } = Dimensions.get("screen");
 
@@ -20,13 +20,13 @@ const Toast = (props) => {
     return null;
 };
 
-const cache = new Cache({
-    namespace: 'InciTracker',
-    policy: {
-        maxEntries: 5000
-    },
-    backend: AsyncStorage 
-})
+// const cache = new Cache({
+//     namespace: 'InciTracker',
+//     policy: {
+//         maxEntries: 5000
+//     },
+//     backend: AsyncStorage 
+// })
 
 class Home extends React.Component {
     constructor(props) {
@@ -42,7 +42,9 @@ class Home extends React.Component {
             error: null,
             toasterVisible: false,
             toasterMsg: '',
-            liveIncidents: []
+            liveIncidents: [],
+            createdIncidentId: null,
+            manualCache:[]
         }
         this.callbackFn = this.callbackFn.bind(this);
         this.callbackMapFn = this.callbackMapFn.bind(this);
@@ -60,8 +62,8 @@ class Home extends React.Component {
 
     updateData(latitude, longitude){
        this.setState({ isLoaded : true });
-       console.log("Getting HeatMap Data from DB");
-       console.log(latitude, longitude);
+    //    console.log("Getting HeatMap Data from DB");
+    //    console.log(latitude, longitude);
         fetch('http://192.168.1.14:8080/getCount?lat=' + latitude + '&lng=' + longitude)
             .then(res => res.json())
             .then(
@@ -80,6 +82,7 @@ class Home extends React.Component {
                 });
               }
         );
+        
         fetch('http://192.168.1.14:8080/getTickerListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
         .then(res => res.json())
         .then(
@@ -98,6 +101,7 @@ class Home extends React.Component {
             });
           }
         );
+        
         fetch('http://192.168.1.14:8080/getLiveIncidentsListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
             .then(res => res.json())
             .then(
@@ -126,43 +130,71 @@ class Home extends React.Component {
         //     })
     }
 
-    callbackFn(incident, commentText, imageUrls, videoUrl) {
+    callbackFn(incident, commentText, imageUrls, videoUrls) {
 
         //Saving files 
-        for(let i=0; i < imageUrls.length ; i++){
-            let localUrl = imageUrls[i];
-            let fileName =  localUrl.split('/').pop();
-            let formData = new FormData();
+        // for(let i=0; i < imageUrls.length ; i++){
+        //     let localUrl = imageUrls[i];
+        //     let fileName =  localUrl.split('/').pop();
+        //     let formData = new FormData();
 
-            console.log(localUrl);
-            console.log(fileName);
-            console.log(imageUrls.length);
+        //     // console.log(localUrl);
+        //     // console.log(fileName);
+        //     // console.log(imageUrls.length);
 
-            formData.append('photo' , { uri: localUrl, name: fileName, type: 'image'} );
-            return fetch('http://192.168.1.14:8080/addImage?incId='+ incident.incidentId ,{
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'content-type' : 'multipart/form-data'
-                }
-            });
-        }
+        //     formData.append('photo' , { uri: localUrl, name: fileName, type: 'image'} );
+        //     return fetch('http://192.168.1.14:8080/addImage?incId='+ incident.incidentId ,{
+        //         method: 'POST',
+        //         body: formData,
+        //         headers: {
+        //             'content-type' : 'multipart/form-data'
+        //         }
+        //     });
+        // }
 
-        console.log("Image Req submitted");
+        // console.log("Image Req submitted");
         /*
         let node = _.filter(this.state.tickerArray, function (o) {
             if (o.title == title)
                 return o;
         });
-        let existingComments = node[0].comments;
-        let length = existingComments.length + 1;
-        existingComments.push({
-            id: '' + length, name: 'New User', text: commentText, imageUrls: imageUrl,
-            videoUrls: videoUrl
-        });
 
-        this.setState({ tickerArray: this.state.tickerArray });
         */
+
+        var valueFromCache = _.filter(this.state.manualCache, {'key' : incident.incidentId});
+        console.log(valueFromCache);
+        if(valueFromCache.length == 0){
+            var obj = { key : incident.incidentId, incident: 
+                { 
+                    comments :
+                        [
+                            {name: "Shashi", text: commentText, 
+                            imageUrls: imageUrls,
+                            videoUrls: videoUrls }
+                        ]
+                }
+            };
+            this.state.manualCache.push(obj);
+        } else {
+            var existingObject = valueFromCache[0].incident;
+            let existingComments = existingObject.comments;
+            existingComments.push({
+                    name: 'Shashi', text: commentText, 
+                    imageUrls: imageUrls,
+                    videoUrls: videoUrls
+            });
+            this.state.manualCache.push(existingObject);
+        }
+
+        //let existingComments = valueFromCache.comments;
+        // let length = existingComments.length + 1;
+        // existingComments.push({
+        //     id: '' + length, name: 'New User', text: commentText, imageUrls: imageUrl,
+        //     videoUrls: videoUrl
+        // });
+
+        this.setState({ manualCache: this.state.manualCache });
+        // */
 
     }
 
@@ -200,8 +232,11 @@ class Home extends React.Component {
         this.setState({ tickerArray: existingArray });
     }
 
-    callbackPopUpAPI(postJson, createOrUpdate) {
-        fetch('http://192.168.1.14:8080/addIncident/', {
+    async callbackPopUpAPI(postJson, createOrUpdate) {
+
+        console.log(postJson);
+
+        await fetch('http://192.168.1.14:8080/addIncident/', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -209,13 +244,36 @@ class Home extends React.Component {
             },
             body: JSON.stringify(postJson)
             }
+
         ).then(res => res.json())
          .then(
-           (incidentId) => {
-            console.log(incidentId);
+           (createdIncidentId) => {
+            this.setState({createdIncidentId : createdIncidentId});
         });
 
+        let key = this.state.createdIncidentId;
+        console.log("Key");
+        console.log(key);
+        
+        // await cache.set(key , {
+        //     imageUrls : postJson.imageUrls,
+        //     videoUrls : postJson.videoUrls,
+        //     comments : postJson.comments 
+        // });
+
+        AsyncStorage.setItem(''+key, JSON.stringify(postJson));
+
+        var obj = { key : key,
+                    incident: postJson};
+        this.state.manualCache.push(obj);
+        //console.log(this.state.manualCache);
+        //this.setState({ manualCache: this.state.manualCache })
+        // const value = await AsyncStorage.getItem(''+key);
+        // console.log("Value from AsyncStrore.get(key)");
+        // console.log(value);
+
         this.setState({
+            manualCache: this.state.manualCache,
             toasterVisible: true,
             isLoaded: true,
             toasterMsg: "Incident Added Successfully",
@@ -224,6 +282,18 @@ class Home extends React.Component {
         this.updateData(postJson.latitude, postJson.longitude);
 
     }
+
+
+    async getIncidentFromCache(key){
+        var obj = await AsyncStorage.getItem(''+key);
+        console.log("Getting the value from Cache");
+        console.log(obj);
+        return obj;
+    }
+
+    // async getValueCache(key){
+    //     return await cache.get(key);
+    // }
 
     navigate(screen, incDetails) {
 
@@ -282,8 +352,8 @@ class Home extends React.Component {
     render() {
 
         let liveIncidents = this.state.liveIncidents;
-        console.log("Ticker Data");
-        console.log(liveIncidents);
+        // console.log("Ticker Data");
+        // console.log(liveIncidents);
 
         return (
 
@@ -307,7 +377,8 @@ class Home extends React.Component {
                                 >
 
                                     {liveIncidents.map((incident, i) => (
-                                            <Text style={{ color: 'orange' }} key={i} onPress={() => this.props.navigation.navigate('IncidentDetailsScreen', { data: incident, callback: this.callbackFn })}>
+                                            <Text style={{ color: 'orange' }} key={i} onPress={() => this.props.navigation.navigate('IncidentDetailsScreen', 
+                                                { data: incident, manualCache: this.state.manualCache, getIncidentDetails: this.getIncidentFromCache, callback: this.callbackFn })}>
                                                 {incident.offenceName + '  |  '}
                                             </Text>
                                         ))} 

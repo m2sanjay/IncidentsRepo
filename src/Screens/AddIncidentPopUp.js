@@ -118,9 +118,9 @@ class AddIncidentPopUp extends React.Component {
             this.setState({ typeOfIncident })
         })
         
-        console.log(this.state.typeOfIncident);
-        console.log(this.state.coordinate);
-        console.log(this.state.selectedAddress);
+        // console.log(this.state.typeOfIncident);
+        // console.log(this.state.coordinate);
+        // console.log(this.state.selectedAddress);
     }
 
     handleImageClick() {
@@ -139,7 +139,7 @@ class AddIncidentPopUp extends React.Component {
             if (!result.cancelled) {
                 let urlsArray = this.state.imageUrls;
                 urlsArray.push(result.uri);
-                console.log(result);
+                //console.log(result);
                 this.setState({ imageUrls: urlsArray });
             }
         } catch (E) {
@@ -157,7 +157,7 @@ class AddIncidentPopUp extends React.Component {
             });
             if (!result.cancelled) {
                 let urlsArray = this.state.videoUrls;
-                console.log(result);
+                //console.log(result);
                 urlsArray.push(result.uri);
                 this.setState({ videoUrls: urlsArray });
             }
@@ -201,11 +201,11 @@ class AddIncidentPopUp extends React.Component {
         }
 
 
-        console.log("Handling POST");
-        console.log(this.state.updateExisting);
-        console.log(this.state.selectedAddress);
+        // console.log("Handling POST");
+        // console.log(this.state.updateExisting);
+        // console.log(this.state.selectedAddress);
         var iFlag = this.state.updateExisting;
-
+        //console.log(iFlag);
         if(iFlag){
             var existingIncidents = this.state.existingIncidents;
             
@@ -227,10 +227,11 @@ class AddIncidentPopUp extends React.Component {
                     regionId:0,									// should be 0
                     regionName:null,							// Can be null/blank
                     countryId:0,								//should be 0
-                    countryName:""     							//Can be null/blank
+                    countryName:"",  							//Can be null/blank
+                    comments:[]
             }
 
-            console.log(postJson2);
+            //console.log(postJson2);
 
             
             this.setState({ submitted: true });
@@ -254,6 +255,14 @@ class AddIncidentPopUp extends React.Component {
     
         }
         else{
+            // console.log("New JSON")
+            // console.log(this.state.selectedAddress);
+            
+            let selectedAddress = this.state.selectedAddress;
+            if (selectedAddress.length == 0) {
+                console.log("Zero length");
+            }
+
             var localityName = _.filter(this.state.selectedAddress, { types: [
                 "locality",
                 "political",
@@ -281,18 +290,12 @@ class AddIncidentPopUp extends React.Component {
                 regionId:0,									// should be 0
                 regionName:null,							// Can be null/blank
                 countryId:0,								//should be 0
-                countryName:""								//Can be null/blank
+                countryName:"",								//Can be null/blank
+                imageUrls: this.state.imageUrls,
+                videoUrls: this.state.videoUrls,
+                comments:[]
             }
     
-            this.setState({
-                submitted: true,
-                toasterVisible: true,
-                toasterMsg: "Incident Added Successfully",
-                text: "",
-                imageUrl: "",
-                videoUrl: "",
-            });
-            
             // this.props.createIncident(
             //         this.state.selectedValue,
             //         this.state.text,
@@ -305,20 +308,21 @@ class AddIncidentPopUp extends React.Component {
                 "New"
             ); 
             this.props.closePopUp();
-            
+            this.setState({
+                submitted: true,
+                toasterVisible: true,
+                toasterMsg: "Incident Added Successfully",
+                text: "",
+                imageUrl: "",
+                videoUrl: "",
+                imageUrls: [],
+                videoUrls: []
+            });
         }
         
     }
 
     render() {
-        let data = [{
-            value: 'Banana',
-          }, {
-            value: 'Mango',
-          }, {
-            value: 'Pear',
-          }];
-
         return (
 
             <View style={styles.container}>

@@ -9,6 +9,7 @@ import {
     Dimensions,
     FlatList,
     ToastAndroid,
+    AsyncStorage
 } from "react-native";
 import { Icon, Card, Button, Text, Block } from "galio-framework";
 //import { LinearGradient } from 'expo';
@@ -24,8 +25,18 @@ import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 import CameraView from "./CameraView";
+import { Cache } from 'react-native-cache';
+
+const cache = new Cache({
+    namespace: 'InciTracker',
+    policy: {
+        maxEntries: 5000
+    },
+    backend: AsyncStorage
+})
 
 const { width, height } = Dimensions.get("screen");
+
 
 const Toast = (props) => {
     if (props.visible) {
@@ -41,6 +52,8 @@ const Toast = (props) => {
     return null;
 };
 
+
+
 class IncidentDetailsScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -54,11 +67,18 @@ class IncidentDetailsScreen extends React.Component {
             toasterMsg: "",
             imageUrls: [],
             videoUrls: [],
+            cacheData: null,
+            commentImageUrls:[],
+            commentVideoUrls:[],
+            commentImageUrl:"",
+            commentVideoUrl:""
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleImageClick = this.handleImageClick.bind(this);
         this.handleVideoClick = this.handleVideoClick.bind(this);
+        this.getCacheValue = this.getCacheValue.bind(this);
     }
+
     handleChange(e) {
         this.setState({ text: e });
     }
@@ -77,10 +97,10 @@ class IncidentDetailsScreen extends React.Component {
                 quality: 1,
             });
             if (!result.cancelled) {
-                let urlsArray = this.state.imageUrls;
+                let urlsArray = this.state.commentImageUrls;
                 urlsArray.push(result.uri);
-                console.log(result);
-                this.setState({ imageUrls: urlsArray });
+                //console.log(result);
+                this.setState({ commentImageUrls: urlsArray });
             }
         } catch (E) {
             console.log(E);
@@ -96,7 +116,11 @@ class IncidentDetailsScreen extends React.Component {
                 quality: 1,
             });
             if (!result.cancelled) {
-                this.setState({ videoUrl: result.uri });
+                //this.setState({ videoUrl: result.uri });
+                let urlsArrayVideo = this.state.commentVideoUrls;
+                urlsArrayVideo.push(result.uri);
+                //console.log(result);
+                this.setState({ commentVideoUrls: urlsArrayVideo });
             }
         } catch (E) {
             console.log(E);
@@ -117,18 +141,18 @@ class IncidentDetailsScreen extends React.Component {
 
     handleSubmit() {
         //alert(this.state.text);
-        // if (this.state.text == '') {
-        //     alert('Please type in comments');
-        //     return;
-        // }
+        if (this.state.text == '') {
+            alert('Please type in comments');
+            return;
+        }
 
-        // if (this.state.text == "") {
-        //     this.setState({
-        //         toasterVisible: true,
-        //         toasterMsg: "Please type in comments",
-        //     });
-        //     return;
-        // }
+        if (this.state.text == "") {
+            this.setState({
+                toasterVisible: true,
+                toasterMsg: "Please type in comments",
+            });
+            return;
+        }
 
         this.setState({ submitted: true });
         
@@ -136,8 +160,8 @@ class IncidentDetailsScreen extends React.Component {
             this.props.navigation.state.params.callback(
                 this.props.navigation.state.params.data,
                 this.state.text,
-                this.state.imageUrls,
-                this.state.videoUrls
+                this.state.commentImageUrls,
+                this.state.commentVideoUrls
             );
         }
         
@@ -147,14 +171,41 @@ class IncidentDetailsScreen extends React.Component {
             text: "",
             imageUrls: [],
             videoUrl: [],
+            commentVideoUrls: [],
+            commentImageUrls: []
         });
     }
     
+    async getCacheValue(key){
+        var getCacheValue = await this.props.navigation.state.params.getIncidentDetails(key);
+        console.log("getCacheValue");
+        console.log(getCacheValue);
+        this.setState({cacheData : getCacheValue});
+    }
+
+
     render() {
         //alert(this.props.navigation.state.params.title);
         var incident = this.props.navigation.state.params.data;
+        //console.log(incident);
+        //console.log(incident.incidentId);
+        // console.log("Incident Id");
+        // //var fromCache = this.props.navigation.state.params.fromCache;
+        //var fromCache = this.getCacheValue(incident.incidentId);
+        //console.log("From Cache");
+        let fromCache =  this.props.navigation.state.params.manualCache;
+        //console.log("fromCache");
+        //console.log(fromCache);
+        //console.log(this.props.navigation.state.params.getIncidentDetails(incident.incidentId));
+        var valueFromCache = _.filter(fromCache, {'key' : incident.incidentId});
+        if(valueFromCache != null && valueFromCache != undefined && valueFromCache.length > 0)
+            valueFromCache = valueFromCache[0].incident;
+        
+        
+        //console.log(valueFromCache);
         //if(this.state.submitted)
         //incident.comments.push({id:1,name:'User 2', text: this.state.text});
+
         return (
             <View style={styles.container}>
                 {this.state.toasterVisible ? (
@@ -176,9 +227,13 @@ class IncidentDetailsScreen extends React.Component {
                     </Block>
                     <Block flex middle>
                         <ScrollView style={styles.registerContainer}>
-                            {incident.imageUrls != undefined && incident.imageUrls.length > 0 ? (
+                            <View style={styles.desc}>
+                                <Text style={styles.MessageText}>{incident.description}</Text>
+                            </View>
+                            {valueFromCache != null && valueFromCache.imageUrls != null && 
+                                valueFromCache.imageUrls.length > 0 ? (
                                 <View style={styles.imageView}>
-                                    {incident.imageUrls.map((o, i) => (
+                                    {valueFromCache.imageUrls.map((o, i) => (
                                         <Image
                                             key={i}
                                             source={{ uri: o }}
@@ -188,9 +243,10 @@ class IncidentDetailsScreen extends React.Component {
                                     ))}
                                 </View>
                             ) : null}
-                            {incident.videoUrls != undefined && incident.videoUrls.length > 0 ? (
+                            {valueFromCache != null && valueFromCache.videoUrls != null && 
+                                valueFromCache.videoUrls.length > 0 ? (
                                 <View style={styles.imageView}>
-                                    {incident.videoUrls.map((o, i) => (
+                                    {valueFromCache.videoUrls.map((o, i) => (
                                         <Video
                                             source={{ uri: o }}
                                             key={i}
@@ -209,26 +265,25 @@ class IncidentDetailsScreen extends React.Component {
                             <Text
                                 style={{ borderWidth: 2, borderColor: "#0A121A", height: 1 }}
                             ></Text>
-                            {console.log(incident)}
-                            <View style={styles.desc}>
-                                <Text style={styles.MessageText}>{incident.description}</Text>
-                            </View>
-
-                            {incident.comments != undefined && incident.comments.length > 0 ? (
+                            {valueFromCache.comments != undefined && valueFromCache.comments.length > 0 ? (
                                 <ScrollView style={styles.comments}>
-                                    {incident.comments.map((com, i) => (
-                                        <View key={i}>
+                                    {valueFromCache.comments.map((com, i) => (
+                                        <View>
                                             <Text style={styles.MessageText2}>{com.name}</Text>
-                                            {/* {com.imageUrls != undefined && com.imageUrls != "" ? (
-                                                <Image
-                                                    source={{ uri: com.imageUrls }}
-                                                    resizeMode="contain"
-                                                    style={{ marginLeft: "5%", width: 100, height: 100 }}
-                                                />
+                                            {com.imageUrls != undefined && com.imageUrls.length > 0 ? (
+                                                com.imageUrls.map((o, i) => (
+                                                    <Image
+                                                        key={i}
+                                                        source={{ uri: o }}
+                                                        resizeMode="contain"
+                                                        style={{ marginLeft: "5%", width: 100, height: 100 }}
+                                                    /> ))
                                             ) : null}
-                                            {com.videoUrls != undefined && com.videoUrls != "" ? (
+                                            {com.videoUrls != undefined && com.videoUrls.length > 0 ? (
+                                                com.videoUrls.map((o, i) => (
                                                 <Video
-                                                    source={{ uri: com.videoUrls }}
+                                                    key={i}
+                                                    source={{ uri: o }}
                                                     rate={1.0}
                                                     volume={1.0}
                                                     isMuted={false}
@@ -237,8 +292,8 @@ class IncidentDetailsScreen extends React.Component {
                                                     isLooping={false}
                                                     useNativeControls={true}
                                                     style={{ marginLeft: "5%", width: 100, height: 100 }}
-                                                />
-                                            ) : null} */}
+                                                /> ))
+                                            ) : null}
                                             <Text style={styles.MessageText1}>{com.text}</Text>
                                         </View>
                                     ))}
@@ -270,18 +325,20 @@ class IncidentDetailsScreen extends React.Component {
                                             onChangeText={(text) => this.handleChange(text)}
                                         />
                                         <Block row>
-                                            {this.state.imageUrls.length > 0  ? 
-                                                this.state.imageUrls.map((eachImage, i) => (
+                                            {this.state.commentImageUrls.length > 0  ? 
+                                                this.state.commentImageUrls.map((eachImage, i) => (
                                                     <Image
+                                                        key={i}
                                                         source={{ uri: eachImage }}
                                                         resizeMode="contain"
                                                         style={{ marginLeft: "5%", width: 50, height: 50 }}
                                                     />) 
                                                     ) : null }
-                                            {this.state.videoUrl != undefined &&
-                                                this.state.videoUrl != "" ? (
+                                            {this.state.commentVideoUrls.length > 0  ? 
+                                                this.state.commentVideoUrls.map((eachVideo, j) => (
                                                     <Video
-                                                        source={{ uri: this.state.videoUrl }}
+                                                        key={j}
+                                                        source={{ uri: eachVideo }}
                                                         rate={1.0}
                                                         volume={1.0}
                                                         isMuted={false}
@@ -290,7 +347,7 @@ class IncidentDetailsScreen extends React.Component {
                                                         isLooping={false}
                                                         useNativeControls={true}
                                                         style={{ marginLeft: "5%", width: 50, height: 50 }}
-                                                    />
+                                                    />)
                                                 ) : null}
                                         </Block>
                                         {/* <Block middle row style={{ margin: 0, padding: 0, alignItems: "flex-end" }}>

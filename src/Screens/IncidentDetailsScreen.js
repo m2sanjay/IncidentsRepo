@@ -276,7 +276,7 @@ class IncidentDetailsScreen extends React.Component {
                                                     <Image
                                                         source={{ uri: o }}
                                                         resizeMode="contain"
-                                                        style={{ marginLeft: "5%", width: 100, height: 100 }}
+                                                        style={{ marginLeft: "5%", width: 200, height: 200 }}
                                                     /> ))
                                             ) : null}
                                             {com.videoUrls != undefined && com.videoUrls.length > 0 ? (
@@ -290,7 +290,7 @@ class IncidentDetailsScreen extends React.Component {
                                                     shouldPlay={false}
                                                     isLooping={false}
                                                     useNativeControls={true}
-                                                    style={{ marginLeft: "5%", width: 100, height: 100 }}
+                                                    style={{ marginLeft: "5%", width: 200, height: 200 }}
                                                 /> ))
                                             ) : null}
                                             <Text style={styles.MessageText1}>{com.text}</Text>

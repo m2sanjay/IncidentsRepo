@@ -4,9 +4,7 @@ import {
   ImageBackground,
   Dimensions,
   StatusBar,
-  KeyboardAvoidingView,
-  ToastAndroid,
-
+  KeyboardAvoidingView
 } from "react-native";
 import { Block, Checkbox, Text, theme } from "galio-framework";
 
@@ -15,84 +13,11 @@ import { Images, argonTheme } from "../constants";
 
 const { width, height } = Dimensions.get("screen");
 
-const Toast = (props) => {
-  if (props.visible) {
-      ToastAndroid.showWithGravityAndOffset(
-          props.message,
-          ToastAndroid.LONG,
-          ToastAndroid.TOP,
-          25,
-          150
-      );
-      return null;
-  }
-  return null;
-};
-
-
 class LoginScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-        username: '',
-        password: '',
-        toasterVisible: false,
-        toasterMsg: "",
-    }
-    this.clearBoth = this.clearBoth.bind(this);
-    this.login = this.login.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.handleUserNameChange = this.handleUserNameChange.bind(this);
-  }
-
-  handlePasswordChange(text){
-    this.state.password = text;
-    this.setState({ 
-      toasterVisible: false,
-      username: this.state.username });
-  }
-
-  handleUserNameChange(text){
-    this.state.username = text;
-    this.setState({ toasterVisible: false,
-      password : this.state.password });
-  }
-
-  clearBoth(){
-    this.state.password = '';
-    this.state.username = '';
-    this.setState({
-      toasterVisible: false,
-      username: this.state.username,
-      password: this.state.password
-    })
-  }
-
-  login(){
-    console.log("login Called");
-    console.log(this.state.username);
-    console.log(this.state.password);
-
-    let user = this.state.username;
-    let pass = this.state.password;
-
-    if(user.toLocaleLowerCase() == 'sanjay.barman@gmail.com' && pass == 'admin@123'){
-      this.props.navigation.navigate('Home');
-    } else {
-      this.setState({
-        toasterVisible: true,
-        toasterMsg: "Username or Password entered is incorrect",
-      });
-    }
-  }
-
   render() {
     const { navigation } = this.props;
     return (
       <Block flex middle>
-        {this.state.toasterVisible ?
-          <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg} /> : null
-        }
         <StatusBar hidden />
         {/* <ImageBackground
           source={Images.RegisterBackground}
@@ -104,9 +29,7 @@ class LoginScreen extends React.Component {
               <Block flex={0.25} middle style={styles.socialConnect}>
                 <Text color={'#00c5e8'} size={12}> Login with </Text>
                 <Block row style={{ marginTop: theme.SIZES.BASE, marginLeft: 25 }}>
-                  <Button style={{...styles.socialButtons, marginRight: 30, backgroundColor: theme.COLORS.FACEBOOK }} 
-                    // onPress={() => this.props.navigation.navigate('Home')}
-                  >
+                  <Button style={{...styles.socialButtons, marginRight: 30, backgroundColor: theme.COLORS.FACEBOOK }} onPress={() => this.props.navigation.navigate('Home')}>
                     <Block row>
                       <Icon
                         name="logo-facebook"
@@ -118,9 +41,7 @@ class LoginScreen extends React.Component {
                       <Text style={{...styles.socialTextButtons, color: theme.COLORS.WHITE}}>FACEBOOK</Text>
                     </Block>
                   </Button>
-                  <Button style={{...styles.socialButtons, marginRight: 30, backgroundColor: argonTheme.COLORS.GMAIL }} 
-                    // onPress={() => this.props.navigation.navigate('Home')}
-                  >
+                  <Button style={{...styles.socialButtons, marginRight: 30, backgroundColor: argonTheme.COLORS.GMAIL }} onPress={() => this.props.navigation.navigate('Home')}>
                     <Block row >
                       <Icon
                         name="logo-google"
@@ -137,7 +58,7 @@ class LoginScreen extends React.Component {
               <Block flex>
                 <Block flex={0.17} middle>
                   <Text color={'#00c5e8'} size={12}>
-                    Or login using classic way
+                    Or sign up the classic way
                   </Text>
                 </Block>
                 <Block flex center>
@@ -146,6 +67,21 @@ class LoginScreen extends React.Component {
                     behavior="padding"
                     enabled
                   >
+                    <Block width={width * 0.8} style={{ marginBottom: 15 }}>
+                      <Input
+                        borderless
+                        placeholder="Name"
+                        iconContent={
+                          <Icon
+                            size={16}
+                            color={argonTheme.COLORS.ICON}
+                            name="hat-3"
+                            family="ArgonExtra"
+                            style={styles.inputIcons}
+                          />
+                        }
+                      />
+                    </Block>
                     <Block width={width * 0.8} style={{ marginBottom: 15 }}>
                       <Input
                         borderless
@@ -159,8 +95,6 @@ class LoginScreen extends React.Component {
                             style={styles.inputIcons}
                           />
                         }
-                        value={this.state.username}
-                        onChangeText={text => this.handleUserNameChange(text)}
                       />
                     </Block>
                     <Block width={width * 0.8}>
@@ -177,37 +111,29 @@ class LoginScreen extends React.Component {
                             style={styles.inputIcons}
                           />
                         }
-                        value={this.state.password}
-                        onChangeText={text => this.handlePasswordChange(text)}
                       />
-                      <Block row style={{ marginTop: theme.SIZES.BASE, marginLeft: 25, marginBottom: 25 }}>
-                        <Button style={styles.createButton2} 
-                          // onPress={() => this.props.navigation.navigate('Home')}
-                          onPress = {() => this.login()}
-                        >
-                          <Text bold size={14} color={'#00c5e8'}>
-                            LOGIN
-                          </Text>
-                        </Button>
-                        <Button style={styles.createButton2} 
-                          // onPress={() => this.props.navigation.navigate('Home')}
-                          onPress = {() => this.clearBoth()}
-                        >
-                          <Text bold size={14} color={'#00c5e8'}>
-                            CLEAR
-                          </Text>
-                        </Button>
+                      <Block row style={styles.passwordCheck}>
+                        <Text size={12} color={argonTheme.COLORS.WHITE}>
+                          password strength:
+                        </Text>
+                        <Text bold size={12} color={argonTheme.COLORS.SUCCESS}>
+                          {" "}
+                          strong
+                        </Text>
                       </Block>
-                   </Block>
-                   <Block flex={0.17} middle>
-                    <Text color={'#00c5e8'} size={12}>
-                      Or create an account for login
-                    </Text>
-                  </Block>
-                   <Block middle>
-                      <Button style={styles.createButton} 
-                        //onPress={() => this.props.navigation.navigate('Home')}
-                      >
+                    </Block>
+                    <Block row width={width * 0.75}>
+                      <Checkbox
+                        checkboxStyle={{
+                          borderWidth: 3
+                        }}
+                        labelStyle={{color:'#fff'}}
+                        color={argonTheme.COLORS.WHITE}
+                        label="I agree with the Privacy Policies"
+                      />
+                    </Block>
+                    <Block middle>
+                      <Button style={styles.createButton} onPress={() => this.props.navigation.navigate('Home')}>
                         <Text bold size={14} color={'#00c5e8'}>
                           CREATE ACCOUNT
                         </Text>
@@ -290,15 +216,6 @@ const styles = StyleSheet.create({
   createButton: {
     width: width * 0.5,
     marginTop: 25,
-    //backgroundColor: '#5E72E4'
-    backgroundColor: 'transparent',
-    borderColor: '#00c5e8',
-    borderWidth: 1
-  },
-  createButton2: {
-    width: width * 0.3,
-    marginTop: 25,
-    marginRight: 30,
     //backgroundColor: '#5E72E4'
     backgroundColor: 'transparent',
     borderColor: '#00c5e8',

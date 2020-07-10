@@ -16,12 +16,17 @@ const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-import { Button } from 'react-native-elements';
+import { ButtonGroup } from 'react-native-elements';
+import ButtonElements from 'react-native-elements/src/buttons/Button';
 import { Table, TableWrapper, Row } from 'react-native-table-component';
 import markerImage from './../Images/marker100.png';
 
 import _ from 'lodash';
 import { Block } from 'galio-framework';
+
+import IncidentHistory from './IncidentHistory';
+import Modal from 'react-native-modal';
+import Button from 'react-native-flat-button';
 
 //const SPACE = 0.01;
 const Toast = (props) => {
@@ -61,12 +66,20 @@ class SearchMap extends React.Component {
       items: [],
       tableHead: ['Offence Type', 'When'],
       widthArr: [140, 140],
+      selectedIndexForRange: 5,
+      showHistory: false,
+      popUpData: []
     };
     this.recordEvent = this.recordEvent.bind(this);
     this.onChangeMarker = this.onChangeMarker.bind(this);
     this.navigate = this.navigate.bind(this);
     //this.navigateToDetails = this.navigateToDetails.bind(this);
     this.updateMarker = this.updateMarker.bind(this);
+    this.updateIndex = this.updateIndex.bind(this);
+    this.openBox = this.openBox.bind(this);
+    this.showHistoryFn = this.showHistoryFn.bind(this);
+    this.hideHistoryFn = this.hideHistoryFn.bind(this);
+    this.renderModalContent = this.renderModalContent.bind(this);
   }
 
   componentDidMount() {
@@ -102,6 +115,22 @@ class SearchMap extends React.Component {
       name,
       data: e.nativeEvent ? e.nativeEvent : e,
     };
+  }
+
+  updateIndex(selectedIndexForRange){
+    this.setState({selectedIndexForRange: selectedIndexForRange, showHistory: true});
+  }
+
+  async openBox(duration){
+    console.log(duration);
+    await fetch('http://192.168.1.14:8080/getTickerListByLatLngAndDays?lat=' + this.state.markerCoordinate.latitude +
+      '&lng=' + this.state.markerCoordinate.longitude + '&noOfDays=' + duration)
+       .then(response => response.json())
+       .then(popUpData => {
+        this.setState({ popUpData: popUpData, showHistory: true, selectedIndexForRange: duration })
+    })
+
+    console.log(this.state.popUpData);
   }
 
   recordEvent(name) {
@@ -237,6 +266,23 @@ class SearchMap extends React.Component {
     this.marker2 = ref;
   }
 
+  showHistoryFn(){
+    this.setState({ showHistory : true });
+  }
+
+  hideHistoryFn(){
+    this.setState({ showHistory :false, selectedIndexForRange: 5 });
+  }
+
+  renderModalContent = () => (
+    <IncidentHistory
+            selectedIndex={this.state.selectedIndexForRange
+            }
+            closePopUp={this.hideHistoryFn.bind(this)}
+            dataAPI={this.state.popUpData}
+        />
+  );
+
   render() {
     //console.log(this.state.items);
     // const crimeData = this.state.items.forEach((o) => {
@@ -262,11 +308,60 @@ class SearchMap extends React.Component {
     //console.log(heatMapData);
     //console.log(tableData);
     //console.log(this.state.heatDataAlabama);
+
+    const allButtons = ['7 days', '1 Month', '1 Year', 'All'];
+    const { selectedIndexForRange } = this.state;
+
     return (
       <View style={styles.container}>
         {this.state.toasterVisible ?
           <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg} /> : null
         }
+        <Block row style={{ 
+            zIndex: 6, height: 33, width: width * 0.90, margin: 10}}>
+          <Button type="custom" 
+            containerStyle={{ marginRight:13, 
+                backgroundColor: selectedIndexForRange == 30 ? '#00c5e8' : 'black', 
+                width: width * .20 }}
+            contentStyle={{ color: selectedIndexForRange == 30 ? 'black' : '#00c5e8' }}
+            onPress={() => this.openBox(30)}>
+              1 month
+          </Button>
+          <Button type="custom" 
+            containerStyle={{ marginRight:13, 
+              backgroundColor: selectedIndexForRange == 90 ? '#00c5e8' : 'black', 
+              width: width * .20 }}
+            contentStyle={{ color: selectedIndexForRange == 90 ? 'black' : '#00c5e8' }}
+            onPress={() => this.openBox(90)}>
+              3 month
+            </Button>
+          <Button type="custom" 
+            containerStyle={{ marginRight:13, 
+              backgroundColor: selectedIndexForRange == 180 ? '#00c5e8' : 'black', 
+              width: width * .20 }}
+            contentStyle={{ color: selectedIndexForRange == 180 ? 'black' : '#00c5e8' }}
+            onPress={() => this.openBox(180)}>
+              6 month
+          </Button>
+          <Button type="custom" 
+            containerStyle={{ 
+              backgroundColor: selectedIndexForRange == 365 ? '#00c5e8' : 'black', 
+              width: width * .20 }}
+            contentStyle={{ color: selectedIndexForRange == 365 ? 'black' : '#00c5e8' }}
+            onPress={() => this.openBox(365)}>
+              1 year
+            </Button>
+        </Block>
+
+        {/* <ButtonGroup 
+          buttons={allButtons}
+          textStyle={{ color:'orange' }}
+          selectedIndex={selectedIndexForRange}
+          selectedButtonStyle={{ backgroundColor: '#00c5e8'}}
+          containerStyle={{ height:30, zIndex: 5, width: width*.90, backgroundColor: 'black' }}
+          onPress={this.updateIndex}
+         /> */}
+
         <GoogleAutoComplete 
           apiKey="" 
           debounce={500} minLength={4}
@@ -284,10 +379,22 @@ class SearchMap extends React.Component {
                   <TextInput style={styles.textInput} ref={input => { this.textInput = input }} 
                     placeholder="Search a places" onChangeText={handleTextChange} value={inputValue} />
                   {/* <Button title="Clear" onPress={clearSearch} /> */}
-                  <Button
+                  {/* <Button
                     icon={{ name: "cancel", zIndex:3, size: 22, color: "#0A121A" }}
                     type="clear"
-                    onPress={()=>{clearSearch(); this.textInput.clear()}} />
+                    onPress={()=>{clearSearch(); this.textInput.clear()}} /> */}
+                    <View
+                      style={{
+                        position: 'absolute',
+                        //top: '50%',
+                        //alignItems: 'flex-end'
+                        }}>
+                        <ButtonElements
+                          icon={{ name: "cancel", zIndex:3, size: 22, color: "#0A121A", 
+                          alignSelf: 'flex-end' }}
+                          type="clear"
+                          onPress={()=>{clearSearch(); this.textInput.clear()}} />
+                    </View>
                 </View>
                 {isSearching && <ActivityIndicator size="large" color="red" />}
                 <ScrollView style={{ zIndex: 2 }}>
@@ -305,6 +412,13 @@ class SearchMap extends React.Component {
             )}
         </GoogleAutoComplete>
         
+        {this.state.showHistory == true ?
+          <View style={{ marginTop: '10%', zIndex: 6 }}>
+            <Modal isVisible={this.state.showHistory}>
+              {this.renderModalContent()}
+            </Modal>
+          </View> : null}
+          
         <MapView style={styles.map}
           provider='google'
           zoomEnabled={true}
@@ -427,6 +541,7 @@ class SearchMap extends React.Component {
                 <Text>Hide</Text>
               </TouchableOpacity>
             </View> */}
+
       </View>
     );
 
@@ -471,8 +586,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: height * 0.17,
     marginBottom: 50,
-    marginRight: 10,
-    marginLeft: 10,
+    marginRight: 5,
+    marginLeft: 5,
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -512,12 +627,12 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     zIndex: 1,
-    padding: 10,
+    padding: 2,
     paddingBottom: 0
   },
   textInput: {
     height: 40,
-    width: width * 0.80,
+    width: width * 0.90,
     borderWidth: 1,
     paddingHorizontal: 16,
     borderColor: 'black',
@@ -525,6 +640,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     opacity: 0.7,
     marginLeft: 10,
+    marginRight: 10,
     borderRadius: 5
   },
 });

@@ -44,7 +44,8 @@ class Home extends React.Component {
             toasterMsg: '',
             liveIncidents: [],
             createdIncidentId: null,
-            manualCache:[]
+            manualCache:[],
+            showHistory: false
         }
         this.callbackFn = this.callbackFn.bind(this);
         this.callbackMapFn = this.callbackMapFn.bind(this);

@@ -30,6 +30,7 @@
     "react-native-dropdown-menu": "^2.0.0",
     "react-native-dynamic-vector-icons": "^0.2.2",
     "react-native-elements": "^2.0.0",
+    "react-native-flat-button": "^1.0.6",
     "react-native-geocoding": "^0.4.0",
     "react-native-gesture-handler": "~1.6.0",
     "react-native-google-autocomplete": "^0.1.9",

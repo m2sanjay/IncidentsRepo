@@ -206,7 +206,7 @@ class LoginScreen extends React.Component {
                   </Block>
                    <Block middle>
                       <Button style={styles.createButton} 
-                        //onPress={() => this.props.navigation.navigate('Home')}
+                        onPress={() => this.props.navigation.navigate('Home')}
                       >
                         <Text bold size={14} color={'#00c5e8'}>
                           CREATE ACCOUNT

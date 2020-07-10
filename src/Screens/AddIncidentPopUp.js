@@ -440,12 +440,12 @@ const styles = StyleSheet.create({
         // marginTop: 10,
         // //backgroundColor: '#5E72E4'
         // backgroundColor: 'transparent',
-        // borderWidth: 0,
+        //borderWidth: 0,
         // alignSelf: 'flex-end'
         width: width * 0.2,
         marginBottom: 25,
         backgroundColor: 'transparent',
-        borderWidth: 0,
+        borderWidth: 1,
         alignSelf: 'flex-end'
         
       },

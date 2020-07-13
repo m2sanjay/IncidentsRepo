@@ -63,9 +63,11 @@ class Home extends React.Component {
 
     updateData(latitude, longitude){
        this.setState({ isLoaded : true });
-    //    console.log("Getting HeatMap Data from DB");
-    //    console.log(latitude, longitude); http://incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com/
-        fetch('http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com/getCount?lat=' + latitude + '&lng=' + longitude)
+       //let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
+       let url = 'http://192.168.1.14:8080';
+       // console.log("Getting HeatMap Data from DB");
+       // console.log(latitude, longitude); http://incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com/
+        fetch(url + '/getCount?lat=' + latitude + '&lng=' + longitude)
             .then(res => res.json())
             .then(
               (heatData) => {
@@ -83,27 +85,43 @@ class Home extends React.Component {
                 });
               }
         );
-        
-        fetch('http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com/getTickerListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
-        .then(res => res.json())
-        .then(
-          (tickerArray) => {
-            this.setState({
-              //isLoaded: false,
-              tickerArray: tickerArray,
-              toasterVisible: false
-            });
-          },
-          (error) => {
-            this.setState({
-              //isLoaded: false,
-              toasterVisible: false,
-              error
-            });
-          }
+
+        fetch(url + '/getTickerListByLatLngAndDays?lat=' + latitude +
+            '&lng=' + longitude + '&noOfDays=' + 7)
+            .then(response => response.json())
+            .then(tickerArray => {
+                this.setState({ tickerArray: tickerArray, 
+                    toasterVisible: false })
+            },
+            (error) => {
+                this.setState({
+                  //isLoaded: false,
+                  toasterVisible: false,
+                  error
+                });
+              }
         );
         
-        fetch('http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com/getLiveIncidentsListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
+        // fetch('http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com/getTickerListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
+        // .then(res => res.json())
+        // .then(
+        //   (tickerArray) => {
+        //     this.setState({
+        //       //isLoaded: false,
+        //       tickerArray: tickerArray,
+        //       toasterVisible: false
+        //     });
+        //   },
+        //   (error) => {
+        //     this.setState({
+        //       //isLoaded: false,
+        //       toasterVisible: false,
+        //       error
+        //     });
+        //   }
+        // );
+        
+        fetch( url + '/getLiveIncidentsListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
             .then(res => res.json())
             .then(
               (liveIncidents) => {
@@ -353,6 +371,7 @@ class Home extends React.Component {
     render() {
 
         let liveIncidents = this.state.liveIncidents;
+        let tickerArray = this.state.tickerArray;
         // console.log("Ticker Data");
         // console.log(liveIncidents);
 
@@ -369,7 +388,7 @@ class Home extends React.Component {
                     <View style={{ height: 50 }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
                             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                            {liveIncidents.length > 0 ?
+                            {this.state.tickerArray.length > 0 ?
                                 <TextTicker style={{ height: 50, padding: 15, fontSize: 17, backgroundColor: 'black' }}
                                     //duration={10000} bounce={false}
                                     loop={true}
@@ -377,10 +396,13 @@ class Home extends React.Component {
                                     scrollSpeed={3000}
                                 >
 
-                                    {liveIncidents.map((incident, i) => (
-                                            <Text style={{ color: 'orange' }} key={i} onPress={() => this.props.navigation.navigate('IncidentDetailsScreen', 
-                                                { data: incident, manualCache: this.state.manualCache, getIncidentDetails: this.getIncidentFromCache, callback: this.callbackFn })}>
-                                                {incident.offenceName + '  |  '}
+                                    {tickerArray.map((incident, i) => (
+                                            <Text style={{ color: 'orange' }} 
+                                                key={i} 
+                                                // onPress={() => this.props.navigation.navigate('IncidentDetailsScreen', 
+                                                // { data: incident, manualCache: this.state.manualCache, getIncidentDetails: this.getIncidentFromCache, callback: this.callbackFn })}
+                                                >
+                                                {incident.offenceName + '(' + incident.count + ') |  '}
                                             </Text>
                                         ))} 
                                 </TextTicker> : 

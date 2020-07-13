@@ -73,7 +73,7 @@ class SearchMap extends React.Component {
     this.recordEvent = this.recordEvent.bind(this);
     this.onChangeMarker = this.onChangeMarker.bind(this);
     this.navigate = this.navigate.bind(this);
-    //this.navigateToDetails = this.navigateToDetails.bind(this);
+    this.navigateToDetails = this.navigateToDetails.bind(this);
     this.updateMarker = this.updateMarker.bind(this);
     this.updateIndex = this.updateIndex.bind(this);
     this.openBox = this.openBox.bind(this);
@@ -122,7 +122,7 @@ class SearchMap extends React.Component {
   }
 
   async openBox(duration){
-    console.log(duration);
+    //console.log(duration);
     await fetch('http://192.168.1.14:8080/getTickerListByLatLngAndDays?lat=' + this.state.markerCoordinate.latitude +
       '&lng=' + this.state.markerCoordinate.longitude + '&noOfDays=' + duration)
        .then(response => response.json())
@@ -130,7 +130,7 @@ class SearchMap extends React.Component {
         this.setState({ popUpData: popUpData, showHistory: true, selectedIndexForRange: duration })
     })
 
-    console.log(this.state.popUpData);
+    //console.log(this.state.popUpData);
   }
 
   recordEvent(name) {
@@ -215,9 +215,10 @@ class SearchMap extends React.Component {
     });
   }
 
-  // navigateToDetails(details) {
-  //   this.props.navigateTo('IncidentDetailsScreen', details);
-  // }
+  navigateToDetails(details) {
+     console.log(details);
+     this.props.navigateTo('IncidentDetailsScreen', details);
+  }
 
   updateMarker(selectedLatitude, selectedLongitude) {
     console.log("updateMarker");
@@ -386,7 +387,8 @@ class SearchMap extends React.Component {
                     <View
                       style={{
                         position: 'absolute',
-                        //top: '50%',
+                        marginLeft: '85%',
+                        marginTop: '1%'
                         //alignItems: 'flex-end'
                         }}>
                         <ButtonElements
@@ -482,7 +484,7 @@ class SearchMap extends React.Component {
                 title={o.offenceName}
                 description={o.offenceName}
               >
-                <Callout //onPress={() => this.navigateToDetails(o)} 
+                <Callout onPress={() => this.navigateToDetails(o)} 
                     //onPress={() => this.updateIncidentToExistingLocation(o)}
                     style={styles.plainView}>
                   {/* <View >

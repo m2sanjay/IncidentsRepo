@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet, View, ScrollView, Dimensions } from 'react-native';
 import { Block, Text } from 'galio-framework';
-//import { Button } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 
 const { width, height } = Dimensions.get("screen");
 
 
 import { Table, TableWrapper, Row } from 'react-native-table-component';
-import Button from 'react-native-flat-button';
+//import Button from 'react-native-flat-button';
 
 class IncidentHistory extends React.Component {
     constructor(props) {
@@ -18,14 +18,42 @@ class IncidentHistory extends React.Component {
             widthArrNoRecords: [325],
             noRecords: ['No offence data available'],
         }
+
+        this.totalCount = this.totalCount.bind(this);
     }
 
+    totalCount(){
+        let sum = 0;
+        this.props.dataAPI.map((o, i) => (
+            sum = sum + o.count
+        ));
+        return sum;
+        console.log(sum);
+    }
 
     render() {
         return (
             <View>
                 <View>
                     <View style={styles.addView}>
+                        <Block row style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                {/* <Button type="custom"
+                                    containerStyle={{ 
+                                        alignSelf: 'flex-end',
+                                        backgroundColor: '#00c5e8', 
+                                        marginRight: 10,
+                                        marginTop: 10,
+                                        height: 35,
+                                        width: 70
+                                    }}
+                                    onPress={() => this.props.closePopUp()}>
+                                    Close
+                                </Button> */}
+                                <Button  
+                                        icon={{ name: "cancel", size: 20, color: "#00c5e8"}} 
+                                        type="clear" 
+                                        onPress={() => this.props.closePopUp()} />
+                        </Block>
                         <Block center row style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                             <View style={styles1.container}>
                                 <ScrollView horizontal={true}>
@@ -62,13 +90,18 @@ class IncidentHistory extends React.Component {
                                 </ScrollView>
                             </View>
                         </Block>
+                        <Block style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                            <Text style={{ textAlign: 'center', marginRight: 10 , fontWeight: 'bold', color: 'orange' }}>
+                                Total : {this.totalCount()}
+                            </Text>
+                        </Block>
                         {/* <Button containerStyle={styles.createButton3} type='clear'
                                 titleStyle={{ color: '#00c5e8', fontSize: 13 }}
                                 title='Dismiss' 
                                 onPress={this.props.closePopUp} 
                         /> */}
 
-                        <Button type="custom"
+                        {/* <Button type="custom"
                             containerStyle={{ 
                                 alignSelf: 'flex-end',
                                 backgroundColor: '#00c5e8', 
@@ -79,7 +112,7 @@ class IncidentHistory extends React.Component {
                             }}
                             onPress={() => this.props.closePopUp()}>
                             Close
-                        </Button>
+                        </Button> */}
                     </View>
                 </View>
             </View>

@@ -10,6 +10,8 @@ import _ from 'lodash';
 import AddIncidentPopUp from './AddIncidentPopUp';
 //import { Cache } from 'react-native-cache';
 
+import axios from 'axios';
+
 const { width, height } = Dimensions.get("screen");
 
 const Toast = (props) => {
@@ -121,7 +123,7 @@ class Home extends React.Component {
         //   }
         // );
         
-        fetch( url + '/getLiveIncidentsListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
+        fetch( url + '/getLiveIncidentsListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude + '&noOfDays=7')
             .then(res => res.json())
             .then(
               (liveIncidents) => {
@@ -255,7 +257,9 @@ class Home extends React.Component {
 
         console.log(postJson);
 
-        await fetch('http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com/addIncident/', {
+        //let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
+        let urllocal = 'http://192.168.1.14:8080';
+        await fetch(url + '/addIncident/', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -274,6 +278,41 @@ class Home extends React.Component {
         console.log("Key");
         console.log(key);
         
+        var data = new FormData();
+        var imagedata = postJson.imageUrls[0];
+        data.append('photo', imagedata);
+
+        axios({
+            url: `${url}/addIncidentFile?incId=${key}&fileData=${JSON.stringify(data)}`,
+            method: "POST",
+            data: data,
+            headers: {
+                'content-type' : 'multipart/form-data'
+            }
+        }).then((response) => {
+            console.log(response)
+        })
+        
+        /*
+        
+        fetch(`${url}/addIncidentFile?incId=${key}&fileData=${JSON.stringify(data)}`, {
+            method: "POST",
+            headers: {
+                'content-type' : 'multipart/form-data'
+            },
+            body: JSON.stringify(data)
+            }).then(function (res) {
+            if (res.ok) {
+                console.log("Perfect! ");
+            } else if (res.status == 401) {
+                console.log("Oops! ");
+            } else {
+                console.log("res : " + res);
+            }
+            }
+        );
+        */
+
         // await cache.set(key , {
         //     imageUrls : postJson.imageUrls,
         //     videoUrls : postJson.videoUrls,
@@ -285,6 +324,9 @@ class Home extends React.Component {
         var obj = { key : key,
                     incident: postJson};
         this.state.manualCache.push(obj);
+
+
+        
         //console.log(this.state.manualCache);
         //this.setState({ manualCache: this.state.manualCache })
         // const value = await AsyncStorage.getItem(''+key);

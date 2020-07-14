@@ -47,7 +47,8 @@ class Home extends React.Component {
             liveIncidents: [],
             createdIncidentId: null,
             manualCache:[],
-            showHistory: false
+            showHistory: false,
+            tempCmtId: 0
         }
         this.callbackFn = this.callbackFn.bind(this);
         this.callbackMapFn = this.callbackMapFn.bind(this);
@@ -151,7 +152,70 @@ class Home extends React.Component {
         //     })
     }
 
-    callbackFn(incident, commentText, imageUrls, videoUrls) {
+    async callbackFn(incident, commentText, imageUrls, videoUrls) {
+
+        console.log("callbackFn called");
+        console.log(incident);
+        var postJson3 = {
+            incidentId:incident.incidentId,							//should be null
+            commentId: null,
+            comments: commentText,
+            incidentCommentImageUrls: imageUrls,
+            incidentCommentVideoUrls: videoUrls
+        }
+
+        let urllocal = 'http://192.168.1.14:8080';
+        await fetch(urllocal + '/addComments/', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postJson3)
+            }
+        ).then(res => res.json())
+         .then(
+          (tempCmtId) => {
+           this.setState({tempCmtId : tempCmtId});
+        });
+        
+        console.log(this.state.tempCmtId);
+
+        var key = this.state.tempCmtId;
+        
+        for(let i=0; i< imageUrls.length; i++){
+            var formData = new FormData();
+            var imagedata = imageUrls[i];
+            formData.append('fileData', { uri : imagedata, name : 'one.jpg', type: 'image/jpeg'});
+
+            axios({
+                url: `${urllocal}/addIncidentCommentFile?cmntId=${key}`,
+                method: "POST",
+                data: formData,
+                headers: {
+                    'Content-type' : 'multipart/form-data'
+                }
+            }).then((response) => {
+                console.log(response)
+            })
+        }
+        
+        for(let i=0; i<videoUrls.length; i++){
+            var formData = new FormData();
+            var videoData = videoUrls[i];
+            formData.append('fileData', { uri : videoData, name : 'one.mp4', type: 'video/mp4'});
+
+            axios({
+                url: `${urllocal}/addIncidentCommentFile?cmntId=${key}`,
+                method: "POST",
+                data: formData,
+                headers: {
+                    'Content-type' : 'multipart/form-data'
+                }
+            }).then((response) => {
+                console.log(response)
+            })
+        }
 
         //Saving files 
         // for(let i=0; i < imageUrls.length ; i++){
@@ -183,7 +247,7 @@ class Home extends React.Component {
         */
 
         var valueFromCache = _.filter(this.state.manualCache, {'key' : incident.incidentId});
-        console.log(valueFromCache);
+        //console.log(valueFromCache);
         if(valueFromCache.length == 0){
             var obj = { key : incident.incidentId, incident: 
                 { 
@@ -259,7 +323,7 @@ class Home extends React.Component {
 
         //let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
         let urllocal = 'http://192.168.1.14:8080';
-        await fetch(url + '/addIncident/', {
+        await fetch(urllocal + '/addIncident/', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -277,21 +341,40 @@ class Home extends React.Component {
         let key = this.state.createdIncidentId;
         console.log("Key");
         console.log(key);
-        
-        var data = new FormData();
-        var imagedata = postJson.imageUrls[0];
-        data.append('photo', imagedata);
 
-        axios({
-            url: `${url}/addIncidentFile?incId=${key}&fileData=${JSON.stringify(data)}`,
-            method: "POST",
-            data: data,
-            headers: {
-                'content-type' : 'multipart/form-data'
-            }
-        }).then((response) => {
-            console.log(response)
-        })
+        for(let i=0; i<postJson.imageUrls.length; i++){
+            var formData = new FormData();
+            var imagedata = postJson.imageUrls[i];
+            formData.append('fileData', { uri : imagedata, name : 'one.jpg', type: 'image/jpeg'});
+
+            axios({
+                url: `${urllocal}/addIncidentFile?incId=${key}`,
+                method: "POST",
+                data: formData,
+                headers: {
+                    'Content-type' : 'multipart/form-data'
+                }
+            }).then((response) => {
+                console.log(response)
+            })
+        }
+        
+        for(let i=0; i<postJson.videoUrls.length; i++){
+            var formData = new FormData();
+            var videoData = postJson.videoUrls[i];
+            formData.append('fileData', { uri : videoData, name : 'one.mp4', type: 'video/mp4'});
+
+            axios({
+                url: `${urllocal}/addIncidentFile?incId=${key}`,
+                method: "POST",
+                data: formData,
+                headers: {
+                    'Content-type' : 'multipart/form-data'
+                }
+            }).then((response) => {
+                console.log(response)
+            })
+        }
         
         /*
         
@@ -348,7 +431,7 @@ class Home extends React.Component {
     async getIncidentFromCache(key){
         var obj = await AsyncStorage.getItem(''+key);
         console.log("Getting the value from Cache");
-        console.log(obj);
+        //console.log(obj);
         return obj;
     }
 

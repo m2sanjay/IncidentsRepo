@@ -71,13 +71,15 @@ class IncidentDetailsScreen extends React.Component {
             commentImageUrls:[],
             commentVideoUrls:[],
             commentImageUrl:"",
-            commentVideoUrl:""
+            commentVideoUrl:"",
+            incidentDetailsAPI: null
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleImageClick = this.handleImageClick.bind(this);
         this.handleVideoClick = this.handleVideoClick.bind(this);
         this.getCacheValue = this.getCacheValue.bind(this);
+        this.updateAPIData = this.updateAPIData.bind(this);
     }
 
     handleChange(e) {
@@ -87,6 +89,23 @@ class IncidentDetailsScreen extends React.Component {
     handleImageClick() {
         this.getPermissionAsync();
         this._pickImage();
+    }
+
+    componentDidMount(){
+        this.updateAPIData();
+    }
+
+    async updateAPIData(){
+        console.log("updateAPIData");
+        console.log(this.props.navigation.state.params.data.incidentId);
+        await fetch('http://192.168.1.14:8080/getLiveIncidentCommentsAndFiles?incidentId='+
+            this.props.navigation.state.params.data.incidentId)
+            .then(response => response.json())
+            .then(incidentDetailsAPI => {
+                this.setState({ incidentDetailsAPI: incidentDetailsAPI })
+        })
+
+        //return this.state.incidentDetailsAPI;
     }
 
     _pickImage = async () => {
@@ -188,7 +207,9 @@ class IncidentDetailsScreen extends React.Component {
     render() {
         //alert(this.props.navigation.state.params.title);
         var incident = this.props.navigation.state.params.data;
-        //console.log(incident);
+        var inciAPI = this.state.incidentDetailsAPI;
+        console.log("Render");
+        console.log(inciAPI);
         //console.log(incident.incidentId);
         // console.log("Incident Id");
         // //var fromCache = this.props.navigation.state.params.fromCache;
@@ -231,7 +252,7 @@ class IncidentDetailsScreen extends React.Component {
                             <View style={styles.desc}>
                                 <Text style={styles.MessageText}>{incident.description}</Text>
                             </View>
-                            {valueFromCache != null && valueFromCache.imageUrls != null && 
+                            {/* {valueFromCache != null && valueFromCache.imageUrls != null && 
                                 valueFromCache.imageUrls.length > 0 ? (
                                 <View style={styles.imageView}>
                                     {valueFromCache.imageUrls.map((o, i) => (
@@ -243,11 +264,43 @@ class IncidentDetailsScreen extends React.Component {
                                         />
                                     ))}
                                 </View>
+                            ) : null} */}
+                            {inciAPI != null && inciAPI.incidentImageUrls != null && 
+                                inciAPI.incidentImageUrls.length > 0 ? (
+                                <View style={styles.imageView}>
+                                    {inciAPI.incidentImageUrls.map((o, i) => (
+                                        <Image
+                                            key={i}
+                                            source={{ uri: o }}
+                                            resizeMode="contain"
+                                            style={{ width: width-30, height: 150, marginBottom: 20 }}
+                                        />
+                                    ))}
+                                </View>
                             ) : null}
-                            {valueFromCache != null && valueFromCache.videoUrls != null && 
+                            {/* {valueFromCache != null && valueFromCache.videoUrls != null && 
                                 valueFromCache.videoUrls.length > 0 ? (
                                 <View style={styles.imageView}>
                                     {valueFromCache.videoUrls.map((o, i) => (
+                                        <Video
+                                            source={{ uri: o }}
+                                            key={i}
+                                            rate={1.0}
+                                            volume={1.0}
+                                            isMuted={false}
+                                            resizeMode="contain"
+                                            shouldPlay={false}
+                                            isLooping={false}
+                                            useNativeControls={true}
+                                            style={{ width: width-30, height: 150, marginBottom: 20 }}
+                                        />
+                                    ))}
+                                </View>
+                            ) : null} */}
+                            {inciAPI != null && inciAPI.incidentVideoUrls != null && 
+                                inciAPI.incidentVideoUrls.length > 0 ? (
+                                <View style={styles.imageView}>
+                                    {inciAPI.incidentVideoUrls.map((o, i) => (
                                         <Video
                                             source={{ uri: o }}
                                             key={i}
@@ -266,38 +319,42 @@ class IncidentDetailsScreen extends React.Component {
                             <Text
                                 style={{ borderWidth: 2, borderColor: "#0A121A", height: 1 }}
                             ></Text>
-                            {valueFromCache.comments != undefined && valueFromCache.comments.length > 0 ? (
-                                <ScrollView style={styles.comments}>
-                                    {valueFromCache.comments.map((com, i) => (
-                                        <ScrollView key={i}>
-                                            <Text style={styles.MessageText2}>{com.name}</Text>
-                                            {com.imageUrls != undefined && com.imageUrls.length > 0 ? (
-                                                com.imageUrls.map((o, i) => (
-                                                    <Image
-                                                        source={{ uri: o }}
-                                                        resizeMode="contain"
-                                                        style={{ marginLeft: "5%", width: 200, height: 200 }}
-                                                    /> ))
-                                            ) : null}
-                                            {com.videoUrls != undefined && com.videoUrls.length > 0 ? (
-                                                com.videoUrls.map((o, i) => (
-                                                <Video
-                                                    source={{ uri: o }}
-                                                    rate={1.0}
-                                                    volume={1.0}
-                                                    isMuted={false}
-                                                    resizeMode="contain"
-                                                    shouldPlay={false}
-                                                    isLooping={false}
-                                                    useNativeControls={true}
-                                                    style={{ marginLeft: "5%", width: 200, height: 200 }}
-                                                /> ))
-                                            ) : null}
-                                            <Text style={styles.MessageText1}>{com.text}</Text>
+                            {inciAPI != undefined && inciAPI.comments != null && 
+                                inciAPI.comments.length > 0 ? (
+                                    inciAPI.comments != null && inciAPI.comments.length > 0 ? (
+                                        <ScrollView style={styles.comments}>
+                                            {inciAPI.comments.map((com, i) => (
+                                                <ScrollView key={i}>
+                                                    <Text style={styles.MessageText2}>{"Shashi"}</Text>
+                                                    {com.incidentCommentImageUrls != undefined && com.incidentCommentImageUrls.length > 0 ? (
+                                                        com.incidentCommentImageUrls.map((o, i) => (
+                                                            <Image
+                                                                source={{ uri: o }}
+                                                                resizeMode="contain"
+                                                                style={{ marginLeft: "5%", width: 200, height: 200 }}
+                                                            /> ))
+                                                    ) : null}
+                                                    {com.incidentCommentVideoUrls != undefined && com.incidentCommentVideoUrls.length > 0 ? (
+                                                        com.incidentCommentVideoUrls.map((o, i) => (
+                                                        <Video
+                                                            source={{ uri: o }}
+                                                            rate={1.0}
+                                                            volume={1.0}
+                                                            isMuted={false}
+                                                            resizeMode="contain"
+                                                            shouldPlay={false}
+                                                            isLooping={false}
+                                                            useNativeControls={true}
+                                                            style={{ marginLeft: "5%", width: 200, height: 200 }}
+                                                        /> ))
+                                                    ) : null}
+                                                    <Text style={styles.MessageText1}>{com.comments}</Text>
+                                                </ScrollView>
+                                            ))}
                                         </ScrollView>
-                                    ))}
-                                </ScrollView>
-                            ) : null}
+                                    ) : null
+                                ) : null
+                            }
 
                             <ScrollView>
                                 <Text

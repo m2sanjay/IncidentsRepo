@@ -26,6 +26,8 @@ import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 import CameraView from "./CameraView";
 import { Cache } from 'react-native-cache';
+import Spinner from 'react-native-loading-spinner-overlay';
+import ButtonNew from 'react-native-flat-button';
 
 const cache = new Cache({
     namespace: 'InciTracker',
@@ -72,7 +74,8 @@ class IncidentDetailsScreen extends React.Component {
             commentVideoUrls:[],
             commentImageUrl:"",
             commentVideoUrl:"",
-            incidentDetailsAPI: null
+            incidentDetailsAPI: null,
+            isLoaded: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -96,17 +99,19 @@ class IncidentDetailsScreen extends React.Component {
     }
 
     async updateAPIData(){
-        console.log("updateAPIData");
-        console.log(this.props.navigation.state.params.data.incidentId);
-        await fetch('http://192.168.1.14:8080/getLiveIncidentCommentsAndFiles?incidentId='+
-            this.props.navigation.state.params.data.incidentId)
+        this.setState({ isLoaded : true });
+        var inciId = this.props.navigation.state.params.data.incidentId;
+        await fetch('http://192.168.1.14:8080/getLiveIncidentCommentsAndFiles?incidentId='+ inciId)
             .then(response => response.json())
             .then(incidentDetailsAPI => {
                 this.setState({ incidentDetailsAPI: incidentDetailsAPI })
         })
 
-        //return this.state.incidentDetailsAPI;
+        this.setState({ isLoaded: false, incidentDetailsAPI: this.state.incidentDetailsAPI });
+        console.log(this.state.incidentDetailsAPI);
     }
+
+
 
     _pickImage = async () => {
         try {
@@ -159,7 +164,7 @@ class IncidentDetailsScreen extends React.Component {
         }
     };
 
-    handleSubmit() {
+    async handleSubmit() {
         //alert(this.state.text);
         // if (this.state.text == '') {
         //     alert('Please type in comments');
@@ -174,17 +179,26 @@ class IncidentDetailsScreen extends React.Component {
             return;
         }
 
-        this.setState({ submitted: true });
+        this.setState({ submitted: true, isLoaded: true });
         
-        if (this.props.navigation.state.params.callback != undefined) {
-            this.props.navigation.state.params.callback(
-                this.props.navigation.state.params.data,
-                this.state.text,
-                this.state.commentImageUrls,
-                this.state.commentVideoUrls
-            );
-        }
+        // if (this.props.navigation.state.params.callback != undefined) {
+        //     this.props.navigation.state.params.callback(
+        //         this.props.navigation.state.params.data,
+        //         this.state.text,
+        //         this.state.commentImageUrls,
+        //         this.state.commentVideoUrls
+        //     );
+        // }
         
+        this.props.navigation.state.params.callback(
+            this.props.navigation.state.params.data,
+            this.state.text,
+            this.state.commentImageUrls,
+            this.state.commentVideoUrls
+        );
+
+        this.updateAPIData();
+
         this.setState({
             toasterVisible: true,
             toasterMsg: "Incident Updated Successfully",
@@ -192,7 +206,8 @@ class IncidentDetailsScreen extends React.Component {
             imageUrls: [],
             videoUrl: [],
             commentVideoUrls: [],
-            commentImageUrls: []
+            commentImageUrls: [],
+            //isLoaded: false
         });
     }
     
@@ -236,6 +251,7 @@ class IncidentDetailsScreen extends React.Component {
                         message={this.state.toasterMsg}
                     />
                 ) : null}
+                <Spinner visible={this.state.isLoaded} textContent={"Loading..."} textStyle={{color: '#FFF'}} />
                 <Block style={{ backgroundColor: "#0A121A", width, height, zIndex: 1 }}>
                     <Block style={{ backgroundColor: "#00c5e8" }} middle>
                         <Text style={styles.profileText}>Incident Details</Text>
@@ -322,11 +338,10 @@ class IncidentDetailsScreen extends React.Component {
                             {inciAPI != undefined && inciAPI.comments != null && 
                                 inciAPI.comments.length > 0 ? (
                                     inciAPI.comments != null && inciAPI.comments.length > 0 ? (
-                                        <ScrollView style={styles.comments}>
-                                            {inciAPI.comments.map((com, i) => (
-                                                <ScrollView key={i}>
-                                                    <Text style={styles.MessageText2}>{"Shashi"}</Text>
-                                                    {com.incidentCommentImageUrls != undefined && com.incidentCommentImageUrls.length > 0 ? (
+                                        inciAPI.comments.map((com, i) => (
+                                            <ScrollView>
+                                                <Text style={styles.MessageText2}>{"Shashi"}</Text>
+                                                    {com.incidentCommentImageUrls.length > 0 ? (
                                                         com.incidentCommentImageUrls.map((o, i) => (
                                                             <Image
                                                                 source={{ uri: o }}
@@ -350,8 +365,7 @@ class IncidentDetailsScreen extends React.Component {
                                                     ) : null}
                                                     <Text style={styles.MessageText1}>{com.comments}</Text>
                                                 </ScrollView>
-                                            ))}
-                                        </ScrollView>
+                                            ))
                                     ) : null
                                 ) : null
                             }
@@ -430,9 +444,22 @@ class IncidentDetailsScreen extends React.Component {
                                             <Button style={styles.createButtonNew} onPress={this.handleVideoClick}>
                                                 <Icon style={styles.btnIcon} name="video" family="Entypo" size={30} />
                                             </Button>
-                                            <Button style={styles.createButton3} onPress={this.handleSubmit}>
+                                            {/* <Button style={styles.createButton3} onPress={this.handleSubmit}>
                                                 <Text bold size={14} color={'#00c5e8'}>Submit</Text>
-                                            </Button>
+                                            </Button> */}
+                                            <ButtonNew
+                                                type="custom" 
+                                                containerStyle={{ //marginTop: 1, 
+                                                    marginLeft: 15,
+                                                    height: 40,
+                                                    backgroundColor: 'black', 
+                                                    fontSize: 18,
+                                                    width: width *.25
+                                                    }}
+                                                contentStyle={{ color: '#00c5e8' }}
+                                                onPress={() => this.handleSubmit()}>
+                                                Submit
+                                            </ButtonNew>
                                         </Block>
                                     </View>
                                 </View>
@@ -530,7 +557,7 @@ const styles = StyleSheet.create({
     comments: {
         marginTop: 10,
         height: 160,
-        flexDirection: "column",
+        //flexDirection: "column",
         backgroundColor: "#1D2123",
     },
     imageView: {

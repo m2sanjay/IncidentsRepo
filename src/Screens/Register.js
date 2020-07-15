@@ -17,49 +17,91 @@ const { width, height } = Dimensions.get("screen");
 
 const Toast = (props) => {
   if (props.visible) {
-      ToastAndroid.showWithGravityAndOffset(
-          props.message,
-          ToastAndroid.LONG,
-          ToastAndroid.TOP,
-          25,
-          150
-      );
-      return null;
+    ToastAndroid.showWithGravityAndOffset(
+      props.message,
+      ToastAndroid.LONG,
+      ToastAndroid.TOP,
+      25,
+      150
+    );
+    return null;
   }
   return null;
 };
 
 
-class LoginScreen extends React.Component {
+class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        username: '',
-        password: '',
-        toasterVisible: false,
-        toasterMsg: "",
-        loggedInUser: null
+      username: '',
+      password: '',
+      toasterVisible: false,
+      toasterMsg: "",
+      mobileNo: '',
+      otp: '',
     }
     this.clearBoth = this.clearBoth.bind(this);
     this.login = this.login.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleUserNameChange = this.handleUserNameChange.bind(this);
+    this.handleMobileChange = this.handleMobileChange.bind(this);
+    this.sendOTP = this.sendOTP.bind(this);
   }
 
-  handlePasswordChange(text){
+    sendOTP(){
+      if(this.state.mobileNo == ''){
+        return;
+      }
+
+      var postJson5 = {
+        userId: "",
+        userName: "",
+        password: "",
+        emailId: "",							
+        mobileNo: this.state.mobileNo,
+        otp: "",
+        otpExpiryDateTime: ""
+      }
+
+      let urllocal = 'http://192.168.1.14:8080';
+          
+      fetch(urllocal + '/sendOtp/', {
+            method: 'POST',
+            headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postJson5)
+            }
+          )
+    }
+
+  handlePasswordChange(text) {
     this.state.password = text;
-    this.setState({ 
+    this.setState({
       toasterVisible: false,
-      username: this.state.username });
+      username: this.state.username
+    });
   }
 
-  handleUserNameChange(text){
+  handleUserNameChange(text) {
     this.state.username = text;
-    this.setState({ toasterVisible: false,
-      password : this.state.password });
+    this.setState({
+      toasterVisible: false,
+      password: this.state.password
+    });
   }
 
-  clearBoth(){
+  handleMobileChange(text) {
+    this.state.mobileNo = text;
+    this.setState({
+      toasterVisible: false,
+      mobileNo: this.state.mobileNo
+    });
+  }
+
+  clearBoth() {
     this.state.password = '';
     this.state.username = '';
     this.setState({
@@ -69,41 +111,17 @@ class LoginScreen extends React.Component {
     })
   }
 
-  async login(){
-    var postJson4 = {
-      userId: "",
-      userName: "",
-      password: this.state.password,
-      emailId: this.state.username,							
-      mobileNo: "",
-      otp: "",
-      otpExpiryDateTime: ""
-    }
+  async login() {
+    console.log("login Called");
+    console.log(this.state.username);
+    console.log(this.state.password);
 
-    let urllocal = 'http://192.168.1.14:8080';
-        
-    await fetch(urllocal + '/validateUserLogin/', {
-           method: 'POST',
-           headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-           },
-           body: JSON.stringify(postJson4)
-          }
-        ).then(res => res.text())
-         .then((text) => text.length ? JSON.parse(text) : {})
-         .then(
-          (loggedInUser) => {
-           this.setState({loggedInUser : loggedInUser})
-      });
-      
-    if(this.state.loggedInUser.emailId != undefined){
-        console.log("Login Successful " + this.state.loggedInUser.emailId);
-        this.setState({
-          username: "",
-          password: "",
-        });
-        this.props.navigation.navigate('Home');
+    let user = this.state.username;
+    let pass = this.state.password;
+
+
+    if (user.toLocaleLowerCase() == 'sanjay.barman@gmail.com' && pass == 'admin@123') {
+      this.props.navigation.navigate('Home');
     } else {
       this.setState({
         toasterVisible: true,
@@ -124,10 +142,10 @@ class LoginScreen extends React.Component {
           source={Images.RegisterBackground}
           style={{ width, height, zIndex: 1 }}
         > */}
-        <Block style={{backgroundColor: '#0A121A', width, height, zIndex: 1}}>
+        <Block style={{ backgroundColor: '#0A121A', width, height, zIndex: 1 }}>
           <Block flex middle>
             <Block style={styles.registerContainer}>
-              <Block flex={0.25} middle style={styles.socialConnect}>
+              {/* <Block flex={0.25} middle style={styles.socialConnect}>
                 <Text color={'#00c5e8'} size={12}> Login with </Text>
                 <Block row style={{ marginTop: theme.SIZES.BASE, marginLeft: 25 }}>
                   <Button style={{...styles.socialButtons, marginRight: 30, backgroundColor: theme.COLORS.FACEBOOK }} 
@@ -159,11 +177,11 @@ class LoginScreen extends React.Component {
                     </Block>
                   </Button>
                 </Block>
-              </Block>
+              </Block> */}
               <Block flex>
                 <Block flex={0.17} middle>
-                  <Text color={'#00c5e8'} size={12}>
-                    Or login using classic way
+                  <Text color={'#00c5e8'} size={16}>
+                    User Registration Form
                   </Text>
                 </Block>
                 <Block flex center>
@@ -172,6 +190,40 @@ class LoginScreen extends React.Component {
                     behavior="padding"
                     enabled
                   >
+                    <Block width={width * 0.8} style={{ marginBottom: 15 }}>
+                      <Input
+                        borderless
+                        placeholder="First Name"
+                        iconContent={
+                          <Icon
+                            size={16}
+                            color={argonTheme.COLORS.ICON}
+                            name="ic_mail_24px"
+                            family="ArgonExtra"
+                            style={styles.inputIcons}
+                          />
+                        }
+                        value={this.state.username}
+                        onChangeText={text => this.handleUserNameChange(text)}
+                      />
+                    </Block>
+                    <Block width={width * 0.8} style={{ marginBottom: 15 }}>
+                      <Input
+                        borderless
+                        placeholder="Last Name"
+                        iconContent={
+                          <Icon
+                            size={16}
+                            color={argonTheme.COLORS.ICON}
+                            name="ic_mail_24px"
+                            family="ArgonExtra"
+                            style={styles.inputIcons}
+                          />
+                        }
+                        value={this.state.username}
+                        onChangeText={text => this.handleUserNameChange(text)}
+                      />
+                    </Block>
                     <Block width={width * 0.8} style={{ marginBottom: 15 }}>
                       <Input
                         borderless
@@ -189,7 +241,7 @@ class LoginScreen extends React.Component {
                         onChangeText={text => this.handleUserNameChange(text)}
                       />
                     </Block>
-                    <Block width={width * 0.8}>
+                    <Block width={width * 0.8} style={{ marginBottom: 15 }}>
                       <Input
                         password
                         borderless
@@ -206,37 +258,65 @@ class LoginScreen extends React.Component {
                         value={this.state.password}
                         onChangeText={text => this.handlePasswordChange(text)}
                       />
-                      <Block row style={{ marginTop: theme.SIZES.BASE, marginLeft: 25, marginBottom: 25 }}>
-                        <Button style={styles.createButton2} 
-                           onPress={() => this.props.navigation.navigate('Home')}
-                          //onPress = {() => this.login()}
+                     </Block> 
+                    <Block row width={width * 0.8}>
+                      <Input
+                        borderless
+                        placeholder="Phone"
+                        iconContent={
+                          <Icon
+                            size={16}
+                            color={argonTheme.COLORS.ICON}
+                            name="ic_mail_24px"
+                            family="ArgonExtra"
+                            style={styles.inputIcons}
+                          />
+                        }
+                        value={this.state.mobileNo}
+                        onChangeText={text => this.handleMobileChange(text)}
+                      />
+                      <Button style={styles.createButtonPhone}
+                          // onPress={() => this.props.navigation.navigate('Home')}
+                           onPress={() => this.sendOTP()}
+                        >
+                          <Text bold size={14} color={'#00c5e8'}>
+                            Send OTP
+                          </Text>
+                        </Button>
+                    </Block>
+                    <Block row style={{ marginTop: theme.SIZES.BASE, marginLeft: 25, marginBottom: 25 }}>
+                        <Button style={styles.createButton2}
+                          nPress={() => this.props.navigation.navigate('Home')}
+                          //onPress={() => this.login()}
                         >
                           <Text bold size={14} color={'#00c5e8'}>
                             LOGIN
                           </Text>
                         </Button>
-                        <Button style={styles.createButton2} 
+                        <Button style={styles.createButton2}
                           // onPress={() => this.props.navigation.navigate('Home')}
-                          onPress = {() => this.clearBoth()}
+                          onPress={() => this.clearBoth()}
                         >
                           <Text bold size={14} color={'#00c5e8'}>
                             CLEAR
                           </Text>
                         </Button>
-                      </Block>
-                   </Block>
-                   <Block flex={0.17} middle>
-                    <Text color={'#00c5e8'} size={12}>
-                      Or create an account for login
-                    </Text>
-                  </Block>
-                   <Block middle>
-                      <Button style={styles.createButton} 
+                        <Button style={styles.createButton2}
+                           onPress={() => this.props.navigation.navigate('LoginScreen')}
+                          //onPress={() => this.login()}
+                        >
+                          <Text bold size={14} color={'#00c5e8'}>
+                            BACK
+                          </Text>
+                        </Button>
+                    </Block>
+                    <Block middle>
+                      <Button style={styles.createButton}
                         onPress={() => this.props.navigation.navigate('Register')}
                       >
                         <Text bold size={14} color={'#00c5e8'}>
                           CREATE ACCOUNT
-                        </Text>
+                          </Text>
                       </Button>
                     </Block>
                   </KeyboardAvoidingView>
@@ -308,6 +388,9 @@ const styles = StyleSheet.create({
   inputIcons: {
     marginRight: 12
   },
+  inputIconsPhone: {
+    width: width * .75
+  },
   passwordCheck: {
     paddingLeft: 15,
     paddingTop: 13,
@@ -322,9 +405,18 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   createButton2: {
-    width: width * 0.3,
+    width: width * 0.2,
     marginTop: 25,
-    marginRight: 30,
+    marginRight: 15,
+    //backgroundColor: '#5E72E4'
+    backgroundColor: 'transparent',
+    borderColor: '#00c5e8',
+    borderWidth: 1
+  },
+  createButtonPhone: {
+    width: width * 0.3,
+    marginTop: 8,
+    marginLeft: 10,
     //backgroundColor: '#5E72E4'
     backgroundColor: 'transparent',
     borderColor: '#00c5e8',
@@ -332,4 +424,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default Register;

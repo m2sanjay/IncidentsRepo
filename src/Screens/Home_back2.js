@@ -343,12 +343,11 @@ class Home extends React.Component {
         let key = this.state.createdIncidentId;
         console.log("Key");
         console.log(key);
-        console.log(postJson);
 
         for(let i=0; i<postJson.imageUrls.length; i++){
             var formData = new FormData();
             var imagedata = postJson.imageUrls[i];
-            var incidentImageName = 'IncidentImage_' + i + '.jpg'; 
+            var incidentImageName = 'IncidentImage' + i + '.jpeg'; 
             formData.append('fileData', { uri : imagedata, name : incidentImageName, type: 'image/jpeg'});
 
             axios({
@@ -366,7 +365,7 @@ class Home extends React.Component {
         for(let j=0; j<postJson.videoUrls.length; j++){
             var formData = new FormData();
             var videoData = postJson.videoUrls[j];
-            var incidentVideoName = 'IncidentVideo_' + j + '.mp4'; 
+            var incidentVideoName = 'IncidentVideo' + j + '.mp4'; 
             formData.append('fileData', { uri : videoData, name : incidentVideoName, type: 'video/mp4'});
 
             axios({

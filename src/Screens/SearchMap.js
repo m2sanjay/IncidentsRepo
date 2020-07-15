@@ -163,7 +163,7 @@ class SearchMap extends React.Component {
          //console.log("getting data from state");
          //console.log(this.state.selectedAddress);     
       })
-      .catch(error => console.warn(error));
+      //.catch(error => console.warn(error));
     
     // console.log("Getting Address Data");
     // Geocoder.from(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)
@@ -216,12 +216,12 @@ class SearchMap extends React.Component {
   }
 
   navigateToDetails(details) {
-     console.log(details);
+     //console.log(details);
      this.props.navigateTo('IncidentDetailsScreen', details);
   }
 
   updateMarker(selectedLatitude, selectedLongitude) {
-    console.log("updateMarker");
+    //console.log("updateMarker");
     this.props.updateData(selectedLatitude, selectedLongitude);
 
     this.setState({

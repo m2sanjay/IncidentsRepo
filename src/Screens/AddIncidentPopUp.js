@@ -18,6 +18,7 @@ import { Video } from 'expo-av';
 
 import { Dropdown } from 'react-native-material-dropdown';
 import { Button } from 'react-native-elements';
+import ButtonNew from 'react-native-flat-button';
 
 const Toast = (props) => {
     if (props.visible) {
@@ -257,8 +258,6 @@ class AddIncidentPopUp extends React.Component {
     
         }
         else{
-            // console.log("New JSON")
-            // console.log(this.state.selectedAddress);
             
             let selectedAddress = this.state.selectedAddress;
             if (selectedAddress.length == 0) {
@@ -365,16 +364,14 @@ class AddIncidentPopUp extends React.Component {
                                     {this.state.imageUrls.length > 0 ? 
                                         (this.state.imageUrls.map((o, i) => (
                                             <Image
-                                                key={i}
                                                 source={{ uri: o }}
                                                 resizeMode="contain"
                                                 style={{ marginLeft: "5%", width: 50, height: 50 }}
                                             /> ))
                                         ) : null}
                                     {this.state.videoUrls.length > 0 ? 
-                                        (this.state.videoUrls.map((o, i) => (
+                                        (this.state.videoUrls.map((o, j) => (
                                             <Video
-                                                key={i}
                                                 source={{ uri: o }}
                                                 rate={1.0}
                                                 volume={1.0}
@@ -399,12 +396,31 @@ class AddIncidentPopUp extends React.Component {
                                         type="clear"
                                         onPress={this.handleVideoClick}
                                     />
-                                    <Button containerStyle={styles.createButton3} type='clear' 
+                                    <ButtonNew
+                                        type="custom" 
+                                        containerStyle={{ marginBottom: 15, 
+                                            backgroundColor: 'black', marginLeft: 15,
+                                            fontSize: 18, width: width *.2 }}
+                                        contentStyle={{ color: '#00c5e8' }}
+                                        onPress={() => this.handleSubmit()}>
+                                        Submit
+                                    </ButtonNew>
+                                    <ButtonNew
+                                        type="custom" 
+                                        containerStyle={{ marginBottom: 15, marginLeft: 15,
+                                            backgroundColor: 'black', 
+                                            fontSize: 18,
+                                            width: width *.2 }}
+                                        contentStyle={{ color: '#00c5e8' }}
+                                        onPress={() => this.props.closePopUp()}>
+                                        Close
+                                    </ButtonNew>
+                                    {/* <Button containerStyle={styles.createButton3} type='clear' 
                                         titleStyle={{color:'#00c5e8', fontSize: 16 }} 
                                         title='Submit' onPress={this.handleSubmit} />
                                     <Button containerStyle={styles.createButton3} type='clear' 
                                         titleStyle={{color:'#00c5e8', fontSize: 16 }} 
-                                        title='Close' onPress={this.props.closePopUp} />
+                                        title='Close' onPress={this.props.closePopUp} /> */}
                                         {/* <Icon style={styles.btnIcon} name="video" family="Entypo" size={30} /> */}
                                     {/* <Button style={styles.createButton3} onPress={this.handleSubmit}>
                                         <Text bold size={14} color={'#00c5e8'}>Submit</Text>

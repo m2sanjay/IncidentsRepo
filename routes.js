@@ -5,7 +5,7 @@ import Home from './src/Screens/Home';
 import AddIncident from './src/Screens/AddIncident';
 import IncidentDetailsScreen from './src/Screens/IncidentDetailsScreen';
 import SearchMap from './src/Screens/SearchMap';
-
+import Register from './src/Screens/Register';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
 const AppNavigator = createStackNavigator({
@@ -30,7 +30,10 @@ const AppNavigator = createStackNavigator({
     SearchMap: {
       screen: SearchMap,
     },
-  }, {
+    Register: {
+      screen: Register
+    }
+    }, {
       defaultNavigationOptions: {
           header: null
       }

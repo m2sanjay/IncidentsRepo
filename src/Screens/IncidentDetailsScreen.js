@@ -98,20 +98,22 @@ class IncidentDetailsScreen extends React.Component {
         this.updateAPIData();
     }
 
+    componentWillUpdate(){
+        //this.setState({})
+    }
+
     async updateAPIData(){
         this.setState({ isLoaded : true });
         var inciId = this.props.navigation.state.params.data.incidentId;
         await fetch('http://192.168.1.14:8080/getLiveIncidentCommentsAndFiles?incidentId='+ inciId)
             .then(response => response.json())
             .then(incidentDetailsAPI => {
-                this.setState({ incidentDetailsAPI: incidentDetailsAPI })
+                this.setState({ incidentDetailsAPI: incidentDetailsAPI, isLoaded: false })
         })
-
-        this.setState({ isLoaded: false, incidentDetailsAPI: this.state.incidentDetailsAPI });
+        console.log("updateAPIData called");
+        //this.setState({ isLoaded: false, incidentDetailsAPI: this.state.incidentDetailsAPI });
         console.log(this.state.incidentDetailsAPI);
     }
-
-
 
     _pickImage = async () => {
         try {
@@ -190,13 +192,15 @@ class IncidentDetailsScreen extends React.Component {
         //     );
         // }
         
-        this.props.navigation.state.params.callback(
+        await this.props.navigation.state.params.callback(
             this.props.navigation.state.params.data,
             this.state.text,
             this.state.commentImageUrls,
             this.state.commentVideoUrls
         );
 
+        console.log("Calling after callback ****************************** ");
+        
         this.updateAPIData();
 
         this.setState({
@@ -213,8 +217,8 @@ class IncidentDetailsScreen extends React.Component {
     
     async getCacheValue(key){
         var getCacheValue = await this.props.navigation.state.params.getIncidentDetails(key);
-        console.log("getCacheValue");
-        console.log(getCacheValue);
+        //console.log("getCacheValue");
+        //console.log(getCacheValue);
         this.setState({cacheData : getCacheValue});
     }
 
@@ -222,9 +226,9 @@ class IncidentDetailsScreen extends React.Component {
     render() {
         //alert(this.props.navigation.state.params.title);
         var incident = this.props.navigation.state.params.data;
-        var inciAPI = this.state.incidentDetailsAPI;
-        console.log("Render");
-        console.log(inciAPI);
+        let inciAPI = this.state.incidentDetailsAPI;
+        //console.log("Render");
+        //console.log(inciAPI);
         //console.log(incident.incidentId);
         // console.log("Incident Id");
         // //var fromCache = this.props.navigation.state.params.fromCache;
@@ -234,9 +238,9 @@ class IncidentDetailsScreen extends React.Component {
         //console.log("fromCache");
         //console.log(fromCache);
         //console.log(this.props.navigation.state.params.getIncidentDetails(incident.incidentId));
-        var valueFromCache = _.filter(fromCache, {'key' : incident.incidentId});
-        if(valueFromCache != null && valueFromCache != undefined && valueFromCache.length > 0)
-            valueFromCache = valueFromCache[0].incident;
+        // var valueFromCache = _.filter(fromCache, {'key' : incident.incidentId});
+        // if(valueFromCache != null && valueFromCache != undefined && valueFromCache.length > 0)
+        //     valueFromCache = valueFromCache[0].incident;
         
         
         //console.log(valueFromCache);
@@ -289,7 +293,7 @@ class IncidentDetailsScreen extends React.Component {
                                             key={i}
                                             source={{ uri: o }}
                                             resizeMode="contain"
-                                            style={{ width: width-30, height: 150, marginBottom: 20 }}
+                                            style={{ height: 200, marginBottom: 20 }}
                                         />
                                     ))}
                                 </View>
@@ -327,7 +331,7 @@ class IncidentDetailsScreen extends React.Component {
                                             shouldPlay={false}
                                             isLooping={false}
                                             useNativeControls={true}
-                                            style={{ width: width-30, height: 150, marginBottom: 20 }}
+                                            style={{ height: 150, marginBottom: 20 }}
                                         />
                                     ))}
                                 </View>
@@ -346,7 +350,7 @@ class IncidentDetailsScreen extends React.Component {
                                                             <Image
                                                                 source={{ uri: o }}
                                                                 resizeMode="contain"
-                                                                style={{ marginLeft: "5%", width: 200, height: 200 }}
+                                                                style={{ marginLeft: "5%", width: 150, height: 150 }}
                                                             /> ))
                                                     ) : null}
                                                     {com.incidentCommentVideoUrls != undefined && com.incidentCommentVideoUrls.length > 0 ? (
@@ -360,7 +364,7 @@ class IncidentDetailsScreen extends React.Component {
                                                             shouldPlay={false}
                                                             isLooping={false}
                                                             useNativeControls={true}
-                                                            style={{ marginLeft: "5%", width: 200, height: 200 }}
+                                                            style={{ marginLeft: "5%", width: 150, height: 150 }}
                                                         /> ))
                                                     ) : null}
                                                     <Text style={styles.MessageText1}>{com.comments}</Text>
@@ -437,7 +441,7 @@ class IncidentDetailsScreen extends React.Component {
                                                 <Text bold size={14} color={"#00c5e8"}>Post Comment</Text>
                                             </Button>
                                         </Block> */}
-                                        <Block right row style={{marginTop: 10,padding:0,flexDirection: 'row', justifyContent: 'flex-end'}}>
+                                        <Block right row style={{marginTop: 5, marginBottom:30,  padding:0,flexDirection: 'row', justifyContent: 'flex-end'}}>
                                             <Button style={styles.createButtonNew} onPress={this.handleImageClick}>
                                                 <Icon style={styles.btnIcon} name="image" family="Entypo" size={30} />
                                             </Button>

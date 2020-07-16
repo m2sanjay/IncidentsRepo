@@ -15,6 +15,8 @@ import { Images, argonTheme } from "../constants";
 
 const { width, height } = Dimensions.get("screen");
 
+import ButtonNew from 'react-native-flat-button';
+
 const Toast = (props) => {
   if (props.visible) {
       ToastAndroid.showWithGravityAndOffset(
@@ -206,23 +208,47 @@ class LoginScreen extends React.Component {
                         value={this.state.password}
                         onChangeText={text => this.handlePasswordChange(text)}
                       />
-                      <Block row style={{ marginTop: theme.SIZES.BASE, marginLeft: 25, marginBottom: 25 }}>
-                        <Button style={styles.createButton2} 
+                      <Block row style={{ marginTop: 30, marginLeft: 25, marginBottom: 25 }}>
+                        {/* <Button style={styles.createButton2} 
                            onPress={() => this.props.navigation.navigate('Home')}
                           //onPress = {() => this.login()}
                         >
                           <Text bold size={14} color={'#00c5e8'}>
                             LOGIN
                           </Text>
-                        </Button>
-                        <Button style={styles.createButton2} 
+                        </Button> */}
+                        <ButtonNew
+                                        type="custom" 
+                                        containerStyle={{ 
+                                            backgroundColor: 'black', marginLeft: 15,
+                                            fontSize: 20, width: width *.3, height: 50 }}
+                                        contentStyle={{ color: '#00c5e8' }}
+                                        //onPress={() => this.handleSubmit()}
+                                        //onPress={() => this.props.navigation.navigate('Home')}
+                                        onPress = {() => this.login()}
+                                        >
+                                        Login
+                                    </ButtonNew>
+                        {/* <Button style={styles.createButton2} 
                           // onPress={() => this.props.navigation.navigate('Home')}
                           onPress = {() => this.clearBoth()}
                         >
                           <Text bold size={14} color={'#00c5e8'}>
                             CLEAR
                           </Text>
-                        </Button>
+                        </Button> */}
+                        <ButtonNew
+                                        type="custom" 
+                                        containerStyle={{ 
+                                            backgroundColor: 'black', marginLeft: 15,
+                                            fontSize: 20, width: width *.3, height: 50 }}
+                                        contentStyle={{ color: '#00c5e8' }}
+                                        //onPress={() => this.handleSubmit()}
+                                        //onPress={() => this.props.navigation.navigate('Home')}
+                                        onPress = {() => this.clearBoth()}
+                                        >
+                                        Clear
+                                    </ButtonNew>
                       </Block>
                    </Block>
                    <Block flex={0.17} middle>
@@ -231,13 +257,25 @@ class LoginScreen extends React.Component {
                     </Text>
                   </Block>
                    <Block middle>
-                      <Button style={styles.createButton} 
+                      {/* <Button style={styles.createButton} 
                         onPress={() => this.props.navigation.navigate('Register')}
                       >
                         <Text bold size={14} color={'#00c5e8'}>
                           CREATE ACCOUNT
                         </Text>
-                      </Button>
+                      </Button> */}
+                      <ButtonNew
+                                        type="custom" 
+                                        containerStyle={{ marginTop:25,
+                                            backgroundColor: 'black', marginLeft: 15,
+                                            fontSize: 20, width: width *.5, height: 50 }}
+                                        contentStyle={{ color: '#00c5e8' }}
+                                        //onPress={() => this.handleSubmit()}
+                                        //onPress={() => this.props.navigation.navigate('Home')}
+                                        onPress={() => this.props.navigation.navigate('Register')}
+                                        >
+                                        Create Account
+                                    </ButtonNew>
                     </Block>
                   </KeyboardAvoidingView>
                 </Block>

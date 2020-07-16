@@ -48,7 +48,7 @@ class Home extends React.Component {
             createdIncidentId: null,
             manualCache:[],
             showHistory: false,
-            tempCmtId: 0
+            tempCmtId: ''
         }
         this.callbackFn = this.callbackFn.bind(this);
         this.callbackMapFn = this.callbackMapFn.bind(this);
@@ -154,7 +154,7 @@ class Home extends React.Component {
 
     async callbackFn(incident, commentText, imageUrls, videoUrls) {
 
-        console.log("callbackFn called");
+        //console.log("callbackFn called");
         var postJson3 = {
             incidentId:incident.incidentId,							//should be null
             commentId: null,
@@ -174,20 +174,21 @@ class Home extends React.Component {
             },
             body: JSON.stringify(postJson3)
             }
-        ).then(res => res.json())
+        ).then(res => res.text())
          .then(
           (tempCmtId) => {
            this.setState({tempCmtId : tempCmtId});
         });
         
+        console.log("Comment Id");
         console.log(this.state.tempCmtId);
 
         var key = this.state.tempCmtId;
-        
+        console.log(imageUrls);
         for(let i=0; i <imageUrls.length; i++){
             var formData = new FormData();
             var imagedata = imageUrls[i];
-            var imageFileName = 'CommentsImage'+ i +'.jpeg';
+            var imageFileName = 'CommentsImage_'+ i +'.jpeg';
             formData.append('fileData', { uri : imagedata, name : imageFileName, type: 'image/jpeg'});
 
             await axios({
@@ -201,6 +202,7 @@ class Home extends React.Component {
                 console.log(response)
             })
         }
+
         
         for(let j=0; j<videoUrls.length; j++){
             var formData = new FormData();
@@ -219,8 +221,8 @@ class Home extends React.Component {
                 console.log(response)
             })
         }
-
-        console.log("File saved");
+        
+        console.log("Comments File saved");
         //Saving files 
         // for(let i=0; i < imageUrls.length ; i++){
         //     let localUrl = imageUrls[i];
@@ -250,8 +252,9 @@ class Home extends React.Component {
 
         */
 
-        var valueFromCache = _.filter(this.state.manualCache, {'key' : incident.incidentId});
+        //var valueFromCache = _.filter(this.state.manualCache, {'key' : incident.incidentId});
         //console.log(valueFromCache);
+        /*
         if(valueFromCache.length == 0){
             var obj = { key : incident.incidentId, incident: 
                 { 
@@ -274,7 +277,7 @@ class Home extends React.Component {
             });
             this.state.manualCache.push(existingObject);
         }
-
+        */
         //let existingComments = valueFromCache.comments;
         // let length = existingComments.length + 1;
         // existingComments.push({
@@ -282,7 +285,7 @@ class Home extends React.Component {
         //     videoUrls: videoUrl
         // });
 
-        this.setState({ manualCache: this.state.manualCache });
+        //this.setState({ manualCache: this.state.manualCache });
         // */
 
     }
@@ -323,6 +326,7 @@ class Home extends React.Component {
 
     async callbackPopUpAPI(postJson, createOrUpdate) {
 
+        this.setState({ isLoaded: true });
         //let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
         let urllocal = 'http://192.168.1.14:8080';
         await fetch(urllocal + '/addIncident/', {
@@ -351,7 +355,7 @@ class Home extends React.Component {
             var incidentImageName = 'IncidentImage_' + i + '.jpg'; 
             formData.append('fileData', { uri : imagedata, name : incidentImageName, type: 'image/jpeg'});
 
-            axios({
+            await axios({
                 url: `${urllocal}/addIncidentFile?incId=${key}`,
                 method: "POST",
                 data: formData,
@@ -369,7 +373,7 @@ class Home extends React.Component {
             var incidentVideoName = 'IncidentVideo_' + j + '.mp4'; 
             formData.append('fileData', { uri : videoData, name : incidentVideoName, type: 'video/mp4'});
 
-            axios({
+            await axios({
                 url: `${urllocal}/addIncidentFile?incId=${key}`,
                 method: "POST",
                 data: formData,

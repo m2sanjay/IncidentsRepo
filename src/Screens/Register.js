@@ -6,12 +6,14 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   ToastAndroid,
+  Alert,
 
 } from "react-native";
 import { Block, Checkbox, Text, theme } from "galio-framework";
 
 import { Button, Icon, Input } from "../components";
 import { Images, argonTheme } from "../constants";
+import ButtonNew from 'react-native-flat-button';
 
 const { width, height } = Dimensions.get("screen");
 
@@ -34,26 +36,94 @@ class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
+      userFirstName: '',
+      userLastName: '',
+      userEmail: '',
       password: '',
       toasterVisible: false,
       toasterMsg: "",
       mobileNo: '',
       otp: '',
+      otpSent: false,
+      otpValidated: false,
+      otpValidationMsg: '',
+      registerationSuccess: false
     }
     this.clearBoth = this.clearBoth.bind(this);
     this.login = this.login.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.handleUserNameChange = this.handleUserNameChange.bind(this);
+    this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
+    this.handleEmailChange = this.handleEmailChange.bind(this);
+    this.handleLastNameChange = this.handleLastNameChange.bind(this);
     this.handleMobileChange = this.handleMobileChange.bind(this);
+    this.handleOTPChange = this.handleOTPChange.bind(this);
+    this.handleOTPValidation = this.handleOTPValidation.bind(this);
     this.sendOTP = this.sendOTP.bind(this);
   }
+
+    async handleOTPValidation(){
+      let otpEntered = this.state.otp;
+      console.log(otpEntered);
+      var postJson6 = {
+        userId: "",
+        userName: "",
+        password: "",
+        emailId: "",							
+        mobileNo: this.state.mobileNo,
+        otp: this.state.otp,
+        otpExpiryDateTime: ""
+      }
+
+      console.log(postJson6);
+      let urllocal = 'http://192.168.1.14:8080';
+          
+      await fetch(urllocal + '/validateOtp/', {
+            method: 'POST',
+            headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postJson6)
+            }
+          ).then(response => response.text())
+          .then(
+            (otpValidationMsg) => {
+             this.setState({otpValidationMsg : otpValidationMsg});
+      });
+
+      this.setState({ toasterVisible: true, toasterMsg: this.state.otpValidationMsg});
+      //otpValidated =
+      if(this.state.otpValidationMsg == 'Verified Successfully'){
+        this.setState({ otpValidated : true });
+      } else {
+        this.setState({ otpValidated : false });
+      }
+
+      console.log(this.state.otpValidated);
+    }
+
+    handleEmailChange(text){
+      this.state.userEmail = text;
+      this.setState({
+        toasterVisible: false,
+        userEmail: this.state.userEmail
+      });
+    }
+
+    handleOTPChange(text){
+      this.state.otp = text;
+      this.setState({
+        toasterVisible: false,
+        otp: this.state.otp
+      });
+    }
 
     sendOTP(){
       if(this.state.mobileNo == ''){
         return;
       }
 
+      this.setState({ otpSent : true, otpValidated: false, toasterVisible: true, toasterMsg: 'OTP sent to mobile number'});
       var postJson5 = {
         userId: "",
         userName: "",
@@ -64,6 +134,7 @@ class Register extends React.Component {
         otpExpiryDateTime: ""
       }
 
+      console.log(postJson5);
       let urllocal = 'http://192.168.1.14:8080';
           
       fetch(urllocal + '/sendOtp/', {
@@ -81,15 +152,23 @@ class Register extends React.Component {
     this.state.password = text;
     this.setState({
       toasterVisible: false,
-      username: this.state.username
+      password: this.state.password
     });
   }
 
-  handleUserNameChange(text) {
-    this.state.username = text;
+  handleFirstNameChange(text) {
+    this.state.userFirstName = text;
     this.setState({
       toasterVisible: false,
-      password: this.state.password
+      userFirstName: this.state.userFirstName
+    });
+  }
+
+  handleLastNameChange(text) {
+    this.state.userLastName = text;
+    this.setState({
+      toasterVisible: false,
+      userLastName: this.state.userLastName
     });
   }
 
@@ -101,33 +180,74 @@ class Register extends React.Component {
     });
   }
 
-  clearBoth() {
-    this.state.password = '';
-    this.state.username = '';
+  handleLastNameChange(text) {
+    this.state.userLastName = text;
     this.setState({
       toasterVisible: false,
-      username: this.state.username,
-      password: this.state.password
+      userLastName: this.state.userLastName
+    });
+  }
+
+  clearBoth() {
+    this.state.userFirstName = '';
+    this.state.userLastName = '';
+    this.state.userEmail = '';
+    this.state.password = '';
+    this.state.mobileNo = '';
+    this.state.otp = '';
+    //this.state.otp
+    //this.state. = '';
+    //this.state.username = '';
+    this.setState({
+      toasterVisible: false,
+      userFirstName: this.state.userFirstName,
+      userLastName: this.state.userLastName,
+      userEmail: this.state.userEmail,
+      password: this.state.password,
+      mobileNo: this.state.mobileNo,
+      otp: this.state.otp,
     })
   }
 
   async login() {
-    console.log("login Called");
-    console.log(this.state.username);
-    console.log(this.state.password);
+    
+    var postJson4 = {
+      userName: this.state.userFirstName + " " + this.state.userLastName,
+      password: this.state.password,
+      emailId: this.state.userEmail,							
+      mobileNo: this.state.mobileNo,
+    }
 
-    let user = this.state.username;
-    let pass = this.state.password;
+    console.log(postJson4);
 
-
-    if (user.toLocaleLowerCase() == 'sanjay.barman@gmail.com' && pass == 'admin@123') {
-      this.props.navigation.navigate('Home');
+    let urllocal = 'http://192.168.1.14:8080';
+        
+    await fetch(urllocal + '/registerUser/', {
+           method: 'POST',
+           headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+           },
+           body: JSON.stringify(postJson4)
+          }
+        ).then(res => res.text())
+         .then(
+          (registerationSuccess) => {
+           this.setState({registerationSuccess : registerationSuccess, toasterVisible: false})
+      });
+    
+    console.log(this.state.registerationSuccess);
+    if ( this.state.registerationSuccess == "true" ){
+        //Alert.alert("Registration Successful. Please login using Email and Password");
+        this.setState({ toasterVisible: true, toasterMsg: "Registration successful. Please login now"});
+        this.props.navigation.navigate('LoginScreen');
     } else {
       this.setState({
         toasterVisible: true,
-        toasterMsg: "Username or Password entered is incorrect",
+        toasterMsg: "Email Id already Registered",
       });
     }
+
   }
 
   render() {
@@ -203,8 +323,8 @@ class Register extends React.Component {
                             style={styles.inputIcons}
                           />
                         }
-                        value={this.state.username}
-                        onChangeText={text => this.handleUserNameChange(text)}
+                        value={this.state.userFirstName}
+                        onChangeText={text => this.handleFirstNameChange(text)}
                       />
                     </Block>
                     <Block width={width * 0.8} style={{ marginBottom: 15 }}>
@@ -220,8 +340,8 @@ class Register extends React.Component {
                             style={styles.inputIcons}
                           />
                         }
-                        value={this.state.username}
-                        onChangeText={text => this.handleUserNameChange(text)}
+                        value={this.state.userLastName}
+                        onChangeText={text => this.handleLastNameChange(text)}
                       />
                     </Block>
                     <Block width={width * 0.8} style={{ marginBottom: 15 }}>
@@ -237,8 +357,8 @@ class Register extends React.Component {
                             style={styles.inputIcons}
                           />
                         }
-                        value={this.state.username}
-                        onChangeText={text => this.handleUserNameChange(text)}
+                        value={this.state.userEmail}
+                        onChangeText={text => this.handleEmailChange(text)}
                       />
                     </Block>
                     <Block width={width * 0.8} style={{ marginBottom: 15 }}>
@@ -262,7 +382,7 @@ class Register extends React.Component {
                     <Block row width={width * 0.8}>
                       <Input
                         borderless
-                        placeholder="Phone"
+                        placeholder="Mobile"
                         iconContent={
                           <Icon
                             size={16}
@@ -275,25 +395,84 @@ class Register extends React.Component {
                         value={this.state.mobileNo}
                         onChangeText={text => this.handleMobileChange(text)}
                       />
-                      <Button style={styles.createButtonPhone}
+                      {/* <Button style={styles.createButtonPhone}
                           // onPress={() => this.props.navigation.navigate('Home')}
                            onPress={() => this.sendOTP()}
                         >
                           <Text bold size={14} color={'#00c5e8'}>
                             Send OTP
                           </Text>
-                        </Button>
+                        </Button> */}
+                        <ButtonNew
+                                        type="custom" 
+                                        containerStyle={{ marginTop:5,
+                                            backgroundColor: 'black', marginLeft: 15,
+                                            fontSize: 20, width: width *.3, height: 50 }}
+                                        contentStyle={{ color: '#00c5e8' }}
+                                        //onPress={() => this.handleSubmit()}
+                                        //onPress={() => this.props.navigation.navigate('Home')}
+                                        onPress={() => this.sendOTP()}
+                                        >
+                                        Sent OTP
+                                    </ButtonNew>
                     </Block>
-                    <Block row style={{ marginTop: theme.SIZES.BASE, marginLeft: 25, marginBottom: 25 }}>
-                        <Button style={styles.createButton2}
-                          nPress={() => this.props.navigation.navigate('Home')}
+                    {this.state.otpSent ? 
+                    <Block row width={width * 0.8}>
+                      <Input
+                        borderless
+                        placeholder="Enter OTP"
+                        iconContent={
+                          <Icon
+                            size={12}
+                            color={argonTheme.COLORS.ICON}
+                            name="ic_mail_24px"
+                            family="ArgonExtra"
+                            style={styles.inputIcons}
+                          />
+                        }
+                        value={this.state.otp}
+                        onChangeText={text => this.handleOTPChange(text)}
+                      />
+                      <ButtonNew
+                                        type="custom" 
+                                        containerStyle={{ marginTop:5,
+                                            backgroundColor: 'black', marginLeft: 15,
+                                            fontSize: 20, width: width *.3, height: 50 }}
+                                        contentStyle={{ color: '#00c5e8' }}
+                                        //onPress={() => this.handleSubmit()}
+                                        //onPress={() => this.props.navigation.navigate('Home')}
+                                        onPress={() => this.handleOTPValidation()}
+                                        >
+                                        Validate OTP
+                                    </ButtonNew>
+                    </Block>
+                    :
+                      null
+                    }
+
+                    {this.state.otpValidated == true ? 
+
+                    <Block row style={{ marginTop: 10, marginLeft: 25, marginBottom: 25 }}>
+                        {/* <Button style={styles.createButton2}
+                          onPress={() => this.props.navigation.navigate('Home')}
                           //onPress={() => this.login()}
                         >
                           <Text bold size={14} color={'#00c5e8'}>
                             LOGIN
                           </Text>
-                        </Button>
-                        <Button style={styles.createButton2}
+                        </Button> */}
+                        <ButtonNew
+                                        type="custom" 
+                                        containerStyle={{ marginTop:5,
+                                            backgroundColor: 'black', 
+                                            fontSize: 40, width: width *.2, height: 50 }}
+                                        contentStyle={{ color: '#00c5e8' }}
+                                        //onPress={() => this.props.navigation.navigate('Home')}
+                                        onPress={() => this.login()}
+                                        >
+                                        Register
+                                    </ButtonNew>
+                        {/* <Button style={styles.createButton2}
                           // onPress={() => this.props.navigation.navigate('Home')}
                           onPress={() => this.clearBoth()}
                         >
@@ -308,17 +487,72 @@ class Register extends React.Component {
                           <Text bold size={14} color={'#00c5e8'}>
                             BACK
                           </Text>
-                        </Button>
+                        </Button> */}
+                        <ButtonNew
+                                        type="custom" 
+                                        containerStyle={{ marginTop:5,
+                                            backgroundColor: 'black', marginLeft: 15,
+                                            fontSize: 20, width: width *.2, height: 50 }}
+                                        contentStyle={{ color: '#00c5e8' }}
+                                        onPress={() => this.props.navigation.navigate('LoginScreen')}
+                                        >
+                                        Back
+                                    </ButtonNew>
+                                    <ButtonNew
+                                        type="custom" 
+                                        containerStyle={{ marginTop:5,
+                                            backgroundColor: 'black', marginLeft: 15,
+                                            fontSize: 25, width: width *.2, height: 50 }}
+                                        contentStyle={{ color: '#00c5e8' }}
+                                        onPress={() => this.clearBoth()}
+                                        >
+                                        Clear
+                                    </ButtonNew>
                     </Block>
-                    <Block middle>
-                      <Button style={styles.createButton}
+                    : <Block row center style={{ marginTop: 10, marginLeft: 25, marginBottom: 25 }}>
+                    <ButtonNew
+                                    type="custom" 
+                                    containerStyle={{ marginTop:5,
+                                        backgroundColor: 'black',
+                                        fontSize: 20, width: width *.2, height: 50 }}
+                                    contentStyle={{ color: '#00c5e8' }}
+                                    onPress={() => this.props.navigation.navigate('LoginScreen')}
+                                    >
+                                    Back
+                                </ButtonNew>
+                                <ButtonNew
+                                    type="custom" 
+                                    containerStyle={{ marginTop:5,
+                                        backgroundColor: 'black', marginLeft: 15,
+                                        fontSize: 25, width: width *.2, height: 50 }}
+                                    contentStyle={{ color: '#00c5e8' }}
+                                    onPress={() => this.clearBoth()}
+                                    >
+                                    Clear
+                                </ButtonNew>
+                </Block>
+                 }
+                    {/* <Block middle>
+                      {/* <Button style={styles.createButton}
                         onPress={() => this.props.navigation.navigate('Register')}
                       >
                         <Text bold size={14} color={'#00c5e8'}>
                           CREATE ACCOUNT
                           </Text>
                       </Button>
-                    </Block>
+                      <ButtonNew
+                                        type="custom" 
+                                        containerStyle={{ marginTop:5,
+                                            backgroundColor: 'black', marginLeft: 15,
+                                            fontSize: 25, width: width *.25, height: 50 }}
+                                        contentStyle={{ color: '#00c5e8' }}
+                                        onPress={() => this.props.navigation.navigate('LoginScreen')}
+                                        >
+                                        Clear
+                                    </ButtonNew>
+                    </Block> */}
+
+                    
                   </KeyboardAvoidingView>
                 </Block>
               </Block>

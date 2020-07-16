@@ -318,7 +318,7 @@ class SearchMap extends React.Component {
         {this.state.toasterVisible ?
           <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg} /> : null
         }
-        <Block row style={{ 
+        <Block row center style={{ //padding: 5,
             zIndex: 6, height: 33, width: width * 0.90, margin: 10}}>
           <Button type="custom" 
             containerStyle={{ marginRight:13, 

@@ -194,7 +194,7 @@ class AddIncidentPopUp extends React.Component {
         let postJson = null;
     }
 
-    handleSubmit() {
+    async handleSubmit() {
         if (this.state.selectedOffenseId == null) {
             this.setState({
                 toasterVisible: true,
@@ -239,7 +239,7 @@ class AddIncidentPopUp extends React.Component {
             
             this.setState({ submitted: true });
 
-            this.props.createIncident(
+            await this.props.createIncident(
                 postJson2,
                 "Update"
             ); 

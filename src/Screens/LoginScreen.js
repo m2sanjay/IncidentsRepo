@@ -82,9 +82,9 @@ class LoginScreen extends React.Component {
       otpExpiryDateTime: ""
     }
 
-    let urllocal = 'http://192.168.1.14:8080';
-        
-    await fetch(urllocal + '/validateUserLogin/', {
+    //let url = 'http://192.168.1.14:8080';
+    let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
+    await fetch(url + '/validateUserLogin/', {
            method: 'POST',
            headers: {
                 Accept: 'application/json',

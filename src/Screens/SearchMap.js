@@ -123,7 +123,8 @@ class SearchMap extends React.Component {
 
   async openBox(duration){
     //console.log(duration);
-    await fetch('http://192.168.1.14:8080/getTickerListByLatLngAndDays?lat=' + this.state.markerCoordinate.latitude +
+    let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
+    await fetch(url + '/getTickerListByLatLngAndDays?lat=' + this.state.markerCoordinate.latitude +
       '&lng=' + this.state.markerCoordinate.longitude + '&noOfDays=' + duration)
        .then(response => response.json())
        .then(popUpData => {

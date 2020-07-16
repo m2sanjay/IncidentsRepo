@@ -105,7 +105,8 @@ class IncidentDetailsScreen extends React.Component {
     async updateAPIData(){
         this.setState({ isLoaded : true });
         var inciId = this.props.navigation.state.params.data.incidentId;
-        await fetch('http://192.168.1.14:8080/getLiveIncidentCommentsAndFiles?incidentId='+ inciId)
+        let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
+        await fetch(url + '/getLiveIncidentCommentsAndFiles?incidentId='+ inciId)
             .then(response => response.json())
             .then(incidentDetailsAPI => {
                 this.setState({ incidentDetailsAPI: incidentDetailsAPI, isLoaded: false })

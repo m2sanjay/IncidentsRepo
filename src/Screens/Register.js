@@ -75,9 +75,9 @@ class Register extends React.Component {
       }
 
       console.log(postJson6);
-      let urllocal = 'http://192.168.1.14:8080';
-          
-      await fetch(urllocal + '/validateOtp/', {
+      //let url = 'http://192.168.1.14:8080';
+      let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
+      await fetch(url + '/validateOtp/', {
             method: 'POST',
             headers: {
                   Accept: 'application/json',
@@ -135,9 +135,10 @@ class Register extends React.Component {
       }
 
       console.log(postJson5);
-      let urllocal = 'http://192.168.1.14:8080';
-          
-      fetch(urllocal + '/sendOtp/', {
+      //let url = 'http://192.168.1.14:8080';
+      let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
+
+      fetch(url + '/sendOtp/', {
             method: 'POST',
             headers: {
                   Accept: 'application/json',
@@ -220,9 +221,10 @@ class Register extends React.Component {
 
     console.log(postJson4);
 
-    let urllocal = 'http://192.168.1.14:8080';
+    //let url = 'http://192.168.1.14:8080';
+    let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
         
-    await fetch(urllocal + '/registerUser/', {
+    await fetch(url + '/registerUser/', {
            method: 'POST',
            headers: {
                 Accept: 'application/json',

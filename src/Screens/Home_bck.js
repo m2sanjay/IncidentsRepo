@@ -99,8 +99,9 @@ class Home extends React.Component {
     }
     
     updateTicker(latitude, longitude){
-
-        fetch('http://192.168.1.14:8080/getIncidentsListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
+        let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
+        //let url = 'http://192.168.1.14:8080';
+        fetch( url + '/getIncidentsListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude)
             .then(response => response.json())
             .then(tickerArray => {
             this.setState({ tickerArray })

@@ -71,14 +71,14 @@ class SearchMap extends React.Component {
 
   componentDidMount() {
     Geocoder.init("AIzaSyB4OJsFNMQncqptmQ3nAk-mbUNqqcCYYts");
-
-    fetch('http://192.168.1.14:8080/getIncidents')
+    let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
+    fetch(url + '/getIncidents')
       .then(response => response.json())
       .then(items => {
         this.setState({ items })
     })
 
-    fetch('http://192.168.1.14:8080/getIncidentsHeatMap')
+    fetch(url + '/getIncidentsHeatMap')
       .then(response => response.json())
       .then(heatDataAlabama => {
         this.setState({ heatDataAlabama })

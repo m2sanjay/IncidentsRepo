@@ -66,8 +66,8 @@ class Home extends React.Component {
 
     updateData(latitude, longitude){
        this.setState({ isLoaded : true });
-       //let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
-       let url = 'http://192.168.1.14:8080';
+       let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
+       //let url = 'http://192.168.1.14:8080';
        // console.log("Getting HeatMap Data from DB");
        // console.log(latitude, longitude); http://incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com/
         fetch(url + '/getCount?lat=' + latitude + '&lng=' + longitude)
@@ -163,10 +163,11 @@ class Home extends React.Component {
             incidentCommentVideoUrls: videoUrls
         }
 
-        let urllocal = 'http://192.168.1.14:8080';
+        let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
+        //let url = 'http://192.168.1.14:8080';
         console.log(postJson3);
         
-        await fetch(urllocal + '/addComments/', {
+        await fetch(url + '/addComments/', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -192,7 +193,7 @@ class Home extends React.Component {
             formData.append('fileData', { uri : imagedata, name : imageFileName, type: 'image/jpeg'});
 
             await axios({
-                url: `${urllocal}/addIncidentCommentFile?cmntId=${key}`,
+                url: `${url}/addIncidentCommentFile?cmntId=${key}`,
                 method: "POST",
                 data: formData,
                 headers: {
@@ -211,7 +212,7 @@ class Home extends React.Component {
             formData.append('fileData', { uri : videoData, name : videoFileName, type: 'video/mp4'});
 
             await axios({
-                url: `${urllocal}/addIncidentCommentFile?cmntId=${key}`,
+                url: `${url}/addIncidentCommentFile?cmntId=${key}`,
                 method: "POST",
                 data: formData,
                 headers: {
@@ -327,9 +328,9 @@ class Home extends React.Component {
     async callbackPopUpAPI(postJson, createOrUpdate) {
 
         this.setState({ isLoaded: true });
-        //let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
-        let urllocal = 'http://192.168.1.14:8080';
-        await fetch(urllocal + '/addIncident/', {
+        let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
+        //let url = 'http://192.168.1.14:8080';
+        await fetch(url + '/addIncident/', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -356,7 +357,7 @@ class Home extends React.Component {
             formData.append('fileData', { uri : imagedata, name : incidentImageName, type: 'image/jpeg'});
 
             await axios({
-                url: `${urllocal}/addIncidentFile?incId=${key}`,
+                url: `${url}/addIncidentFile?incId=${key}`,
                 method: "POST",
                 data: formData,
                 headers: {
@@ -374,7 +375,7 @@ class Home extends React.Component {
             formData.append('fileData', { uri : videoData, name : incidentVideoName, type: 'video/mp4'});
 
             await axios({
-                url: `${urllocal}/addIncidentFile?incId=${key}`,
+                url: `${url}/addIncidentFile?incId=${key}`,
                 method: "POST",
                 data: formData,
                 headers: {

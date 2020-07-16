@@ -98,10 +98,6 @@ class IncidentDetailsScreen extends React.Component {
         this.updateAPIData();
     }
 
-    componentWillUpdate(){
-        //this.setState({})
-    }
-
     async updateAPIData(){
         this.setState({ isLoaded : true });
         var inciId = this.props.navigation.state.params.data.incidentId;
@@ -260,11 +256,11 @@ class IncidentDetailsScreen extends React.Component {
                 <Block style={{ backgroundColor: "#0A121A", width, height, zIndex: 1 }}>
                     <Block style={{ backgroundColor: "#00c5e8" }} middle>
                         <Text style={styles.profileText}>Incident Details</Text>
-                        <View
-                            style={{ flexDirection: "row", justifyContent: "space-between" }}
-                        >
-                            <Text h5 style={styles.horizontalText}>
-                                {incident.offenceName}
+                    </Block>
+                    <Block style={{ backgroundColor: "#1d2123"}} middle>
+                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                            <Text h5 style={styles.horizontalTextOffence}>
+                                {incident.offenceName.toUpperCase()}
                             </Text>
                         </View>
                     </Block>
@@ -620,6 +616,14 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         color: "black",
         marginLeft: "5%",
+        marginTop: "1%",
+        paddingBottom: "3%",
+    },
+    horizontalTextOffence: {
+        fontWeight: "700",
+        color: "orange",
+        marginLeft: "5%",
+        marginRight: "5%",
         marginTop: "1%",
         paddingBottom: "3%",
     },

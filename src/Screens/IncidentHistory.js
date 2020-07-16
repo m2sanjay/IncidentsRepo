@@ -14,8 +14,8 @@ class IncidentHistory extends React.Component {
         super(props);
         this.state = {
             tableHead: ['Offence Type', 'Count'],
-            widthArr: [210, 115],
-            widthArrNoRecords: [325],
+            widthArr: [210, 110],
+            widthArrNoRecords: [320],
             noRecords: ['No offence data available'],
         }
 
@@ -27,8 +27,10 @@ class IncidentHistory extends React.Component {
         this.props.dataAPI.map((o, i) => (
             sum = sum + o.count
         ));
+        //let returnArray = ['Total' , ''+sum];
+        //console.log(returnArray);
         return sum;
-        console.log(sum);
+        //console.log(sum);
     }
 
     render() {
@@ -36,24 +38,40 @@ class IncidentHistory extends React.Component {
             <View>
                 <View>
                     <View style={styles.addView}>
-                        <Block row style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                                {/* <Button type="custom"
-                                    containerStyle={{ 
-                                        alignSelf: 'flex-end',
-                                        backgroundColor: '#00c5e8', 
-                                        marginRight: 10,
-                                        marginTop: 10,
-                                        height: 35,
-                                        width: 70
-                                    }}
-                                    onPress={() => this.props.closePopUp()}>
-                                    Close
-                                </Button> */}
-                                <Button  
-                                        icon={{ name: "cancel", size: 20, color: "#00c5e8"}} 
+                        <View style={{ 
+                            flexDirection: 'row', 
+                            backgroundColor: 'transparent',
+                            //backgroundColor: 'white',
+                            justifyContent: 'flex-end',
+                            //paddingTop: 40,
+                            //marginLeft: '90%',
+                            //zIndex: 4,
+                            overflowX: 'visible'
+                            }}>
+                        <Button  
+                                        icon={{
+                                        //borderRadius: '5',
+                                        name: "cancel", size: 25, 
+                                        color: "#00c5e8",
+                                        //color: "black",
+                                        //marginLeft: '95%',
+                                        flexDirection: 'row',
+                                        backgroundColor: 'transparent', 
+                                        justifyContent: 'flex-end',
+                                        //paddingTop: '90%',
+                                        //paddingTop: 40
+                                        //zIndex: 5,
+                                        //overflow: 'hidden'
+                                        }} 
+                                        containerStyle={{ 
+                                            marginBottom: '-5%', 
+                                            marginRight: '-10%',
+                                            //borderRadius: '10',
+                                        }}
+                                        //containerStyle={{ marginTop : 100 }}
                                         type="clear" 
                                         onPress={() => this.props.closePopUp()} />
-                        </Block>
+                        </View>
                         <Block center row style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                             <View style={styles1.container}>
                                 <ScrollView horizontal={true}>
@@ -84,17 +102,23 @@ class IncidentHistory extends React.Component {
                                                         data={this.state.noRecords}>
                                                     </Row>
                                                 }
+                                                <Row 
+                                                        data={["Total", this.totalCount()]}
+                                                        widthArr={this.state.widthArr} 
+                                                        style={styles1.header} 
+                                                        textStyle={styles1.textHeader} 
+                                                />
                                             </Table>
                                         </ScrollView>
                                     </View>
                                 </ScrollView>
                             </View>
                         </Block>
-                        <Block style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                        {/* <Block style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                             <Text style={{ textAlign: 'center', marginRight: 10 , fontWeight: 'bold', color: 'orange' }}>
                                 Total : {this.totalCount()}
                             </Text>
-                        </Block>
+                        </Block> */}
                         {/* <Button containerStyle={styles.createButton3} type='clear'
                                 titleStyle={{ color: '#00c5e8', fontSize: 13 }}
                                 title='Dismiss' 
@@ -128,7 +152,7 @@ const styles = StyleSheet.create({
     createButtonNew: {
         width: width * 0.1,
         marginTop: 10,
-        marginRight: 5,
+        //marginRight: 5,
         borderWidth: 0,
         borderColor: 'transparent',
         shadowOpacity: 0,
@@ -139,7 +163,7 @@ const styles = StyleSheet.create({
     },
     createButton3: {
         // width: width * 0.25,
-        marginTop: 10,
+        //marginTop: 10,
         // //backgroundColor: '#5E72E4'
         // backgroundColor: 'transparent',
         //borderWidth: 0,
@@ -218,12 +242,13 @@ const styles = StyleSheet.create({
         marginRight: '5%',
         borderRadius: 10,
         borderColor: 'orange',
-        paddingBottom: '5%',
-        //paddingTop: '2%',
-
-        backgroundColor: 'black',
+        //paddingBottom: '1%',
+        paddingTop: '1%',
+        //height: height * .5,
+        //backgroundColor: 'black',
+        backgroundColor: 'transparent',
         //opacity: 0.6
-        opacity: 0.9,
+        opacity: 1,
         //backgroundColor: '#0A121A',
     },
     profileText: {
@@ -433,11 +458,11 @@ const styles = StyleSheet.create({
 });
 
 const styles1 = StyleSheet.create({
-    container: { flex: 1, padding: 2, paddingTop: 2, backgroundColor: 'black' },
-    header: { height: 35, backgroundColor: 'black' },
-    nonHeader: { height: 30, backgroundColor: 'black' },
-    textHeader: { textAlign: 'center', fontWeight: 'bold', color: 'orange' },
-    text: { textAlign: 'center', fontWeight: '100', color: 'orange' },
+    container: { flex: 1, padding: 5, backgroundColor: 'black' },
+    header: { height: 35, backgroundColor: '#00c5e8' },
+    nonHeader: { height: 35, backgroundColor: 'black' },
+    textHeader: { textAlign: 'center', fontWeight: 'bold', color: 'black' },
+    text: { textAlign: 'center', fontWeight: 'normal', color: 'orange' },
     dataWrapper: { marginTop: -1 },
     row: { height: 20, backgroundColor: 'black' }
   });

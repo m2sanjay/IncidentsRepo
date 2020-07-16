@@ -224,8 +224,8 @@ class LoginScreen extends React.Component {
                                             fontSize: 20, width: width *.3, height: 50 }}
                                         contentStyle={{ color: '#00c5e8' }}
                                         //onPress={() => this.handleSubmit()}
-                                        //onPress={() => this.props.navigation.navigate('Home')}
-                                        onPress = {() => this.login()}
+                                        onPress={() => this.props.navigation.navigate('Home')}
+                                        //onPress = {() => this.login()}
                                         >
                                         Login
                                     </ButtonNew>

@@ -320,27 +320,38 @@ class SearchMap extends React.Component {
           <Toast visible={this.state.toasterVisible} message={this.state.toasterMsg} /> : null
         }
         <Block row center style={{ //padding: 5,
-            zIndex: 6, height: 33, width: width * 0.90, margin: 10}}>
+            zIndex: 6, height: 45, width: width * 0.9, margin: 2,
+            backgroundColor: "#54585c",
+            //backgroundColor: "transparent",
+            borderRadius: 5,
+            justifyContent: "space-around"
+            }}>
           <Button type="custom" 
-            containerStyle={{ marginRight:13, 
+            containerStyle={{ //marginRight:13, 
                 backgroundColor: selectedIndexForRange == 30 ? '#00c5e8' : 'black', 
-                width: width * .20 }}
+                width: width * .2,
+                height: 33
+              }}
             contentStyle={{ color: selectedIndexForRange == 30 ? 'black' : '#00c5e8' }}
             onPress={() => this.openBox(30)}>
               1 month
           </Button>
           <Button type="custom" 
-            containerStyle={{ marginRight:13, 
+            containerStyle={{ //marginRight:13, 
               backgroundColor: selectedIndexForRange == 90 ? '#00c5e8' : 'black', 
-              width: width * .20 }}
+              width: width * .2 ,
+              height: 33
+            }}
             contentStyle={{ color: selectedIndexForRange == 90 ? 'black' : '#00c5e8' }}
             onPress={() => this.openBox(90)}>
               3 month
             </Button>
           <Button type="custom" 
-            containerStyle={{ marginRight:13, 
+            containerStyle={{ //marginRight:13, 
               backgroundColor: selectedIndexForRange == 180 ? '#00c5e8' : 'black', 
-              width: width * .20 }}
+              width: width * .2,
+              height: 33
+            }}
             contentStyle={{ color: selectedIndexForRange == 180 ? 'black' : '#00c5e8' }}
             onPress={() => this.openBox(180)}>
               6 month
@@ -348,7 +359,9 @@ class SearchMap extends React.Component {
           <Button type="custom" 
             containerStyle={{ 
               backgroundColor: selectedIndexForRange == 365 ? '#00c5e8' : 'black', 
-              width: width * .20 }}
+              width: width * .2 ,
+              height: 33
+            }}
             contentStyle={{ color: selectedIndexForRange == 365 ? 'black' : '#00c5e8' }}
             onPress={() => this.openBox(365)}>
               1 year

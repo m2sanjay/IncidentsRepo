@@ -257,6 +257,7 @@ class IncidentDetailsScreen extends React.Component {
                     <Block style={{ backgroundColor: "#00c5e8" }} middle>
                         <Text style={styles.profileText}>Incident Details</Text>
                     </Block>
+                    <Text style={{ borderWidth: 6, borderColor: "#0A121A", height: 1 }}></Text>
                     <Block style={{ backgroundColor: "#1d2123"}} middle>
                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                             <Text h5 style={styles.horizontalTextOffence}>
@@ -264,6 +265,7 @@ class IncidentDetailsScreen extends React.Component {
                             </Text>
                         </View>
                     </Block>
+                    <Text style={{ borderWidth: 6, borderColor: "#0A121A", height: 1 }}></Text>
                     <Block flex middle>
                         <ScrollView style={styles.registerContainer}>
                             <View style={styles.desc}>
@@ -626,6 +628,12 @@ const styles = StyleSheet.create({
         marginRight: "5%",
         marginTop: "1%",
         paddingBottom: "3%",
+    },
+    spacebar: {
+        marginLeft: "5%",
+        marginRight: "5%",
+        marginTop: "1%",
+        paddingBottom: "1%",
     },
     tickerText: {
         color: "black",

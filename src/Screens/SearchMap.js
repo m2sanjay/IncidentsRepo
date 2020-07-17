@@ -429,12 +429,13 @@ class SearchMap extends React.Component {
         </GoogleAutoComplete>
         
         {this.state.showHistory == true ?
-          <View style={{ marginTop: '10%', zIndex: 6 }}>
+          <View style={{ zIndex: 6 }}>
+            {/* {this.renderModalContent()} */}
             <Modal isVisible={this.state.showHistory}>
               {this.renderModalContent()}
             </Modal>
           </View> : null}
-          
+            
         <MapView style={styles.map}
           provider='google'
           zoomEnabled={true}

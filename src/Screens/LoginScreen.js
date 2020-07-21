@@ -82,6 +82,8 @@ class LoginScreen extends React.Component {
       otpExpiryDateTime: ""
     }
 
+    //this.state.loggedInUser = {} ;
+
     //let url = 'http://192.168.1.14:8080';
     let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
     await fetch(url + '/validateUserLogin/', {
@@ -99,11 +101,13 @@ class LoginScreen extends React.Component {
            this.setState({loggedInUser : loggedInUser})
       });
       
-    if(this.state.loggedInUser.emailId != undefined){
+    if(this.state.loggedInUser.emailId != undefined && this.state.loggedInUser.emailId != "") {
         console.log("Login Successful " + this.state.loggedInUser.emailId);
         this.setState({
           username: "",
           password: "",
+          toasterVisible: true,
+          toasterMsg: "Login Successful",
         });
         this.props.navigation.navigate('Home');
     } else {

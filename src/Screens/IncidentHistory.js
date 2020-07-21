@@ -40,7 +40,7 @@ class IncidentHistory extends React.Component {
                     <View style={styles.addView}>
                         <View style={{ 
                             zIndex: 5,
-                            marginBottom: '-13%',
+                            marginBottom: '-11%',
                             marginTop: '20%', 
                             flexDirection: 'row', 
                             backgroundColor: 'transparent',
@@ -68,7 +68,7 @@ class IncidentHistory extends React.Component {
                                         }} 
                                         containerStyle={{ 
                                             //marginBottom: '-8%', 
-                                            marginRight: '-2%',
+                                            marginRight: '-3%',
                                             //backgroundColor: 'black',
 
                                             //borderRadius: '10',
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
         //paddingBottom: '1%',
         paddingTop: '1%',
         height: height * .5,
-        width: width * .835,
+        width: width * .8,
         //backgroundColor: 'black',
         backgroundColor: 'transparent',
         //opacity: 0.6

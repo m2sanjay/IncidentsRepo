@@ -306,6 +306,7 @@ class SearchMap extends React.Component {
     
     let heatMapData = this.props.heatData();
     let liveIncidents = this.props.liveIncidents();
+
     //heatMapData = heatMapData.map(eachData => eachData.basicData);
     //console.log(heatMapData);
     //console.log(tableData);
@@ -456,10 +457,12 @@ class SearchMap extends React.Component {
           {this.state.isMapReady ==true ? 
               <Circle center ={this.state.markerCoordinate} 
                 radius={2500} 
-                fillColor=
-                {heatMapData > 300000 ? 'rgba(255,0,0,.55)' :
-                    heatMapData > 200000 ? 'rgba(255,191,0,.55)' :
-                    'rgba(0,255,0,.55)'} /> : null}
+                fillColor= 'transparent'
+                // {heatMapData > 300000 ? 'rgba(255,0,0,.55)' :
+                //     heatMapData > 200000 ? 'rgba(255,191,0,.55)' :
+                //     'rgba(0,255,0,.55)'} 
+                />
+                : null}
           {/* Amber fillColor='rgba(255,191,0,.55)' */}
           {/* Amber fillColor='rgba(255,191,0,.55)' */}
 
@@ -507,12 +510,12 @@ class SearchMap extends React.Component {
                       </View> */}
                   <View style={styles1.container}>
                     <ScrollView horizontal={true}>
-                      <View>
-                        <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
-                          <Row data={this.state.tableHead} widthArr={this.state.widthArr} style={styles1.header} textStyle={styles1.text} />
+                      <View >
+                        <Table borderStyle={{ borderWidth: 1, borderColor: '#00c5e8' }}>
+                          <Row data={this.state.tableHead} widthArr={this.state.widthArr} style={styles1.header} textStyle={styles1.headerText} />
                         </Table>
                         <ScrollView style={styles1.dataWrapper}>
-                          <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
+                          <Table borderStyle={{ borderWidth: 1, borderColor: '#00c5e8' }}>
                             {
                               <Row
                                   //key={index}
@@ -527,14 +530,28 @@ class SearchMap extends React.Component {
                             }
                           </Table>
                         </ScrollView>
-                        {/* <Block center row style={{margiflexDirection: 'row', justifyContent: 'flex-end'}}>
-                            <Button
+                        <Block center row style={{margiflexDirection: 'row', justifyContent: 'flex-end'}}>
+                            {/* <Button
                               containerStyle={styles.createButton3}
                               type="solid"
                               onPress={this.updateIncidentToExistingLocation} 
                               titleStyle={{color:'black', fontSize: 12 }} 
-                              title='Add new incident'/> 
-                          </Block> */}
+                              title='Add new incident'/>  */}
+                            <Button type="custom" 
+                              containerStyle={{ //marginRight:13, 
+                                  backgroundColor: 'black', 
+                                  //width: width * .2,
+                                  marginTop: 10,
+                                  marginBottom: 10,
+                                  padding: 5,
+                                  height: 30
+                                }}
+                              contentStyle={{ color: '#00c5e8' }}
+                              //onPress={() => this.openBox(30)}
+                              >
+                                Update Incident
+                            </Button>
+                          </Block>
                       </View>
                     </ScrollView>
                   </View>
@@ -544,6 +561,20 @@ class SearchMap extends React.Component {
           ) : null}
 
         </MapView>
+        <Block row center style={{ //padding: 5,
+            zIndex: 6, height: 45, width: width * 0.2,
+            marginRight: width * .05, marginBottom: width * .01,
+            //backgroundColor: "#54585c",
+            backgroundColor: 
+              heatMapData > 300000 ? 'rgba(255,0,0,.55)' :
+                heatMapData > 200000 ? 'rgba(255,191,0,.55)' : 'rgba(0,255,0,.55)',
+            borderRadius: 5,
+            //borderColor: 'yellow',
+            //borderStyle: {{ color : 'black'}},
+            alignSelf: 'flex-end'
+            }}>
+              {/* <Text style={{ alignItems: 'center' }}>Total Count:  {heatMapData} </Text> */}
+        </Block>
         {/* <View style={styles.buttonContainer}>
               <TouchableOpacity
                 onPress={() => this.show()}
@@ -570,11 +601,12 @@ SearchMap.propTypes = {
 };
 
 const styles1 = StyleSheet.create({
-  container: { flex: 1, padding: 2, paddingTop: 2, backgroundColor: '#fff' },
-  header: { height: 30, backgroundColor: '#537791' },
-  text: { textAlign: 'center', fontWeight: '100' },
+  container: { flex: 1, padding: 2, paddingTop: 2, backgroundColor: '#54585c' },
+  header: { height: 30, color: 'black', backgroundColor: '#00c5e8' },
+  headerText: { textAlign: 'center', height: 20, color:'black', fontWeight: 'normal' },
+  text: { textAlign: 'center', height: 20, color:'orange', fontWeight: 'normal' },
   dataWrapper: { marginTop: -1 },
-  row: { height: 20, backgroundColor: '#E7E6E1' }
+  row: { height: 30, backgroundColor: 'black' }
 });
 
 const styles = StyleSheet.create({

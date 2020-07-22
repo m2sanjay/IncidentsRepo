@@ -5,7 +5,7 @@ import TextTicker from 'react-native-text-ticker';
 import SearchMap from "./SearchMap.js";
 import Modal from 'react-native-modal';
 import Spinner from 'react-native-loading-spinner-overlay';
-import _ from 'lodash';
+import _, { filter } from 'lodash';
 
 import AddIncidentPopUp from './AddIncidentPopUp';
 //import { Cache } from 'react-native-cache';
@@ -48,7 +48,8 @@ class Home extends React.Component {
             createdIncidentId: null,
             manualCache:[],
             showHistory: false,
-            tempCmtId: ''
+            tempCmtId: '',
+            selectedTicker: []
         }
         this.callbackFn = this.callbackFn.bind(this);
         this.callbackMapFn = this.callbackMapFn.bind(this);
@@ -62,10 +63,11 @@ class Home extends React.Component {
         this.updateData = this.updateData.bind(this);
         this.getUpdatedHeat = this.getUpdatedHeat.bind(this);
         this.getLiveIncident = this.getLiveIncident.bind(this);
+        this.selectedTickerFn = this.selectedTickerFn.bind(this);
     }
 
     updateData(latitude, longitude){
-       this.setState({ isLoaded : true });
+       this.setState({ isLoaded : true, selectedTicker : [] });
        let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
        //let url = 'http://192.168.1.14:8080';
        // console.log("Getting HeatMap Data from DB");
@@ -124,7 +126,8 @@ class Home extends React.Component {
         //   }
         // );
         
-        fetch( url + '/getLiveIncidentsListByLatLngFormatted?lat=' + latitude + '&lng=' + longitude + '&noOfDays=7')
+        fetch( url + '/getLiveIncidentsListByLatLngFormatted?lat=' + latitude + '&lng=' + 
+            longitude + '&noOfDays=7')
             .then(res => res.json())
             .then(
               (liveIncidents) => {
@@ -142,6 +145,27 @@ class Home extends React.Component {
                 });
               }
         );
+    }
+
+    selectedTickerFn(offenceName){
+        //console.log(offenceName);
+        let tickArray = this.state.selectedTicker;
+        if(tickArray.length == 0){
+            tickArray.push(offenceName);
+        } else {
+            let index = _.indexOf(tickArray, offenceName);
+            if(index < 0){
+                tickArray.push(offenceName);
+            } else {
+                _.remove(tickArray, function(n) {
+                    return n == offenceName;
+                });
+            }
+        }
+
+        this.state.selectedTicker = tickArray;
+        this.setState({selectedTicker: this.state.selectedTicker});
+        
     }
 
     updateTicker(latitude, longitude) {
@@ -496,7 +520,44 @@ class Home extends React.Component {
 
 
     getLiveIncident(){
-        return this.state.liveIncidents;
+        console.log("Live Incidents " );
+        //console.log(this.state.selectedTicker);
+        let filteredIncidentsToReturn = [];
+        let filteredIncidents1 = [];
+        //let filteredIncidents2 = [];
+        let selTicker = this.state.selectedTicker;
+        let allIncidents = this.state.liveIncidents;
+        //filteredIncidents = _.filter(this.state.liveIncidents, ['offenceName', 'rape']);
+        //filteredIncidents = _.pullAllWith(this.state.liveIncidents, [{ 'offenceName': 'violent-crime'}]);
+        
+        console.log(selTicker);
+        if(selTicker.length > 0){
+            selTicker.map((eachType, i) => {
+                filteredIncidents1 = _.filter(allIncidents, function(o) { 
+                    return o.offenceName == eachType; 
+                });
+                //console.log(filteredIncidents1);
+                filteredIncidentsToReturn = filteredIncidentsToReturn.concat(filteredIncidents1);
+                //console.log(filteredIncidentsToReturn);
+            });
+            
+            // filteredIncidents1 = _.filter(this.state.liveIncidents, function(o) { 
+            //     return o.offenceName == 'violent-crime'; 
+            // });
+            
+            // filteredIncidents2 = _.filter(this.state.liveIncidents, function(o) { 
+            //     return o.offenceName == 'rape'; 
+            // });
+    
+            //console.log(filteredIncidentsToReturn);
+            //console.log(filteredIncidents1.concat(filteredIncidents2));
+            //console.log(filteredIncidents2);
+            
+            return filteredIncidentsToReturn;
+        } else {
+            return allIncidents;
+        }
+        
     }
 
     updateImages(){
@@ -505,7 +566,7 @@ class Home extends React.Component {
 
     render() {
 
-        let liveIncidents = this.state.liveIncidents;
+        //let liveIncidents = this.state.liveIncidents;
         let tickerArray = this.state.tickerArray;
         // console.log("Ticker Data");
         // console.log(liveIncidents);
@@ -520,11 +581,12 @@ class Home extends React.Component {
                     <Block style={{ backgroundColor: '#00c5e8' }} middle>
                         <Text style={styles.profileText}>Incident Tracker</Text>
                     </Block>
-                    <View style={{ height: 50 }}>
+                    <View style={{ height: 50  }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
                             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                            {this.state.tickerArray.length > 0 ?
-                                <TextTicker style={{ height: 50, padding: 15, fontSize: 17, backgroundColor: 'black' }}
+                            {tickerArray.length > 0 ?
+                                <TextTicker style={{ height: 50, marginTop: 25, marginBottom:25, fontSize: 17, 
+                                     }}
                                     //duration={10000} bounce={false}
                                     loop={true}
                                     //scrollSpeed={3000}
@@ -532,12 +594,20 @@ class Home extends React.Component {
                                 >
 
                                     {tickerArray.map((incident, i) => (
-                                            <Text style={{ color: 'orange' }} 
+                                            <Text style={{ 
+                                                color: 
+                                                _.indexOf(this.state.selectedTicker, incident.offenceName) < 0 ?
+                                                'orange' : 'black',
+                                                backgroundColor: _.indexOf(this.state.selectedTicker, incident.offenceName) < 0 ?
+                                                'transparent' : 'orange',
+                                            }} 
                                                 key={i} 
-                                                // onPress={() => this.props.navigation.navigate('IncidentDetailsScreen', 
-                                                // { data: incident, manualCache: this.state.manualCache, getIncidentDetails: this.getIncidentFromCache, callback: this.callbackFn })}
+                                                // onPress={() => this.props.navigation.navigate('TickerFlatList', 
+                                                //  { data: this.getLiveIncident.bind(this) })}
+                                                onPress={() => this.selectedTickerFn(incident.offenceName)}
+
                                                 >
-                                                {incident.offenceName + '(' + incident.count + ') |  '}
+                                                {' ' + incident.offenceName + '(' + incident.count + ') '}
                                             </Text>
                                         ))} 
                                 </TextTicker> : 
@@ -556,7 +626,8 @@ class Home extends React.Component {
                         liveIncidents={this.getLiveIncident.bind(this)}
                         enableModal={this.enableModalFn.bind(this)}
                         updateTicker={this.updateTicker.bind(this)}
-                        updateData={this.updateData.bind(this)} />
+                        updateData={this.updateData.bind(this)}
+                        selectedTicker={this.state.selectedTicker} />
                     {this.state.visibleModal == true ?
                         <View style={{ marginTop: '50%', height: height * .5 }}>
                             <Modal isVisible={this.state.visibleModal}>

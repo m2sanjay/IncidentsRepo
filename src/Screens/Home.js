@@ -68,6 +68,8 @@ class Home extends React.Component {
 
     updateData(latitude, longitude){
        this.setState({ isLoaded : true, selectedTicker : [] });
+       console.log(latitude);
+       console.log(longitude);
        let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
        //let url = 'http://192.168.1.14:8080';
        // console.log("Getting HeatMap Data from DB");
@@ -92,7 +94,7 @@ class Home extends React.Component {
         );
 
         fetch(url + '/getTickerListByLatLngAndDays?lat=' + latitude +
-            '&lng=' + longitude + '&noOfDays=' + 7)
+            '&lng=' + longitude + '&noOfDays=' + 15)
             .then(response => response.json())
             .then(tickerArray => {
                 this.setState({ tickerArray: tickerArray, 
@@ -127,7 +129,7 @@ class Home extends React.Component {
         // );
         
         fetch( url + '/getLiveIncidentsListByLatLngFormatted?lat=' + latitude + '&lng=' + 
-            longitude + '&noOfDays=7')
+            longitude)// + '&noOfDays=7')
             .then(res => res.json())
             .then(
               (liveIncidents) => {

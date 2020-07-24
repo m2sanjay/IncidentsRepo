@@ -125,7 +125,7 @@ class SearchMap extends React.Component {
     //console.log(duration);
     let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
     await fetch(url + '/getTickerListByLatLngAndDays?lat=' + this.state.markerCoordinate.latitude +
-      '&lng=' + this.state.markerCoordinate.longitude + '&noOfDays=' + duration)
+      '&lng=' + this.state.markerCoordinate.longitude)// + '&noOfDays=' + duration)
        .then(response => response.json())
        .then(popUpData => {
         this.setState({ popUpData: popUpData, showHistory: true, selectedIndexForRange: duration })
@@ -306,7 +306,7 @@ class SearchMap extends React.Component {
     
     let heatMapData = this.props.heatData();
     let liveIncidents = this.props.liveIncidents();
-
+    
     //heatMapData = heatMapData.map(eachData => eachData.basicData);
     //console.log(heatMapData);
     //console.log(tableData);
@@ -456,7 +456,11 @@ class SearchMap extends React.Component {
           
           {this.state.isMapReady ==true ? 
               <Circle center ={this.state.markerCoordinate} 
-                radius={2500} 
+                radius={2500}
+                strokeColor={heatMapData > 20 ? 'rgba(255,0,0,.55)' :
+                     heatMapData > 10 ? 'rgba(255,191,0,.55)' :
+                     'rgba(0,255,0,.55)'} 
+                strokeWidth={3}
                 fillColor= 'transparent'
                 // {heatMapData > 300000 ? 'rgba(255,0,0,.55)' :
                 //     heatMapData > 200000 ? 'rgba(255,191,0,.55)' :
@@ -504,7 +508,7 @@ class SearchMap extends React.Component {
               >
                 <Callout onPress={() => this.navigateToDetails(o)} 
                     //onPress={() => this.updateIncidentToExistingLocation(o)}
-                    style={styles.plainView}>
+                    style={styles.plainView2}>
                   {/* <View >
                         <Text>{o.title}</Text>
                       </View> */}
@@ -541,15 +545,15 @@ class SearchMap extends React.Component {
                               containerStyle={{ //marginRight:13, 
                                   backgroundColor: 'black', 
                                   //width: width * .2,
-                                  marginTop: 10,
-                                  marginBottom: 10,
+                                  marginTop: 2,
+                                  marginBottom: 2,
                                   padding: 5,
                                   height: 30
                                 }}
                               contentStyle={{ color: '#00c5e8' }}
                               //onPress={() => this.openBox(30)}
                               >
-                                Update Incident
+                                Update
                             </Button>
                           </Block>
                       </View>
@@ -561,20 +565,21 @@ class SearchMap extends React.Component {
           ) : null}
 
         </MapView>
-        <Block row center style={{ //padding: 5,
-            zIndex: 6, height: 45, width: width * 0.2,
+        {console.log(heatMapData)}
+        {/* <Block row center style={{ //padding: 5,
+            zIndex: 6, height: 45, width: width * 0.2, borderWidth: 2,
             marginRight: width * .05, marginBottom: width * .01,
             //backgroundColor: "#54585c",
             backgroundColor: 
-              heatMapData > 300000 ? 'rgba(255,0,0,.55)' :
-                heatMapData > 200000 ? 'rgba(255,191,0,.55)' : 'rgba(0,255,0,.55)',
+              heatMapData > 20 ? 'rgba(255,0,0,.55)' :
+                heatMapData > 10 ? 'rgba(255,191,0,.55)' : 'rgba(0,255,0,.55)',
             borderRadius: 5,
             //borderColor: 'yellow',
             //borderStyle: {{ color : 'black'}},
             alignSelf: 'flex-end'
             }}>
-              {/* <Text style={{ alignItems: 'center' }}>Total Count:  {heatMapData} </Text> */}
-        </Block>
+              { <Text style={{ alignItems: 'center' }}>Total Count:  {heatMapData} </Text> 
+        </Block> */}
         {/* <View style={styles.buttonContainer}>
               <TouchableOpacity
                 onPress={() => this.show()}
@@ -617,6 +622,11 @@ const styles = StyleSheet.create({
   plainView: {
     width: width * 0.7,
     alignItems: 'center',
+  },
+  plainView2: {
+    width: width * 0.7,
+    alignItems: 'center',
+    backgroundColor: 'black'
   },
   plainViewNew: {
     width: width * 0.25,

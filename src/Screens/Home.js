@@ -597,11 +597,14 @@ class Home extends React.Component {
 
                                     {tickerArray.map((incident, i) => (
                                             <Text style={{ 
-                                                color: 
-                                                _.indexOf(this.state.selectedTicker, incident.offenceName) < 0 ?
-                                                'orange' : 'black',
+                                                // color: 
+                                                // _.indexOf(this.state.selectedTicker, incident.offenceName) < 0 ?
+                                                // 'orange' : 'black',
+                                                // backgroundColor: _.indexOf(this.state.selectedTicker, incident.offenceName) < 0 ?
+                                                // 'transparent' : 'orange',
+                                                color: incident.coulourCode,
                                                 backgroundColor: _.indexOf(this.state.selectedTicker, incident.offenceName) < 0 ?
-                                                'transparent' : 'orange',
+                                                 'transparent' : 'white',
                                             }} 
                                                 key={i} 
                                                 // onPress={() => this.props.navigation.navigate('TickerFlatList', 

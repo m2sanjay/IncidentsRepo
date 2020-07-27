@@ -27,6 +27,9 @@ import { Block } from 'galio-framework';
 import IncidentHistory from './IncidentHistory';
 import Modal from 'react-native-modal';
 import Button from 'react-native-flat-button';
+//import ButtonNative from 'react-native-elements';
+import { format } from "date-fns";
+import Moment from 'moment';
 
 //const SPACE = 0.01;
 const Toast = (props) => {
@@ -64,8 +67,8 @@ class SearchMap extends React.Component {
       error: null,
       isLoaded: false,
       items: [],
-      tableHead: ['Offence Type', 'When'],
-      widthArr: [140, 140],
+      tableHead: ['Offence Type', 'Date'],
+      widthArr: [140, 80],
       selectedIndexForRange: 5,
       showHistory: false,
       popUpData: []
@@ -80,6 +83,7 @@ class SearchMap extends React.Component {
     this.showHistoryFn = this.showHistoryFn.bind(this);
     this.hideHistoryFn = this.hideHistoryFn.bind(this);
     this.renderModalContent = this.renderModalContent.bind(this);
+    this.formatDate = this.formatDate.bind(this);
   }
 
   componentDidMount() {
@@ -125,7 +129,7 @@ class SearchMap extends React.Component {
     //console.log(duration);
     let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
     await fetch(url + '/getTickerListByLatLngAndDays?lat=' + this.state.markerCoordinate.latitude +
-      '&lng=' + this.state.markerCoordinate.longitude)// + '&noOfDays=' + duration)
+      '&lng=' + this.state.markerCoordinate.longitude + '&noOfDays=' + duration)
        .then(response => response.json())
        .then(popUpData => {
         this.setState({ popUpData: popUpData, showHistory: true, selectedIndexForRange: duration })
@@ -144,6 +148,17 @@ class SearchMap extends React.Component {
       }));
     };
   }
+
+  formatDate(toParse){
+    console.log(toParse);
+    //let date = new Date(toParse);
+    //let formattedDate = format(date, "Do-MMM-YYYY");
+    console.log(Moment(toParse).format('d MMM YYYY'));
+    let formattedDate = Moment(toParse).format('d MMM YYYY');
+    return formattedDate;
+    
+  }
+
   onChangeMarker(e) {
       console.log("onChangeMarker");
       this.props.updateData(e.nativeEvent.coordinate.latitude, 
@@ -499,53 +514,54 @@ class SearchMap extends React.Component {
                 ref={ref => {
                   this.marker1 = ref;
                 }}
+                pinColor = {o.coulourCode}
                 coordinate={{
                   latitude: o.latitude,
                   longitude: o.longitude
                 }}
                 title={o.offenceName}
                 description={o.offenceName}
+                //color={o.coulourCode}
               >
                 <Callout onPress={() => this.navigateToDetails(o)} 
                     //onPress={() => this.updateIncidentToExistingLocation(o)}
                     style={styles.plainView2}>
-                  {/* <View >
-                        <Text>{o.title}</Text>
-                      </View> */}
                   <View style={styles1.container}>
                     <ScrollView horizontal={true}>
                       <View >
-                        <Table borderStyle={{ borderWidth: 1, borderColor: '#00c5e8' }}>
-                          <Row data={this.state.tableHead} widthArr={this.state.widthArr} style={styles1.header} textStyle={styles1.headerText} />
+                        <Table borderStyle={{ borderWidth: 1, borderColor: 'black' }}>
+                          <Row 
+                            data={this.state.tableHead} 
+                            widthArr={this.state.widthArr} 
+                            style={styles1.header} 
+                            textStyle={styles1.headerText} 
+                            />
                         </Table>
-                        <ScrollView style={styles1.dataWrapper}>
-                          <Table borderStyle={{ borderWidth: 1, borderColor: '#00c5e8' }}>
+                        <Table borderStyle={{ borderWidth: 1, borderColor: '#00c5e8' }}>
                             {
                               <Row
-                                  //key={index}
-                                  // data={o.latitude == rowData["latitude"] && o.longitude == rowData["longitude"] ?
-                                  //   new Array(rowData["offenceName"] , rowData["count"]) : null }
-                                  data={new Array(o.offenceName, o.createdDate)}
+                                  data={new Array(o.offenceName, this.formatDate(o.createdDate))}
                                   widthArr={this.state.widthArr}
-                                  //style={[styles1.row, index % 2 && { backgroundColor: '#F7F6E7' }]}
                                   style={[styles1.row]}
                                   textStyle={styles1.text}
                                 />
                             }
-                          </Table>
-                        </ScrollView>
-                        <Block center row style={{margiflexDirection: 'row', justifyContent: 'flex-end'}}>
-                            {/* <Button
-                              containerStyle={styles.createButton3}
-                              type="solid"
-                              onPress={this.updateIncidentToExistingLocation} 
-                              titleStyle={{color:'black', fontSize: 12 }} 
-                              title='Add new incident'/>  */}
+                        </Table>
+                        {/* <View>
+                          <Text style={{ color: 'orange'}}> 
+                            Incident {o.offenceName} occurred here at {this.formatDate(o.createdDate)}.
+                          </Text>
+                          <Text style={{ color: 'orange'}}> 
+                            Click on "Update" to view and update the incident.
+                          </Text>
+                        </View> */}
+                        
+                        {/* <Block center row style={{margiflexDirection: 'row', justifyContent: 'flex-end'}}>
                             <Button type="custom" 
                               containerStyle={{ //marginRight:13, 
                                   backgroundColor: 'black', 
                                   //width: width * .2,
-                                  marginTop: 2,
+                                  marginTop: 4,
                                   marginBottom: 2,
                                   padding: 5,
                                   height: 30
@@ -555,7 +571,7 @@ class SearchMap extends React.Component {
                               >
                                 Update
                             </Button>
-                          </Block>
+                          </Block> */}
                       </View>
                     </ScrollView>
                   </View>
@@ -606,9 +622,11 @@ SearchMap.propTypes = {
 };
 
 const styles1 = StyleSheet.create({
-  container: { flex: 1, padding: 2, paddingTop: 2, backgroundColor: '#54585c' },
-  header: { height: 30, color: 'black', backgroundColor: '#00c5e8' },
-  headerText: { textAlign: 'center', height: 20, color:'black', fontWeight: 'normal' },
+  container: { flex: 1, padding: 2, paddingTop: 2, 
+    //backgroundColor: '#54585c',
+    backgroundColor: 'black' },
+  header: { height: 20, backgroundColor: '#00c5e8' },
+  headerText: { textAlign: 'center', height: 18, color:'black', fontWeight: 'normal' },
   text: { textAlign: 'center', height: 20, color:'orange', fontWeight: 'normal' },
   dataWrapper: { marginTop: -1 },
   row: { height: 30, backgroundColor: 'black' }
@@ -624,7 +642,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   plainView2: {
-    width: width * 0.7,
+    //width: width * 0.7,
     alignItems: 'center',
     backgroundColor: 'black'
   },

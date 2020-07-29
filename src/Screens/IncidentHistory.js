@@ -14,7 +14,7 @@ class IncidentHistory extends React.Component {
         super(props);
         this.state = {
             tableHead: ['Offence Type', 'Count'],
-            widthArr: [210, 110],
+            widthArr: [175, 145],
             widthArrNoRecords: [320],
             noRecords: ['No offence data available'],
         }
@@ -35,10 +35,13 @@ class IncidentHistory extends React.Component {
 
     render() {
         return (
-            <View>
+            <View >
                 <View>
                     <View style={styles.addView}>
                         <View style={{ 
+                            zIndex: 5,
+                            marginBottom: '-11%',
+                            marginTop: '20%', 
                             flexDirection: 'row', 
                             backgroundColor: 'transparent',
                             //backgroundColor: 'white',
@@ -46,14 +49,14 @@ class IncidentHistory extends React.Component {
                             //paddingTop: 40,
                             //marginLeft: '90%',
                             //zIndex: 4,
-                            overflowX: 'visible'
+                            //overflowX: 'visible'
                             }}>
                         <Button  
                                         icon={{
                                         //borderRadius: '5',
                                         name: "cancel", size: 25, 
-                                        color: "#00c5e8",
-                                        //color: "black",
+                                        //color: "#00c5e8",
+                                        color: "black",
                                         //marginLeft: '95%',
                                         flexDirection: 'row',
                                         backgroundColor: 'transparent', 
@@ -64,19 +67,24 @@ class IncidentHistory extends React.Component {
                                         //overflow: 'hidden'
                                         }} 
                                         containerStyle={{ 
-                                            marginBottom: '-5%', 
-                                            marginRight: '-10%',
+                                            //marginBottom: '-8%', 
+                                            marginRight: '-3%',
+                                            //backgroundColor: 'black',
+
                                             //borderRadius: '10',
+                                            //zIndex: 5
                                         }}
                                         //containerStyle={{ marginTop : 100 }}
                                         type="clear" 
                                         onPress={() => this.props.closePopUp()} />
                         </View>
-                        <Block center row style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                        <View center row style={{zIndex: 4, borderRadius:5, flexDirection: 'row', justifyContent: 'flex-end' }}>
                             <View style={styles1.container}>
-                                <ScrollView horizontal={true}>
-                                    <View>
-                                        <Table borderStyle={{ borderWidth: 1, borderColor: '#00c5e8' }}>
+                                <ScrollView style={{zIndex: 4, borderRadius: 5}} horizontal={true}>
+                                    <View style={{zIndex: 4, borderRadius: 5 }}>
+                                        <Table
+                                            //style={{ borderRadius: 5 }} 
+                                            borderStyle={{  borderWidth: 1,borderColor: '#00c5e8', borderRadius: 5 }}>
                                             <Row 
                                                 data={this.state.tableHead} 
                                                 widthArr={this.state.widthArr} 
@@ -85,7 +93,9 @@ class IncidentHistory extends React.Component {
                                         </Table>
                                         {/* dataAPI */}
                                         <ScrollView>
-                                            <Table borderStyle={{ borderWidth: 1, borderColor: '#00c5e8' }}>
+                                            <Table 
+                                                //style={{ borderRadius: 5 }}
+                                                borderStyle={{ borderWidth: 1, borderRadius:5, borderColor: '#00c5e8' }}>
                                                 {this.props.dataAPI.length > 0 ?    
                                                    this.props.dataAPI.map((o, i) => (
                                                     <Row 
@@ -102,18 +112,21 @@ class IncidentHistory extends React.Component {
                                                         data={this.state.noRecords}>
                                                     </Row>
                                                 }
-                                                <Row 
+                                            </Table>
+                                        </ScrollView>
+                                        <Table //style={{ borderRadius: 5 }} 
+                                               borderStyle={{ borderWidth: 1, borderColor: '#00c5e8' }}>
+                                            <Row 
                                                         data={["Total", this.totalCount()]}
                                                         widthArr={this.state.widthArr} 
                                                         style={styles1.header} 
                                                         textStyle={styles1.textHeader} 
                                                 />
                                             </Table>
-                                        </ScrollView>
                                     </View>
                                 </ScrollView>
                             </View>
-                        </Block>
+                        </View>
                         {/* <Block style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                             <Text style={{ textAlign: 'center', marginRight: 10 , fontWeight: 'bold', color: 'orange' }}>
                                 Total : {this.totalCount()}
@@ -238,13 +251,16 @@ const styles = StyleSheet.create({
     },
     addView: {
         flexDirection: 'column',
+        marginTop: '20%',
+        //marginBottom: '20%',
         marginLeft: '5%',
         marginRight: '5%',
         borderRadius: 10,
         borderColor: 'orange',
         //paddingBottom: '1%',
         paddingTop: '1%',
-        //height: height * .5,
+        height: height * .5,
+        width: width * .8,
         //backgroundColor: 'black',
         backgroundColor: 'transparent',
         //opacity: 0.6
@@ -458,10 +474,10 @@ const styles = StyleSheet.create({
 });
 
 const styles1 = StyleSheet.create({
-    container: { flex: 1, padding: 5, backgroundColor: 'black' },
-    header: { height: 35, backgroundColor: '#00c5e8' },
+    container: { zIndex: 4, borderRadius: 5, flex: 1, padding: 3, backgroundColor: 'black' },
+    header: { zIndex: 4, height: 35, backgroundColor: '#00c5e8' },
     nonHeader: { height: 35, backgroundColor: 'black' },
-    textHeader: { textAlign: 'center', fontWeight: 'bold', color: 'black' },
+    textHeader: { zIndex: 4,textAlign: 'center', fontWeight: 'bold', color: 'black' },
     text: { textAlign: 'center', fontWeight: 'normal', color: 'orange' },
     dataWrapper: { marginTop: -1 },
     row: { height: 20, backgroundColor: 'black' }

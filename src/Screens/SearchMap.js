@@ -68,7 +68,8 @@ class SearchMap extends React.Component {
       isLoaded: false,
       items: [],
       tableHead: ['Offence Type', 'Date'],
-      widthArr: [140, 80],
+      minWidthArr: [100, 80],
+      maxWidthArr: [140, 80],
       selectedIndexForRange: 5,
       showHistory: false,
       popUpData: []
@@ -524,15 +525,18 @@ class SearchMap extends React.Component {
                 //color={o.coulourCode}
               >
                 <Callout onPress={() => this.navigateToDetails(o)} 
-                    //onPress={() => this.updateIncidentToExistingLocation(o)}
-                    style={styles.plainView2}>
+                    // onPress={() => this.updateIncidentToExistingLocation(o)}
+                    // style={styles.plainView2}
+                  >
                   <View style={styles1.container}>
                     <ScrollView horizontal={true}>
                       <View >
                         <Table borderStyle={{ borderWidth: 1, borderColor: 'black' }}>
                           <Row 
                             data={this.state.tableHead} 
-                            widthArr={this.state.widthArr} 
+                            widthArr={ o.offenceName.length > 11 
+                                    ? this.state.maxWidthArr 
+                                    : this.state.minWidthArr} 
                             style={styles1.header} 
                             textStyle={styles1.headerText} 
                             />
@@ -541,7 +545,9 @@ class SearchMap extends React.Component {
                             {
                               <Row
                                   data={new Array(o.offenceName, this.formatDate(o.createdDate))}
-                                  widthArr={this.state.widthArr}
+                                  widthArr= { o.offenceName.length > 11 
+                                    ? this.state.maxWidthArr 
+                                    : this.state.minWidthArr}
                                   style={[styles1.row]}
                                   textStyle={styles1.text}
                                 />
@@ -622,7 +628,7 @@ SearchMap.propTypes = {
 };
 
 const styles1 = StyleSheet.create({
-  container: { flex: 1, padding: 2, paddingTop: 2, 
+  container: { flex: 1, //padding: 2, paddingTop: 2, 
     //backgroundColor: '#54585c',
     backgroundColor: 'black' },
   header: { height: 20, backgroundColor: '#00c5e8' },

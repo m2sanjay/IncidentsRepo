@@ -460,8 +460,8 @@ class SearchMap extends React.Component {
             {
             latitude: this.state.markerCoordinate.latitude,
             longitude: this.state.markerCoordinate.longitude,
-            longitudeDelta: 0.1,
-            latitudeDelta: 0.1
+            longitudeDelta: 0.03,
+            latitudeDelta: 0.03
           } : null
         }
           zoomTapEnabled={false}
@@ -472,7 +472,7 @@ class SearchMap extends React.Component {
           
           {this.state.isMapReady ==true ? 
               <Circle center ={this.state.markerCoordinate} 
-                radius={2500}
+                radius={600}
                 strokeColor={heatMapData > 20 ? 'rgba(255,0,0,.55)' :
                      heatMapData > 10 ? 'rgba(255,191,0,.55)' :
                      'rgba(0,255,0,.55)'} 
@@ -532,6 +532,7 @@ class SearchMap extends React.Component {
                     <ScrollView horizontal={true}>
                       <View >
                         <Table borderStyle={{ borderWidth: 1, borderColor: 'black' }}>
+                        
                           <Row 
                             data={this.state.tableHead} 
                             widthArr={ o.offenceName.length > 11 
@@ -562,8 +563,8 @@ class SearchMap extends React.Component {
                           </Text>
                         </View> */}
                         
-                        {/* <Block center row style={{margiflexDirection: 'row', justifyContent: 'flex-end'}}>
-                            <Button type="custom" 
+                        <Block center row style={{margiflexDirection: 'row', justifyContent: 'flex-end'}}>
+                            {/* <Button type="custom" 
                               containerStyle={{ //marginRight:13, 
                                   backgroundColor: 'black', 
                                   //width: width * .2,
@@ -576,8 +577,30 @@ class SearchMap extends React.Component {
                               //onPress={() => this.openBox(30)}
                               >
                                 Update
-                            </Button>
-                          </Block> */}
+                            </Button> */}
+                            <Button  
+                              icon={{
+                              name: "cancel", size: 10, 
+                              color: "black",
+                              flexDirection: 'row',
+                              backgroundColor: 'transparent', 
+                              justifyContent: 'flex-end',
+                              }} 
+                              containerStyle={{ 
+                                  borderRadius: 8,
+                                  backgroundColor: '#00c5e8',
+                                  borderBottomWidth: 4,
+                                  borderLeftWidth: 0.5,
+                                  borderRightWidth: 0.5,
+                                  marginTop: 4,
+                                  marginBottom: 2,
+                                  padding: 5,
+                                  height: 25
+                              }}
+                              contentStyle={{fontSize:12, color: '#fff'}}
+                              type="clear" 
+                              >Update</Button>
+                          </Block>
                       </View>
                     </ScrollView>
                   </View>
@@ -585,9 +608,7 @@ class SearchMap extends React.Component {
               </Marker>
             ))
           ) : null}
-
         </MapView>
-        {console.log(heatMapData)}
         {/* <Block row center style={{ //padding: 5,
             zIndex: 6, height: 45, width: width * 0.2, borderWidth: 2,
             marginRight: width * .05, marginBottom: width * .01,

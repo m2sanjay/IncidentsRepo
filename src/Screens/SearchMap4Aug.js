@@ -67,9 +67,9 @@ class SearchMap extends React.Component {
       error: null,
       isLoaded: false,
       items: [],
-      tableHead: ['Offence Type', 'Date'],
-      minWidthArr: [100, 130],
-      maxWidthArr: [140, 130],
+      tableHead: ['Offence Type', 'Date', ' '],
+      minWidthArr: [100, 100, 30],
+      maxWidthArr: [140, 100, 30],
       selectedIndexForRange: 5,
       showHistory: false,
       popUpData: []
@@ -88,7 +88,7 @@ class SearchMap extends React.Component {
   }
 
   componentDidMount() {
-    Geocoder.init("");
+    Geocoder.init("AIzaSyB4OJsFNMQncqptmQ3nAk-mbUNqqcCYYts");
 
     // fetch('http://192.168.1.14:8080/getIncidents')
     //   .then(response => response.json())
@@ -157,7 +157,7 @@ class SearchMap extends React.Component {
     //let formattedDate = format(date, "Do-MMM-YYYY");
     console.log(Moment(toParse).format('DD-MMM-YYYY'));
     let formattedDate = Moment(toParse).format('DD-MMM-YYYY');
-    return formattedDate + "  ";
+    return formattedDate;
     
   }
 
@@ -396,7 +396,7 @@ class SearchMap extends React.Component {
          /> */}
 
         <GoogleAutoComplete 
-          apiKey="" 
+          apiKey="AIzaSyB4OJsFNMQncqptmQ3nAk-mbUNqqcCYYts" 
           debounce={500} minLength={4}
           >
           {({
@@ -539,37 +539,31 @@ class SearchMap extends React.Component {
                   >
                   <View style={{ 
                             zIndex: 5,
-                            marginBottom: o.offenceName.length > 11 ? '-20%' : '-23%',
-                            marginTop: '40%',
+                            marginBottom: o.offenceName.length > 11 ? '-18%' : '-22%',
+                            marginTop: '30%',
                             marginLeft: '75%', 
                             flexDirection: 'row', 
                             backgroundColor: 'transparent',
                             //backgroundColor: 'yellow',
-                            //borderColor: 'yellow',
                             justifyContent: 'flex-end',
-                            //color: '#4d6f7d'
                             }}>
                       <ButtonElements
                                           icon={{
                                             name: "edit", 
-                                            size: 20, 
-                                            color: "black",
-                                            border: '2px solid #fff',
-                                            //borderColor: 'red',
-                                            paddingTop: 0,
+                                            size: 15, 
+                                            color: "#00c5e8",
                                             //backgroundColor: 'transparent', 
                                             flexDirection: 'row',
-                                            backgroundColor: '#00c5e8', 
+                                            backgroundColor: 'black', 
                                             justifyContent: 'flex-end',
                                           }} 
                                            containerStyle={{
                                                marginRight: '-50%',
-                                               
-                                               //marginTop: '10%',
+                                               //marginTop: '-10%',
                                                //marginLeft: 2
                                                //zIndex: 5
                                            }}
-                                          type="clear"
+                                          type="clear" 
                       />
                   </View>
                   <View style={styles1.container}>

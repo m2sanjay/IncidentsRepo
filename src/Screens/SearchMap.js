@@ -72,7 +72,8 @@ class SearchMap extends React.Component {
       maxWidthArr: [140, 130],
       selectedIndexForRange: 5,
       showHistory: false,
-      popUpData: []
+      popUpData: [],
+      //liveIncidents = this.props.liveIncidents();
     };
     this.recordEvent = this.recordEvent.bind(this);
     this.onChangeMarker = this.onChangeMarker.bind(this);
@@ -128,15 +129,19 @@ class SearchMap extends React.Component {
 
   async openBox(duration){
     //console.log(duration);
-    let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
+    /*let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
     await fetch(url + '/getTickerListByLatLngAndDays?lat=' + this.state.markerCoordinate.latitude +
       '&lng=' + this.state.markerCoordinate.longitude + '&noOfDays=' + duration)
        .then(response => response.json())
        .then(popUpData => {
         this.setState({ popUpData: popUpData, showHistory: true, selectedIndexForRange: duration })
-    })
+    })*/
 
     //console.log(this.state.popUpData);
+    duration = this.state.selectedIndexForRange == duration ? 15 : duration;
+    this.setState({ selectedIndexForRange: duration });
+    await this.props.updateLiveData(duration, this.state.markerCoordinate.latitude, this.state.markerCoordinate.longitude);
+    
   }
 
   recordEvent(name) {

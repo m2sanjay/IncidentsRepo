@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Incident Tracker",
-    "slug": "argon-free-react-native",
+    "slug": "IncidentTracker",
     "privacy": "public",
     "sdkVersion": "37.0.0",
     "platforms": [
@@ -10,9 +10,9 @@
     ],
     "version": "1.3.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/IT_Image.png",
     "splash": {
-      "image": "./assets/splash_.png",
+      "image": "./assets/Loading.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
@@ -30,7 +30,7 @@
       "package": "com.ge.sanjay",
       "versionCode":1,
       "permissions":[],
-      "icon": "./assets/icon.png"
+      "icon": "./assets/IT_Image.png"
     }
   }
 }

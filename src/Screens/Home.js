@@ -11,6 +11,7 @@ import AddIncidentPopUp from './AddIncidentPopUp';
 //import { Cache } from 'react-native-cache';
 
 import axios from 'axios';
+import { duration } from 'moment';
 
 const { width, height } = Dimensions.get("screen");
 
@@ -49,7 +50,8 @@ class Home extends React.Component {
             manualCache:[],
             showHistory: false,
             tempCmtId: '',
-            selectedTicker: []
+            selectedTicker: [],
+            noOfDays: 15
         }
         this.callbackFn = this.callbackFn.bind(this);
         this.callbackMapFn = this.callbackMapFn.bind(this);
@@ -64,6 +66,7 @@ class Home extends React.Component {
         this.getUpdatedHeat = this.getUpdatedHeat.bind(this);
         this.getLiveIncident = this.getLiveIncident.bind(this);
         this.selectedTickerFn = this.selectedTickerFn.bind(this);
+        this.updateLiveData = this.updateLiveData.bind(this);
     }
 
     updateData(latitude, longitude){
@@ -94,7 +97,7 @@ class Home extends React.Component {
         );
 
         fetch(url + '/getTickerListByLatLngAndDays?lat=' + latitude +
-            '&lng=' + longitude + '&noOfDays=' + 15)
+            '&lng=' + longitude + '&noOfDays=' + this.state.noOfDays)
             .then(response => response.json())
             .then(tickerArray => {
                 this.setState({ tickerArray: tickerArray, 
@@ -128,8 +131,8 @@ class Home extends React.Component {
         //   }
         // );
         
-        fetch( url + '/getLiveIncidentsListByLatLngFormatted?lat=' + latitude + '&lng=' + 
-            longitude)// + '&noOfDays=7')
+        fetch( url + '/getHistoricIncident?lat=' + latitude + '&lng=' + 
+            longitude + '&noOfDays='+ this.state.noOfDays)
             .then(res => res.json())
             .then(
               (liveIncidents) => {
@@ -147,6 +150,36 @@ class Home extends React.Component {
                 });
               }
         );
+    }
+
+    updateLiveData(days, latitude, longitude){
+    //    this.setState({ isLoaded : true, selectedTicker : [] });
+    //    let url = 'http://Incitrackerrepo-env.eba-2mukkhzp.us-east-2.elasticbeanstalk.com';
+    //    fetch( url + '/getHistoricIncident?lat=' + latitude + '&lng=' + 
+    //         longitude + '&noOfDays=' + days)
+    //         .then(res => res.json())
+    //         .then(
+    //           (liveIncidents) => {
+    //             this.setState({
+    //               isLoaded: false,
+    //               liveIncidents: liveIncidents,
+    //               noOfDays: days,
+    //               toasterVisible: false
+    //             });
+    //           },
+    //           (error) => {
+    //             this.setState({
+    //               isLoaded: false,
+    //               noOfDays: days,
+    //               toasterVisible: false,
+    //               error
+    //             });
+    //           }
+    //     );
+
+        this.state.noOfDays = days;
+        this.setState({noOfDays: this.state.noOfDays});
+        this.updateData(latitude, longitude);
     }
 
     selectedTickerFn(offenceName){
@@ -632,6 +665,8 @@ class Home extends React.Component {
                         enableModal={this.enableModalFn.bind(this)}
                         updateTicker={this.updateTicker.bind(this)}
                         updateData={this.updateData.bind(this)}
+                        updateLiveData={this.updateLiveData.bind(this)}
+                        //updateLiveData= {this.updateLiveData.bind(this)}
                         selectedTicker={this.state.selectedTicker} />
                     {this.state.visibleModal == true ?
                         <View style={{ marginTop: '50%', height: height * .5 }}>

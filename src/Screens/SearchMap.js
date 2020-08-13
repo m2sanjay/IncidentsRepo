@@ -2,7 +2,7 @@ import React from 'react';
 import {
   StyleSheet, View, Text, Dimensions,
   TouchableOpacity, Alert, TextInput, ToastAndroid, ScrollView,
-  ActivityIndicator
+  ActivityIndicator, Animated
 } from 'react-native';
 import MapView, { Marker, Heatmap, Callout, CalloutSubview, ProviderPropType, Circle } from 'react-native-maps';
 import LocationItem from './LocationItem';
@@ -30,6 +30,17 @@ import Button from 'react-native-flat-button';
 //import ButtonNative from 'react-native-elements';
 import { format } from "date-fns";
 import Moment from 'moment';
+import { Trapezoid } from 'react-native-shape';
+
+//import Square from 'react-native-shapes';
+//import Cube, { Palette }  from "react-cube3d";
+
+
+const size = 35;
+
+function getRandomFloat(min, max) {
+  return Math.random() * (max - min) + min;
+}
 
 //const SPACE = 0.01;
 const Toast = (props) => {
@@ -75,6 +86,12 @@ class SearchMap extends React.Component {
       popUpData: [],
       //liveIncidents = this.props.liveIncidents();
     };
+    this.animation = new Animated.ValueXY({x: 0, y: 0});
+    const inputRange = [0, 1];
+    const outputRange = ['0deg', '180deg'];
+    this.rotateX = this.animation.x.interpolate({inputRange, outputRange});
+    this.rotateY = this.animation.y.interpolate({inputRange, outputRange});
+    
     this.recordEvent = this.recordEvent.bind(this);
     this.onChangeMarker = this.onChangeMarker.bind(this);
     this.navigate = this.navigate.bind(this);
@@ -86,7 +103,20 @@ class SearchMap extends React.Component {
     this.hideHistoryFn = this.hideHistoryFn.bind(this);
     this.renderModalContent = this.renderModalContent.bind(this);
     this.formatDate = this.formatDate.bind(this);
+
+
+    
+
   }
+
+  flip = (val) => {
+    this.animation[val].setValue(0);
+    Animated.timing(this.animation[val], {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
 
   componentDidMount() {
     Geocoder.init("");
@@ -320,15 +350,15 @@ class SearchMap extends React.Component {
     //   tableData.push([item.offenceName, item.count]);
     // });
     // console.log(tableData);
-
+    const {rotateX, rotateY} = this;
     let tableData = this.state.items.map(record => ([record.latitude, record.longitude, 
       record.offenceName, record.count]));
     
     const tableDataFull = this.state.items;
     
-    let heatMapData = this.props.heatData();
+    //let heatMapData = this.props.heatData();
     let liveIncidents = this.props.liveIncidents();
-    
+    let heatMapData = liveIncidents.length;
     //heatMapData = heatMapData.map(eachData => eachData.basicData);
     //console.log(heatMapData);
     //console.log(tableData);
@@ -659,18 +689,65 @@ class SearchMap extends React.Component {
         </MapView>
         {/* <Block row center style={{ //padding: 5,
             zIndex: 6, height: 45, width: width * 0.2, borderWidth: 2,
-            marginRight: width * .05, marginBottom: width * .01,
+            marginRight: width * .03, marginBottom: width * .01,
             //backgroundColor: "#54585c",
             backgroundColor: 
               heatMapData > 20 ? 'rgba(255,0,0,.55)' :
                 heatMapData > 10 ? 'rgba(255,191,0,.55)' : 'rgba(0,255,0,.55)',
             borderRadius: 5,
+            shadowOffset:{  width: 10,  height: 10,  },
+            shadowColor: 'black',
+            shadowOpacity: 1.0,
             //borderColor: 'yellow',
             //borderStyle: {{ color : 'black'}},
             alignSelf: 'flex-end'
             }}>
-              { <Text style={{ alignItems: 'center' }}>Total Count:  {heatMapData} </Text> 
+              
         </Block> */}
+
+        <Block row center style={{ //padding: 5,
+            zIndex: 6, height: 95, width: width * 0.2, //borderWidth: 2,
+            marginRight: width * .09, marginBottom: width * .02,
+            //backgroundColor: "#54585c",
+            // backgroundColor: 
+            //   heatMapData > 20 ? 'rgba(255,0,0,.55)' :
+            //     heatMapData > 10 ? 'rgba(255,191,0,.55)' : 'rgba(0,255,0,.55)',
+            //borderRadius: 5,
+            // shadowOffset:{  width: 10,  height: 10,  },
+            // shadowColor: 'black',
+            // shadowOpacity: 1.0,
+            // //borderColor: 'yellow',
+            //borderStyle: {{ color : 'black'}},
+            alignSelf: 'flex-end'
+            }}>
+              <Trapezoid color= {heatMapData > 20 ? 'rgba(255,0,0,.55)' :
+                 heatMapData > 10 ? 'rgba(255,191,0,.55)' : 'rgba(0,255,0,.55)'}
+                  borderWidth={2}
+                  borderRadius={5}
+                  borderColor='black'
+                  borderStyle={{ color : 'black'}}
+                                  //scale={1.2} 
+                //rotate={45}
+                />
+        </Block>
+        {/* <View>
+        <Cube
+                size={size}
+                x={30}
+                y={40}
+                palette={Palette.orange}
+          /></View> */}
+        {/* <View style={styles.containerDown}>
+                <Animated.View
+                  style={{
+                    ...styles.item,
+                    backgroundColor: 
+                      heatMapData > 10 ? 'rgba(255,0,0,.55)' :
+                        heatMapData > 5 ? 'rgba(255,191,0,.55)' : 'rgba(0,255,0,.55)',
+                    transform: [{rotateX}, {rotateY}, {perspective: 50}],
+                  }}
+                />
+        </View> */}
         {/* <View style={styles.buttonContainer}>
               <TouchableOpacity
                 onPress={() => this.show()}
@@ -794,6 +871,13 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     borderRadius: 5
+  },
+  containerDown: {flex: 1, alignItems: 'center', justifyContent: 'center'},
+  item: {
+    height: 50,
+    width: 50,
+    //backgroundColor: 'red',
+    marginBottom: 20,
   },
 });
 
